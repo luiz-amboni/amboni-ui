@@ -117,10 +117,18 @@ export function construirTema(marcaNome: Marca, modo: 'light' | 'dark'): TokensS
 
       text: {
         primary: claro ? slate[900] : slate[100],
-        secondary: claro ? slate[600] : slate[400],
+        // O escuro desce um degrau a mais que o claro (300, não 400) para abrir espaço:
+        // com o secondary em 400, o muted não teria para onde ir sem reprovar.
+        secondary: claro ? slate[600] : slate[300],
         // slate[400] dava 2,56:1 sobre branco — reprovado até no piso de 3:1.
         // Placeholder ilegível não é "discreto", é inacessível. slate[500] = 4,76:1.
-        muted: claro ? slate[500] : slate[500],
+        //
+        // O escuro NÃO herda o slate[500] do claro: sobre o card escuro ele dá 3,75:1.
+        // Isso passava no piso antigo de 3:1 e reprovava na régua real (4,5:1 para texto
+        // normal) — e `muted` pinta texto que informa, como o "precisa de vendas
+        // atribuídas" do StatCard. Quem mais precisa dessa frase é justamente quem não
+        // está enxergando o número. slate[400] = 6,96:1.
+        muted: claro ? slate[500] : slate[400],
         // Sobre a marca cheia: no claro a marca é escura (texto branco); no escuro a
         // marca é clara (texto escuro). Sem isso, botão primário fica ilegível no escuro.
         onBrand: claro ? '#ffffff' : slate[950],

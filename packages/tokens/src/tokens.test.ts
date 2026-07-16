@@ -58,10 +58,35 @@ describe.each(MARCAS_NOMES)('tema %s', marca => {
       expect(r.passa, `secondary sobre surface: ${r.razao}:1`).toBe(true)
     })
 
-    test('texto muted passa ao menos em AA-grande — é o piso do que é legível', () => {
-      // muted é para placeholder/valor ausente. Não precisa de 4.5, mas não pode sumir.
-      const r = relatorio(t.color.text.muted, t.color.surface, WCAG.AA_NAO_TEXTO)
-      expect(r.passa, `muted sobre surface: ${r.razao}:1 (mín 3)`).toBe(true)
+    test('texto secundário passa em AA sobre o fundo da página', () => {
+      const r = relatorio(t.color.text.secondary, t.color.bg)
+      expect(r.passa, `secondary sobre bg: ${r.razao}:1`).toBe(true)
+    })
+
+    // ── `muted` já valeu 3:1 aqui. Não vale mais. ────────────────────────────
+    // A régua antiga era "muted é discreto, 3:1 basta". Com ela o escuro ficava em
+    // 3,75:1 e passava. Mas `muted` pinta o motivo de um valor estar ausente ("precisa
+    // de vendas atribuídas") — texto normal que INFORMA, e a WCAG 1.4.3 pede 4,5:1 sem
+    // carve-out para "discreto": a isenção cobre texto incidental e controle
+    // desabilitado, e nenhum dos dois é este caso. Quem mais precisa dessa frase é
+    // justamente quem não está enxergando o número.
+    //
+    // Os dois fundos são testados de propósito: o furo anterior era cobrir só o card e
+    // não o fundo da página, onde o mesmo cinza rende menos.
+    test.each([
+      ['card', () => t.color.surface],
+      ['fundo da página', () => t.color.bg],
+    ])('texto muted passa em AA sobre %s — ele informa, não decora', (_onde, bg) => {
+      const r = relatorio(t.color.text.muted, bg())
+      expect(r.passa, `muted: ${r.razao}:1 (mín ${r.minimo})`).toBe(true)
+    })
+
+    test('a hierarquia de texto é visível: primary > secondary > muted', () => {
+      // Três tokens que passam no contraste mas rendem quase o mesmo não são hierarquia,
+      // são três cinzas iguais. Se colapsarem, isto reprova antes de virar design.
+      const c = (cor: string) => contraste(cor, t.color.surface)
+      expect(c(t.color.text.primary)).toBeGreaterThan(c(t.color.text.secondary))
+      expect(c(t.color.text.secondary)).toBeGreaterThan(c(t.color.text.muted))
     })
 
     test('texto sobre a marca cheia passa em AA (o botão primário precisa ser legível)', () => {
