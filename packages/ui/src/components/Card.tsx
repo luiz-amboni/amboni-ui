@@ -65,7 +65,12 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(function Card(
   )
 })
 
-export interface CardHeaderProps extends HTMLAttributes<HTMLDivElement> {
+// Omit<'title'>: o HTML já tem um atributo `title` (a dica que aparece ao passar o
+// mouse) e ele só aceita string. A nossa prop `title` é o TÍTULO do card e aceita
+// ReactNode — os dois não cabem no mesmo nome. Sem o Omit, o TypeScript recusa a
+// interface inteira. Mesmo caminho que o MUI usa.
+export interface CardHeaderProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
+  /** O título do card (não confundir com o atributo title do HTML, que é tooltip). */
   title: ReactNode
   subtitle?: ReactNode
   /** Canto direito: filtro, botão, menu. */

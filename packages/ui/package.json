@@ -40,8 +40,9 @@
   ],
   "scripts": {
     "build": "vite build && tsc -p tsconfig.build.json",
-    "test": "vitest run",
-    "dev": "vite build --watch"
+    "test": "npm run typecheck && vitest run",
+    "dev": "vite build --watch",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "peerDependencies": {
     "react": ">=18",
