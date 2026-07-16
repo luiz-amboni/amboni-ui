@@ -1,0 +1,62 @@
+/**
+ * Base do @amboni/ui
+ * ═════════════════════════════════════════════════════════════════════════════
+ * Regras que TODOS os componentes herdam. Escrito em CSS puro de propósito:
+ *
+ *  · sem MUI, sem Tailwind → o mesmo componente serve o iSafe e o VEAR;
+ *  · sem CSS-in-JS → zero JavaScript em tempo de execução só para pintar;
+ *  · classes com prefixo `amb-` → nunca colide com o CSS do produto que instalar.
+ *
+ * Tudo lê as variáveis do @amboni/tokens. Nenhuma cor é escrita aqui.
+ */
+
+/* ── Anel de foco ───────────────────────────────────────────────────────────
+ * A regra mais importante deste arquivo.
+ *
+ * `outline: none` sem substituto é a falha de acessibilidade nº 1 da web: quem
+ * navega por teclado (por deficiência motora, ou só por preferência) perde a
+ * noção de onde está. Aqui o foco é obrigatório e vem de um lugar só.
+ *
+ * `:focus-visible` em vez de `:focus`: o anel aparece para teclado e some no
+ * clique de mouse — que é o que as pessoas esperam.
+ */
+.amb-focus-ring:focus-visible {
+  outline: 2px solid var(--amb-color-border-focus);
+  outline-offset: 2px;
+}
+
+/* Um controle desabilitado precisa PARECER desabilitado e não aceitar clique. */
+.amb-disabled,
+[data-amb-disabled='true'] {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+/**
+ * Esconde visualmente, mas mantém para leitor de tela.
+ * Use quando um ícone sozinho carrega o significado — ex.: um X de fechar precisa
+ * de um texto "Fechar" que só o leitor de tela ouve.
+ */
+.amb-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Números em tabela e KPI: largura fixa por dígito, senão a coluna "dança" ao atualizar. */
+.amb-tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+.amb-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

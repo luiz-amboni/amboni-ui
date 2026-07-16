@@ -1,0 +1,35 @@
+name: Publicar no npm
+
+# Dispara ao criar uma release (Releases → Draft a new release → tag v0.1.0).
+# Assim publicar é um ato explícito, nunca um acidente de push.
+on:
+  release: { types: [published] }
+  workflow_dispatch:
+
+jobs:
+  npm:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write   # procedência (npm provenance): prova que o pacote saiu deste repo
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          registry-url: https://registry.npmjs.org
+
+      - run: npm ci
+      - run: npm run build
+
+      # Nunca publica quebrado: o contraste WCAG é conferido antes.
+      - run: npm test
+
+      - name: Publicar @amboni/tokens
+        run: npm publish -w @amboni/tokens --provenance --access public
+        env: { NODE_AUTH_TOKEN: '${{ secrets.NPM_TOKEN }}' }
+
+      - name: Publicar @amboni/ui
+        run: npm publish -w @amboni/ui --provenance --access public
+        env: { NODE_AUTH_TOKEN: '${{ secrets.NPM_TOKEN }}' }

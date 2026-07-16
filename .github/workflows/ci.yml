@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push: { branches: [main] }
+  pull_request: { branches: [main] }
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+
+      - run: npm ci
+
+      # O build dos tokens vem primeiro: o pacote de UI depende do CSS gerado.
+      - name: Build
+        run: npm run build
+
+      # Inclui o contrato de acessibilidade — cor ilegível reprova aqui, não em produção.
+      - name: Testes (inclui contraste WCAG)
+        run: npm test
+
+      - name: Build do site de documentação
+        run: npm run build -w @amboni/docs

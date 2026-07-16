@@ -1,0 +1,40 @@
+{
+  "name": "@amboni/ui",
+  "version": "0.0.0",
+  "description": "Componentes React do design system Amboni — neutro, temável e acessível por prova",
+  "type": "module",
+  "license": "MIT",
+  "author": "Luiz Amboni",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    "./styles.css": "./dist/styles.css"
+  },
+  "files": ["dist"],
+  "sideEffects": ["*.css"],
+  "publishConfig": { "access": "public" },
+  "repository": { "type": "git", "url": "git+https://github.com/luiz-amboni/amboni-ui.git", "directory": "packages/ui" },
+  "keywords": ["react","design-system","ui","components","a11y","wcag","headless"],
+  "scripts": {
+    "build": "vite build && tsc -p tsconfig.build.json",
+    "test": "vitest run",
+    "dev": "vite build --watch"
+  },
+  "peerDependencies": { "react": ">=18", "react-dom": ">=18" },
+  "dependencies": { "@amboni/tokens": "0.0.0" },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.1.0",
+    "@testing-library/user-event": "^14.5.2",
+    "@types/react": "^19.0.2",
+    "@types/react-dom": "^19.0.2",
+    "@vitejs/plugin-react": "^4.3.4",
+    "jsdom": "^25.0.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.5",
+    "vitest": "^2.1.8"
+  }
+}

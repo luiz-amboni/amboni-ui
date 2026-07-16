@@ -1,0 +1,110 @@
+.amb-btn {
+  /* reset: um <button> traz estilo do navegador que varia entre Chrome/Safari/Firefox */
+  appearance: none;
+  border: 1px solid transparent;
+  font-family: var(--amb-fonte-sans);
+  font-weight: var(--amb-peso-semibold);
+  line-height: 1;
+  cursor: pointer;
+  text-decoration: none;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--amb-espaco-2);
+  white-space: nowrap;
+
+  border-radius: var(--amb-raio-md);
+  transition:
+    background-color var(--amb-duracao-fast) var(--amb-easing-standard),
+    border-color     var(--amb-duracao-fast) var(--amb-easing-standard),
+    color            var(--amb-duracao-fast) var(--amb-easing-standard);
+}
+
+/* ── Tamanhos ───────────────────────────────────────────────────────────────
+ * Altura mínima de 32px mesmo no `sm`: alvos menores que isso são difíceis de
+ * acertar no toque (a recomendação da WCAG é 24px de alvo; 32 dá folga real).
+ */
+.amb-btn--sm { height: 32px; padding: 0 var(--amb-espaco-3); font-size: var(--amb-texto-sm); }
+.amb-btn--md { height: 40px; padding: 0 var(--amb-espaco-4); font-size: var(--amb-texto-base); }
+.amb-btn--lg { height: 48px; padding: 0 var(--amb-espaco-6); font-size: var(--amb-texto-md); }
+
+/* Botão só de ícone é quadrado — senão vira um retângulo torto. */
+.amb-btn--icon.amb-btn--sm { width: 32px; padding: 0; }
+.amb-btn--icon.amb-btn--md { width: 40px; padding: 0; }
+.amb-btn--icon.amb-btn--lg { width: 48px; padding: 0; }
+
+/* ── Variantes ──────────────────────────────────────────────────────────────
+ * `brand-solid` e `text-onBrand` vêm do tema e JÁ passaram no teste de contraste
+ * (packages/tokens). É por isso que este botão é legível nos dois temas e nas
+ * duas marcas sem nenhum ajuste aqui.
+ */
+.amb-btn--primary {
+  background: var(--amb-color-brand-solid);
+  color: var(--amb-color-text-onBrand);
+}
+.amb-btn--primary:hover:not(:disabled) { background: var(--amb-color-brand-solidHover); }
+
+/* Secundário: a ação alternativa. Borda visível — um botão "fantasma" que só
+   aparece no hover esconde a ação de quem não usa mouse. */
+.amb-btn--secondary {
+  background: var(--amb-color-surface);
+  color: var(--amb-color-text-primary);
+  border-color: var(--amb-color-border-strong);
+}
+.amb-btn--secondary:hover:not(:disabled) {
+  background: var(--amb-color-surfaceRaised);
+  border-color: var(--amb-color-brand-solid);
+  color: var(--amb-color-brand-text);
+}
+
+/* Sutil: ação terciária, sem peso visual até a interação. */
+.amb-btn--ghost {
+  background: transparent;
+  color: var(--amb-color-text-secondary);
+}
+.amb-btn--ghost:hover:not(:disabled) {
+  background: var(--amb-color-surfaceRaised);
+  color: var(--amb-color-text-primary);
+}
+
+/* Destrutivo: apagar, cancelar de vez. Cor + PALAVRA — nunca só a cor: 1 em cada
+   12 homens não distingue vermelho de verde. O rótulo é que carrega o aviso. */
+.amb-btn--danger {
+  background: var(--amb-color-danger-solid);
+  color: #fff;
+}
+.amb-btn--danger:hover:not(:disabled) { filter: brightness(0.92); }
+
+.amb-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Ocupa a linha inteira — comum em formulário no celular. */
+.amb-btn--block { width: 100%; }
+
+/* ── Carregando ─────────────────────────────────────────────────────────────
+ * O rótulo continua ocupando espaço (visibility, não display) para o botão não
+ * encolher e "pular" no meio do clique.
+ */
+.amb-btn[data-amb-loading='true'] { cursor: progress; }
+.amb-btn[data-amb-loading='true'] .amb-btn__label { visibility: hidden; }
+
+.amb-btn__spinner {
+  position: absolute;
+  width: 1em;
+  height: 1em;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: var(--amb-raio-full);
+  animation: amb-spin 0.6s linear infinite;
+}
+
+.amb-btn { position: relative; }
+
+@keyframes amb-spin { to { transform: rotate(360deg); } }
+
+/* Quem pediu menos movimento no sistema: o giro para. O botão continua indicando
+   o estado por aria-busy e pelo cursor. Para parte das pessoas, animação em loop
+   causa enjoo — não é preferência estética. */
+@media (prefers-reduced-motion: reduce) {
+  .amb-btn__spinner { animation: none; border-right-color: currentColor; opacity: 0.4; }
+}
