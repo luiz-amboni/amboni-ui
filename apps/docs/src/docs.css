@@ -1,0 +1,435 @@
+/**
+ * O site da documentação — construído COM a biblioteca.
+ *
+ * Nada de estilo inline: se o site do design system não usa os próprios tokens, ele
+ * não prova nada. Tudo aqui lê var(--amb-*) — trocar a marca no topo repinta a página
+ * inteira, não só os exemplos.
+ */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  font-family: var(--amb-fonte-sans);
+  background: var(--amb-color-bg);
+  color: var(--amb-color-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color var(--amb-duracao-normal) var(--amb-easing-standard);
+}
+
+::selection { background: var(--amb-color-brand-solid); color: var(--amb-color-text-onBrand); }
+
+/* ══ Layout ══════════════════════════════════════════════════════════════════ */
+
+.doc-shell { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+
+@media (max-width: 900px) {
+  .doc-shell { grid-template-columns: 1fr; }
+  .doc-side { display: none; }
+}
+
+/* ── Topo ─────────────────────────────────────────────────────────────────── */
+
+.doc-top {
+  position: sticky;
+  top: 0;
+  z-index: var(--amb-camada-sticky);
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: var(--amb-espaco-4);
+  padding: 0 var(--amb-espaco-6);
+  height: 60px;
+  background: color-mix(in srgb, var(--amb-color-surface) 88%, transparent);
+  /* vidro: o conteúdo passa por baixo sem sumir — dá profundidade sem sombra pesada */
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--amb-color-border-default);
+}
+
+.doc-logo {
+  font-family: var(--amb-fonte-display);
+  font-weight: var(--amb-peso-extrabold);
+  font-size: var(--amb-texto-md);
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: var(--amb-espaco-2);
+  text-decoration: none;
+  color: inherit;
+}
+
+.doc-logo__mark {
+  width: 26px; height: 26px;
+  border-radius: var(--amb-raio-sm);
+  background: var(--amb-color-brand-solid);
+  color: var(--amb-color-text-onBrand);
+  display: grid; place-items: center;
+  font-size: 13px; font-weight: var(--amb-peso-extrabold);
+}
+
+.doc-tag {
+  font-size: var(--amb-texto-xs);
+  font-weight: var(--amb-peso-semibold);
+  color: var(--amb-color-brand-text);
+  background: var(--amb-color-brand-subtle);
+  padding: 2px var(--amb-espaco-2);
+  border-radius: var(--amb-raio-full);
+}
+
+.doc-top__spacer { flex: 1; }
+
+.doc-switch { display: flex; align-items: center; gap: var(--amb-espaco-2); }
+
+.doc-switch__label {
+  font-size: var(--amb-texto-xs);
+  font-weight: var(--amb-peso-semibold);
+  color: var(--amb-color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.doc-seg {
+  display: flex;
+  background: var(--amb-color-surfaceSunken);
+  border: 1px solid var(--amb-color-border-default);
+  border-radius: var(--amb-raio-md);
+  padding: 2px;
+  gap: 2px;
+}
+
+.doc-seg__btn {
+  appearance: none; border: 0; cursor: pointer;
+  font-family: inherit;
+  font-size: var(--amb-texto-xs);
+  font-weight: var(--amb-peso-semibold);
+  padding: var(--amb-espaco-1) var(--amb-espaco-3);
+  border-radius: calc(var(--amb-raio-md) - 3px);
+  background: transparent;
+  color: var(--amb-color-text-secondary);
+  transition: all var(--amb-duracao-fast) var(--amb-easing-standard);
+  display: flex; align-items: center; gap: 5px;
+}
+.doc-seg__btn:hover { color: var(--amb-color-text-primary); }
+.doc-seg__btn[aria-pressed='true'] {
+  background: var(--amb-color-surface);
+  color: var(--amb-color-text-primary);
+  box-shadow: var(--amb-shadow-sm);
+}
+
+/* As bolinhas do seletor de marca são a ÚNICA exceção da página ao "sem hex".
+   Elas identificam as marcas — a inativa precisa mostrar a cor dela mesmo quando o
+   tema ativo é o outro, então não podem ler var(--amb-color-brand-*). */
+.doc-dot { width: 9px; height: 9px; border-radius: var(--amb-raio-full); }
+.doc-dot--isafe { background: #0FA6BE; }
+.doc-dot--vear  { background: #8B5CF6; }
+
+/* ── Menu lateral ─────────────────────────────────────────────────────────── */
+
+/* A coluna estica com a página inteira; só o MIOLO dela é que gruda no topo.
+   Fazer o próprio .doc-side ser sticky com height: calc(100vh - 60px) parece funcionar
+   até a página passar de uma tela: a borda direita para onde o elemento acaba, deixando
+   um risco pela metade no meio do texto. A coluna precisa existir de cima a baixo. */
+.doc-side { border-right: 1px solid var(--amb-color-border-default); }
+
+.doc-side__inner {
+  position: sticky;
+  top: 60px;
+  max-height: calc(100vh - 60px);
+  overflow-y: auto;
+  padding: var(--amb-espaco-6) var(--amb-espaco-4);
+}
+
+.doc-side__group + .doc-side__group { margin-top: var(--amb-espaco-6); }
+
+.doc-side__title {
+  font-size: var(--amb-texto-xs);
+  font-weight: var(--amb-peso-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--amb-color-text-muted);
+  padding: 0 var(--amb-espaco-3);
+  margin-bottom: var(--amb-espaco-2);
+}
+
+.doc-side__link {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: var(--amb-espaco-2) var(--amb-espaco-3);
+  border-radius: var(--amb-raio-md);
+  font-size: var(--amb-texto-base);
+  font-weight: var(--amb-peso-medium);
+  color: var(--amb-color-text-secondary);
+  text-decoration: none;
+  transition: all var(--amb-duracao-fast) var(--amb-easing-standard);
+}
+.doc-side__link:hover { background: var(--amb-color-surfaceRaised); color: var(--amb-color-text-primary); }
+.doc-side__link[aria-current='page'] {
+  background: var(--amb-color-brand-subtle);
+  color: var(--amb-color-brand-text);
+  font-weight: var(--amb-peso-semibold);
+}
+
+.doc-side__badge {
+  font-size: 10px; font-weight: var(--amb-peso-bold);
+  padding: 1px 6px; border-radius: var(--amb-raio-full);
+  background: var(--amb-color-success-subtle);
+  color: var(--amb-color-success-text);
+}
+
+/* ── Conteúdo ─────────────────────────────────────────────────────────────── */
+
+.doc-main { padding: var(--amb-espaco-12) var(--amb-espaco-8) var(--amb-espaco-24); min-width: 0; }
+.doc-wrap { max-width: 800px; margin: 0 auto; }
+
+@media (max-width: 900px) { .doc-main { padding: var(--amb-espaco-8) var(--amb-espaco-4); } }
+
+.doc-eyebrow {
+  font-size: var(--amb-texto-xs);
+  font-weight: var(--amb-peso-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--amb-color-brand-text);
+  margin-bottom: var(--amb-espaco-2);
+}
+
+.doc-h1 {
+  font-family: var(--amb-fonte-display);
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: var(--amb-peso-extrabold);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  margin-bottom: var(--amb-espaco-4);
+}
+
+.doc-lead {
+  font-size: var(--amb-texto-lg);
+  line-height: var(--amb-leading-normal);
+  color: var(--amb-color-text-secondary);
+  max-width: 62ch;
+}
+
+.doc-h2 {
+  font-family: var(--amb-fonte-display);
+  font-size: var(--amb-texto-xl);
+  font-weight: var(--amb-peso-bold);
+  letter-spacing: -0.02em;
+  margin-bottom: var(--amb-espaco-2);
+  scroll-margin-top: 80px;
+}
+
+.doc-h3 {
+  font-family: var(--amb-fonte-display);
+  font-size: var(--amb-texto-md);
+  font-weight: var(--amb-peso-bold);
+  letter-spacing: -0.01em;
+  margin: var(--amb-espaco-8) 0 var(--amb-espaco-3);
+}
+
+.doc-p { color: var(--amb-color-text-secondary); max-width: 68ch; line-height: var(--amb-leading-normal); }
+.doc-p + .doc-p { margin-top: var(--amb-espaco-3); }
+.doc-p strong { color: var(--amb-color-text-primary); font-weight: var(--amb-peso-semibold); }
+
+.doc-section { margin-top: var(--amb-espaco-16); }
+.doc-section--first { margin-top: var(--amb-espaco-12); }
+
+.doc-rule { border: 0; border-top: 1px solid var(--amb-color-border-default); margin: var(--amb-espaco-12) 0; }
+
+/* ── Código ───────────────────────────────────────────────────────────────── */
+
+.doc-code {
+  position: relative;
+  background: var(--amb-color-surfaceSunken);
+  border: 1px solid var(--amb-color-border-default);
+  border-radius: var(--amb-raio-md);
+  overflow: hidden;
+}
+
+.doc-code pre {
+  margin: 0;
+  padding: var(--amb-espaco-4);
+  overflow-x: auto;
+  font-family: var(--amb-fonte-mono);
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: var(--amb-color-text-secondary);
+}
+
+/* Realce de sintaxe — tokens, não arco-íris. Só o que ajuda a ler. */
+.tok-tag  { color: var(--amb-color-brand-text); font-weight: var(--amb-peso-medium); }
+.tok-attr { color: var(--amb-color-warning-text); }
+.tok-str  { color: var(--amb-color-success-text); }
+.tok-num  { color: var(--amb-color-danger-text); }
+.tok-com  { color: var(--amb-color-text-muted); font-style: italic; }
+.tok-kw   { color: var(--amb-color-info-text); font-weight: var(--amb-peso-medium); }
+
+.doc-copy {
+  position: absolute; top: var(--amb-espaco-2); right: var(--amb-espaco-2);
+  appearance: none; cursor: pointer;
+  border: 1px solid var(--amb-color-border-default);
+  background: var(--amb-color-surface);
+  color: var(--amb-color-text-secondary);
+  border-radius: var(--amb-raio-sm);
+  padding: 3px var(--amb-espaco-2);
+  font-family: inherit; font-size: 11px; font-weight: var(--amb-peso-semibold);
+  opacity: 0;
+  transition: opacity var(--amb-duracao-fast) var(--amb-easing-standard);
+}
+.doc-code:hover .doc-copy,
+.doc-copy:focus-visible { opacity: 1; }
+.doc-copy:hover { color: var(--amb-color-text-primary); border-color: var(--amb-color-border-strong); }
+
+/* ── Demonstração ─────────────────────────────────────────────────────────── */
+
+.doc-demo {
+  border: 1px solid var(--amb-color-border-default);
+  border-radius: var(--amb-raio-lg);
+  overflow: hidden;
+  margin-bottom: var(--amb-espaco-4);
+}
+
+.doc-demo__stage {
+  padding: var(--amb-espaco-8);
+  background: var(--amb-color-surface);
+  display: flex; flex-wrap: wrap; align-items: center;
+  gap: var(--amb-espaco-3);
+  /* xadrez discreto: mostra que o componente não tem fundo próprio */
+  background-image:
+    linear-gradient(45deg, var(--amb-color-surfaceRaised) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--amb-color-surfaceRaised) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--amb-color-surfaceRaised) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--amb-color-surfaceRaised) 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+}
+
+.doc-demo__stage--plain { background-image: none; }
+.doc-demo__stage--centro { background-image: none; justify-content: center; }
+.doc-demo__stage--grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  background-image: none;
+}
+
+.doc-demo .doc-code { border: 0; border-top: 1px solid var(--amb-color-border-default); border-radius: 0; }
+
+/* ── Tabela ───────────────────────────────────────────────────────────────── */
+
+.doc-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--amb-color-border-default);
+  border-radius: var(--amb-raio-lg);
+  background: var(--amb-color-surface);
+}
+
+.doc-table { width: 100%; border-collapse: collapse; min-width: 560px; }
+
+/* Sem largura mínima — para tabela dentro de um demo estreito, onde os 560px
+   estourariam a borda do card em vez de rolar. */
+.doc-table--fit { min-width: 0; }
+
+.doc-table th {
+  text-align: left;
+  padding: var(--amb-espaco-3) var(--amb-espaco-4);
+  font-size: 10px; font-weight: var(--amb-peso-extrabold);
+  text-transform: uppercase; letter-spacing: 0.07em;
+  color: var(--amb-color-text-muted);
+  background: var(--amb-color-surfaceSunken);
+  border-bottom: 1px solid var(--amb-color-border-default);
+  white-space: nowrap;
+}
+
+.doc-table td {
+  padding: var(--amb-espaco-3) var(--amb-espaco-4);
+  font-size: var(--amb-texto-base);
+  color: var(--amb-color-text-secondary);
+  border-bottom: 1px solid var(--amb-color-border-default);
+  vertical-align: top;
+}
+.doc-table tr:last-child td { border-bottom: 0; }
+
+.doc-table code {
+  font-family: var(--amb-fonte-mono);
+  font-size: 12px;
+}
+.doc-mono-brand { color: var(--amb-color-brand-text); font-weight: var(--amb-peso-semibold); white-space: nowrap; }
+.doc-num { text-align: right; font-variant-numeric: tabular-nums; font-weight: var(--amb-peso-bold); }
+
+.doc-pill {
+  display: inline-block;
+  font-size: 10px; font-weight: var(--amb-peso-extrabold);
+  letter-spacing: 0.05em;
+  padding: 2px var(--amb-espaco-2);
+  border-radius: var(--amb-raio-full);
+}
+.doc-pill--ok  { background: var(--amb-color-success-subtle); color: var(--amb-color-success-text); }
+.doc-pill--bad { background: var(--amb-color-danger-subtle);  color: var(--amb-color-danger-text); }
+
+/* ── Faça / Não faça ──────────────────────────────────────────────────────── */
+
+.doc-dd { display: grid; grid-template-columns: 1fr 1fr; gap: var(--amb-espaco-3); margin-top: var(--amb-espaco-3); }
+@media (max-width: 700px) { .doc-dd { grid-template-columns: 1fr; } }
+
+.doc-dd__item {
+  border: 1px solid;
+  border-radius: var(--amb-raio-md);
+  padding: var(--amb-espaco-4);
+  background: var(--amb-color-surface);
+}
+.doc-dd__item--do  { border-color: color-mix(in srgb, var(--amb-color-success-solid) 40%, transparent); }
+.doc-dd__item--dont{ border-color: color-mix(in srgb, var(--amb-color-danger-solid) 40%, transparent); }
+
+.doc-dd__tag {
+  font-size: 10px; font-weight: var(--amb-peso-extrabold);
+  letter-spacing: 0.08em; text-transform: uppercase;
+  margin-bottom: var(--amb-espaco-2);
+  display: flex; align-items: center; gap: 5px;
+}
+.doc-dd__item--do   .doc-dd__tag { color: var(--amb-color-success-text); }
+.doc-dd__item--dont .doc-dd__tag { color: var(--amb-color-danger-text); }
+
+.doc-dd__t { font-weight: var(--amb-peso-bold); font-size: var(--amb-texto-base); margin-bottom: var(--amb-espaco-1); }
+.doc-dd__d { font-size: var(--amb-texto-sm); color: var(--amb-color-text-secondary); line-height: var(--amb-leading-snug); }
+
+/* ── Aviso ────────────────────────────────────────────────────────────────── */
+
+.doc-note {
+  border-left: 3px solid var(--amb-color-brand-solid);
+  background: var(--amb-color-brand-subtle);
+  border-radius: 0 var(--amb-raio-md) var(--amb-raio-md) 0;
+  padding: var(--amb-espaco-4);
+  margin: var(--amb-espaco-4) 0;
+  font-size: var(--amb-texto-base);
+  color: var(--amb-color-text-secondary);
+  line-height: var(--amb-leading-normal);
+}
+.doc-note strong { color: var(--amb-color-text-primary); }
+.doc-note--warn { border-left-color: var(--amb-color-warning-solid); background: var(--amb-color-warning-subtle); }
+
+/* ── Paleta ───────────────────────────────────────────────────────────────── */
+
+.doc-swatches { display: grid; grid-template-columns: repeat(11, 1fr); gap: 3px; margin-top: var(--amb-espaco-2); }
+@media (max-width: 700px) { .doc-swatches { grid-template-columns: repeat(6, 1fr); } }
+
+.doc-swatch { aspect-ratio: 1; border-radius: var(--amb-raio-sm); position: relative; cursor: pointer; border: 1px solid var(--amb-color-border-default); }
+.doc-swatch__n {
+  position: absolute; bottom: 2px; left: 0; right: 0; text-align: center;
+  font-size: 8px; font-weight: var(--amb-peso-bold); font-family: var(--amb-fonte-mono);
+  opacity: 0.65;
+}
+
+.doc-scale + .doc-scale { margin-top: var(--amb-espaco-4); }
+.doc-scale__name { font-size: var(--amb-texto-sm); font-weight: var(--amb-peso-semibold); font-family: var(--amb-fonte-mono); }
+
+/* ── Rodapé ───────────────────────────────────────────────────────────────── */
+
+.doc-foot {
+  margin-top: var(--amb-espaco-24);
+  padding-top: var(--amb-espaco-6);
+  border-top: 1px solid var(--amb-color-border-default);
+  font-size: var(--amb-texto-sm);
+  color: var(--amb-color-text-muted);
+  display: flex; justify-content: space-between; gap: var(--amb-espaco-4); flex-wrap: wrap;
+}
+.doc-foot a { color: var(--amb-color-brand-text); text-decoration: none; }
+.doc-foot a:hover { text-decoration: underline; }
