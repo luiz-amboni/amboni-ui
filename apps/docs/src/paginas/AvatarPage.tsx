@@ -133,13 +133,14 @@ return TONS_AVATAR[hash % TONS_AVATAR.length]`}</Bloco>
           codigo={`<Avatar nome="Ana Souza" src="https://link-que-expirou/foto.jpg" />
 // Link de Google/Gravatar/S3 expira; a tela cai nas iniciais e ninguém percebe.`}
         >
-          {/* `data:` com conteúdo que não é imagem: dispara exatamente o mesmo `onError`
-              de um link quebrado, sem sair para a rede. Aqui havia uma URL de domínio
-              reservado — honesta e funcional, mas deixava um ERR_NAME_NOT_RESOLVED
-              vermelho no console de quem abre o DevTools nesta página (numa doc, isso lê
-              como bug do site), e a demo dependia de conexão. O caminho exercitado é o
-              mesmo; o ruído, não. */}
-          <Avatar nome="Ana Souza" src="data:image/png;base64,isto-nao-e-uma-imagem" size="lg" />
+          {/* base64 VÁLIDO que decodifica para "hello" — não para um PNG. É a única das
+              três formas de quebrar uma imagem que dispara o `onError` com o console
+              limpo; medi as três. A URL de domínio reservado que estava aqui deixava um
+              ERR_NAME_NOT_RESOLVED vermelho (numa documentação, isso lê como bug do
+              site) e exigia rede; base64 inválido troca por ERR_INVALID_URL. Aqui a URL
+              é bem-formada e o dado chega — só não é imagem, então quem reclama é o
+              decodificador, em silêncio. Mesmo caminho de código, sem o ruído. */}
+          <Avatar nome="Ana Souza" src="data:image/png;base64,aGVsbG8=" size="lg" />
           <Avatar nome="Bruno Lima" size="lg" />
         </Demo>
         <P>
