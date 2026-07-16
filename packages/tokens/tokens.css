@@ -1,0 +1,275 @@
+/**
+ * @amboni/ui — tokens
+ * ARQUIVO GERADO — não edite à mão. Fonte: packages/tokens/src/*.ts
+ * Regenerar: npm run build -w @amboni/tokens
+ *
+ * Uso:
+ *   import '@amboni/tokens/tokens.css'
+ *   <html data-amb-brand="isafe" data-amb-theme="light">
+ */
+
+:root {
+  --amb-espaco-0: 0;
+  --amb-espaco-1: 0.25rem;
+  --amb-espaco-2: 0.5rem;
+  --amb-espaco-3: 0.75rem;
+  --amb-espaco-4: 1rem;
+  --amb-espaco-5: 1.25rem;
+  --amb-espaco-6: 1.5rem;
+  --amb-espaco-8: 2rem;
+  --amb-espaco-10: 2.5rem;
+  --amb-espaco-12: 3rem;
+  --amb-espaco-16: 4rem;
+  --amb-espaco-20: 5rem;
+  --amb-espaco-24: 6rem;
+
+  --amb-raio-none: 0;
+  --amb-raio-sm: 0.25rem;
+  --amb-raio-md: 0.5rem;
+  --amb-raio-lg: 0.75rem;
+  --amb-raio-xl: 1rem;
+  --amb-raio-full: 9999px;
+
+  --amb-fonte-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --amb-fonte-display: 'Sora', 'Inter', system-ui, sans-serif;
+  --amb-fonte-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --amb-texto-xs: 0.75rem;
+  --amb-texto-sm: 0.8125rem;
+  --amb-texto-base: 0.875rem;
+  --amb-texto-md: 1rem;
+  --amb-texto-lg: 1.125rem;
+  --amb-texto-xl: 1.375rem;
+  --amb-texto-2xl: 1.75rem;
+  --amb-texto-3xl: 2.25rem;
+
+  --amb-peso-normal: 400;
+  --amb-peso-medium: 500;
+  --amb-peso-semibold: 600;
+  --amb-peso-bold: 700;
+  --amb-peso-extrabold: 800;
+
+  --amb-leading-tight: 1.2;
+  --amb-leading-snug: 1.4;
+  --amb-leading-normal: 1.6;
+
+  --amb-duracao-instant: 80ms;
+  --amb-duracao-fast: 140ms;
+  --amb-duracao-normal: 200ms;
+  --amb-duracao-slow: 300ms;
+
+  --amb-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --amb-easing-entrada: cubic-bezier(0, 0, 0.2, 1);
+  --amb-easing-saida: cubic-bezier(0.4, 0, 1, 1);
+
+  --amb-camada-base: 0;
+  --amb-camada-dropdown: 1000;
+  --amb-camada-sticky: 1100;
+  --amb-camada-overlay: 1300;
+  --amb-camada-modal: 1400;
+  --amb-camada-popover: 1500;
+  --amb-camada-toast: 1700;
+  --amb-camada-tooltip: 1800;
+}
+
+/* Tema padrão: iSafe claro. Assim a biblioteca funciona mesmo sem configurar nada. */
+:root {
+  --amb-color-bg: #f8fafc;
+  --amb-color-surface: #ffffff;
+  --amb-color-surfaceRaised: #f8fafc;
+  --amb-color-surfaceSunken: #f1f5f9;
+  --amb-color-text-primary: #0f172a;
+  --amb-color-text-secondary: #475569;
+  --amb-color-text-muted: #64748b;
+  --amb-color-text-onBrand: #ffffff;
+  --amb-color-border-default: #e2e8f0;
+  --amb-color-border-strong: #cbd5e1;
+  --amb-color-border-focus: #0c86a0;
+  --amb-color-brand-solid: #106b81;
+  --amb-color-brand-solidHover: #165869;
+  --amb-color-brand-subtle: #ecfeff;
+  --amb-color-brand-text: #106b81;
+  --amb-color-success-solid: #10b981;
+  --amb-color-success-subtle: #ecfdf5;
+  --amb-color-success-text: #047857;
+  --amb-color-success-border: #a7f3d0;
+  --amb-color-warning-solid: #f59e0b;
+  --amb-color-warning-subtle: #fffbeb;
+  --amb-color-warning-text: #b45309;
+  --amb-color-warning-border: #fde68a;
+  --amb-color-danger-solid: #ef4444;
+  --amb-color-danger-subtle: #fef2f2;
+  --amb-color-danger-text: #b91c1c;
+  --amb-color-danger-border: #fecaca;
+  --amb-color-info-solid: #3b82f6;
+  --amb-color-info-subtle: #eff6ff;
+  --amb-color-info-text: #1d4ed8;
+  --amb-color-info-border: #bfdbfe;
+  --amb-shadow-sm: 0 1px 2px 0 rgb(15 23 42 / 0.06);
+  --amb-shadow-md: 0 2px 8px -1px rgb(15 23 42 / 0.08), 0 1px 3px -1px rgb(15 23 42 / 0.06);
+  --amb-shadow-lg: 0 8px 24px -4px rgb(15 23 42 / 0.10), 0 2px 6px -2px rgb(15 23 42 / 0.06);
+  --amb-shadow-xl: 0 20px 40px -8px rgb(15 23 42 / 0.16);
+}
+
+[data-amb-brand="isafe"][data-amb-theme="light"] {
+  --amb-color-bg: #f8fafc;
+  --amb-color-surface: #ffffff;
+  --amb-color-surfaceRaised: #f8fafc;
+  --amb-color-surfaceSunken: #f1f5f9;
+  --amb-color-text-primary: #0f172a;
+  --amb-color-text-secondary: #475569;
+  --amb-color-text-muted: #64748b;
+  --amb-color-text-onBrand: #ffffff;
+  --amb-color-border-default: #e2e8f0;
+  --amb-color-border-strong: #cbd5e1;
+  --amb-color-border-focus: #0c86a0;
+  --amb-color-brand-solid: #106b81;
+  --amb-color-brand-solidHover: #165869;
+  --amb-color-brand-subtle: #ecfeff;
+  --amb-color-brand-text: #106b81;
+  --amb-color-success-solid: #10b981;
+  --amb-color-success-subtle: #ecfdf5;
+  --amb-color-success-text: #047857;
+  --amb-color-success-border: #a7f3d0;
+  --amb-color-warning-solid: #f59e0b;
+  --amb-color-warning-subtle: #fffbeb;
+  --amb-color-warning-text: #b45309;
+  --amb-color-warning-border: #fde68a;
+  --amb-color-danger-solid: #ef4444;
+  --amb-color-danger-subtle: #fef2f2;
+  --amb-color-danger-text: #b91c1c;
+  --amb-color-danger-border: #fecaca;
+  --amb-color-info-solid: #3b82f6;
+  --amb-color-info-subtle: #eff6ff;
+  --amb-color-info-text: #1d4ed8;
+  --amb-color-info-border: #bfdbfe;
+  --amb-shadow-sm: 0 1px 2px 0 rgb(15 23 42 / 0.06);
+  --amb-shadow-md: 0 2px 8px -1px rgb(15 23 42 / 0.08), 0 1px 3px -1px rgb(15 23 42 / 0.06);
+  --amb-shadow-lg: 0 8px 24px -4px rgb(15 23 42 / 0.10), 0 2px 6px -2px rgb(15 23 42 / 0.06);
+  --amb-shadow-xl: 0 20px 40px -8px rgb(15 23 42 / 0.16);
+}
+
+[data-amb-brand="isafe"][data-amb-theme="dark"] {
+  --amb-color-bg: #020617;
+  --amb-color-surface: #0f172a;
+  --amb-color-surfaceRaised: #1e293b;
+  --amb-color-surfaceSunken: #0b1220;
+  --amb-color-text-primary: #f1f5f9;
+  --amb-color-text-secondary: #94a3b8;
+  --amb-color-text-muted: #64748b;
+  --amb-color-text-onBrand: #020617;
+  --amb-color-border-default: #1e293b;
+  --amb-color-border-strong: #334155;
+  --amb-color-border-focus: #22c6e3;
+  --amb-color-brand-solid: #22c6e3;
+  --amb-color-brand-solidHover: #67e0f2;
+  --amb-color-brand-subtle: color-mix(in srgb, #22c6e3 16%, transparent);
+  --amb-color-brand-text: #67e0f2;
+  --amb-color-success-solid: #10b981;
+  --amb-color-success-subtle: color-mix(in srgb, #10b981 14%, transparent);
+  --amb-color-success-text: #34d399;
+  --amb-color-success-border: color-mix(in srgb, #10b981 40%, transparent);
+  --amb-color-warning-solid: #f59e0b;
+  --amb-color-warning-subtle: color-mix(in srgb, #f59e0b 14%, transparent);
+  --amb-color-warning-text: #fbbf24;
+  --amb-color-warning-border: color-mix(in srgb, #f59e0b 40%, transparent);
+  --amb-color-danger-solid: #ef4444;
+  --amb-color-danger-subtle: color-mix(in srgb, #ef4444 14%, transparent);
+  --amb-color-danger-text: #f87171;
+  --amb-color-danger-border: color-mix(in srgb, #ef4444 40%, transparent);
+  --amb-color-info-solid: #3b82f6;
+  --amb-color-info-subtle: color-mix(in srgb, #3b82f6 14%, transparent);
+  --amb-color-info-text: #60a5fa;
+  --amb-color-info-border: color-mix(in srgb, #3b82f6 40%, transparent);
+  --amb-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.30);
+  --amb-shadow-md: 0 2px 8px -1px rgb(0 0 0 / 0.40);
+  --amb-shadow-lg: 0 8px 24px -4px rgb(0 0 0 / 0.50);
+  --amb-shadow-xl: 0 20px 40px -8px rgb(0 0 0 / 0.60);
+}
+
+[data-amb-brand="vear"][data-amb-theme="light"] {
+  --amb-color-bg: #f8fafc;
+  --amb-color-surface: #ffffff;
+  --amb-color-surfaceRaised: #f8fafc;
+  --amb-color-surfaceSunken: #f1f5f9;
+  --amb-color-text-primary: #0f172a;
+  --amb-color-text-secondary: #475569;
+  --amb-color-text-muted: #64748b;
+  --amb-color-text-onBrand: #ffffff;
+  --amb-color-border-default: #e2e8f0;
+  --amb-color-border-strong: #cbd5e1;
+  --amb-color-border-focus: #7a35cf;
+  --amb-color-brand-solid: #5c2684;
+  --amb-color-brand-solidHover: #4b1f6b;
+  --amb-color-brand-subtle: #faf5ff;
+  --amb-color-brand-text: #5c2684;
+  --amb-color-success-solid: #10b981;
+  --amb-color-success-subtle: #ecfdf5;
+  --amb-color-success-text: #047857;
+  --amb-color-success-border: #a7f3d0;
+  --amb-color-warning-solid: #f59e0b;
+  --amb-color-warning-subtle: #fffbeb;
+  --amb-color-warning-text: #b45309;
+  --amb-color-warning-border: #fde68a;
+  --amb-color-danger-solid: #ef4444;
+  --amb-color-danger-subtle: #fef2f2;
+  --amb-color-danger-text: #b91c1c;
+  --amb-color-danger-border: #fecaca;
+  --amb-color-info-solid: #3b82f6;
+  --amb-color-info-subtle: #eff6ff;
+  --amb-color-info-text: #1d4ed8;
+  --amb-color-info-border: #bfdbfe;
+  --amb-shadow-sm: 0 1px 2px 0 rgb(15 23 42 / 0.06);
+  --amb-shadow-md: 0 2px 8px -1px rgb(15 23 42 / 0.08), 0 1px 3px -1px rgb(15 23 42 / 0.06);
+  --amb-shadow-lg: 0 8px 24px -4px rgb(15 23 42 / 0.10), 0 2px 6px -2px rgb(15 23 42 / 0.06);
+  --amb-shadow-xl: 0 20px 40px -8px rgb(15 23 42 / 0.16);
+}
+
+[data-amb-brand="vear"][data-amb-theme="dark"] {
+  --amb-color-bg: #020617;
+  --amb-color-surface: #0f172a;
+  --amb-color-surfaceRaised: #1e293b;
+  --amb-color-surfaceSunken: #0b1220;
+  --amb-color-text-primary: #f1f5f9;
+  --amb-color-text-secondary: #94a3b8;
+  --amb-color-text-muted: #64748b;
+  --amb-color-text-onBrand: #020617;
+  --amb-color-border-default: #1e293b;
+  --amb-color-border-strong: #334155;
+  --amb-color-border-focus: #b985f5;
+  --amb-color-brand-solid: #b985f5;
+  --amb-color-brand-solidHover: #d6b4fe;
+  --amb-color-brand-subtle: color-mix(in srgb, #b985f5 16%, transparent);
+  --amb-color-brand-text: #d6b4fe;
+  --amb-color-success-solid: #10b981;
+  --amb-color-success-subtle: color-mix(in srgb, #10b981 14%, transparent);
+  --amb-color-success-text: #34d399;
+  --amb-color-success-border: color-mix(in srgb, #10b981 40%, transparent);
+  --amb-color-warning-solid: #f59e0b;
+  --amb-color-warning-subtle: color-mix(in srgb, #f59e0b 14%, transparent);
+  --amb-color-warning-text: #fbbf24;
+  --amb-color-warning-border: color-mix(in srgb, #f59e0b 40%, transparent);
+  --amb-color-danger-solid: #ef4444;
+  --amb-color-danger-subtle: color-mix(in srgb, #ef4444 14%, transparent);
+  --amb-color-danger-text: #f87171;
+  --amb-color-danger-border: color-mix(in srgb, #ef4444 40%, transparent);
+  --amb-color-info-solid: #3b82f6;
+  --amb-color-info-subtle: color-mix(in srgb, #3b82f6 14%, transparent);
+  --amb-color-info-text: #60a5fa;
+  --amb-color-info-border: color-mix(in srgb, #3b82f6 40%, transparent);
+  --amb-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.30);
+  --amb-shadow-md: 0 2px 8px -1px rgb(0 0 0 / 0.40);
+  --amb-shadow-lg: 0 8px 24px -4px rgb(0 0 0 / 0.50);
+  --amb-shadow-xl: 0 20px 40px -8px rgb(0 0 0 / 0.60);
+}
+
+/* Respeita quem pediu menos movimento no sistema operacional. Acessibilidade: para
+   parte das pessoas, animação causa enjoo e dor de cabeça — não é preferência estética. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --amb-duracao-instant: 0ms;
+    --amb-duracao-fast: 0ms;
+    --amb-duracao-normal: 0ms;
+    --amb-duracao-slow: 0ms;
+  }
+}

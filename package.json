@@ -1,0 +1,13 @@
+{
+  "name": "amboni-ui-monorepo",
+  "private": true,
+  "type": "module",
+  "workspaces": ["packages/*", "apps/*"],
+  "scripts": {
+    "build": "npm run build -w @amboni/tokens && npm run build -w @amboni/ui",
+    "test": "npm run test -w @amboni/tokens --if-present && npm run test -w @amboni/ui --if-present",
+    "docs": "npm run dev -w @amboni/docs",
+    "lint": "eslint packages apps --ext .ts,.tsx"
+  },
+  "engines": { "node": ">=20" }
+}
