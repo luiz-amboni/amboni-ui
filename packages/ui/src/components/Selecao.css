@@ -1,0 +1,224 @@
+/**
+ * Selecao
+ * ═════════════════════════════════════════════════════════════════════════════
+ * Vale para os dois modos (nativo e buscável): o campo FECHADO é idêntico nos dois,
+ * e é ele que fica na tela o tempo todo. Trocar `buscavel` não pode mexer no layout.
+ */
+
+.amb-selecao {
+  display: inline-flex;
+  flex-direction: column;
+  gap: var(--amb-espaco-1);
+  font-family: var(--amb-fonte-sans);
+  /* min-width:0 para o campo poder encolher dentro de um grid/flex sem estourar a coluna. */
+  min-width: 0;
+}
+
+.amb-selecao__controle {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.amb-selecao__campo {
+  /* reset: select e input trazem estilo do navegador que muda entre Chrome/Safari/Firefox */
+  appearance: none;
+  width: 100%;
+  min-width: 0;
+  font-family: inherit;
+  font-size: var(--amb-texto-base);
+  line-height: 1;
+  color: var(--amb-color-text-primary);
+  background: var(--amb-color-surface);
+  border: 1px solid var(--amb-color-border-strong);
+  border-radius: var(--amb-raio-md);
+  cursor: pointer;
+  text-overflow: ellipsis;
+  transition:
+    border-color var(--amb-duracao-fast) var(--amb-easing-standard),
+    background-color var(--amb-duracao-fast) var(--amb-easing-standard);
+}
+
+/* ── Tamanhos ───────────────────────────────────────────────────────────────
+ * Altura só pelos tokens: é o que mantém o Selecao alinhado com o Button e o Input
+ * quando ficam lado a lado numa barra de filtros. Cravar px aqui quebra essa linha.
+ * Só o padding-left mora aqui — o da direita é compartilhado (ver abaixo), senão a
+ * especificidade maior destas regras venceria e o texto passaria por baixo da seta.
+ */
+.amb-selecao--sm .amb-selecao__campo {
+  height: var(--amb-altura-sm);
+  font-size: var(--amb-texto-sm);
+  padding-left: var(--amb-espaco-3);
+}
+.amb-selecao--md .amb-selecao__campo {
+  height: var(--amb-altura-md);
+  padding-left: var(--amb-espaco-4);
+}
+.amb-selecao--lg .amb-selecao__campo {
+  height: var(--amb-altura-lg);
+  font-size: var(--amb-texto-md);
+  padding-left: var(--amb-espaco-5);
+}
+
+/* Espaço reservado para a seta — o texto longo para antes dela em vez de passar por baixo. */
+.amb-selecao__campo { padding-right: var(--amb-espaco-8); }
+/* Com o X, são dois ícones à direita: o texto precisa parar mais cedo. */
+.amb-selecao--limpavel .amb-selecao__campo { padding-right: var(--amb-espaco-12); }
+
+.amb-selecao__campo:hover:not(:disabled) { border-color: var(--amb-color-brand-solid); }
+
+.amb-selecao__campo:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--amb-color-surfaceSunken);
+}
+
+/* O campo de busca aceita texto: o cursor tem que ser de texto, senão a pessoa não
+   percebe que dá para digitar ali. */
+.amb-selecao__campo[role='combobox'] { cursor: text; }
+
+/**
+ * A lista ABERTA do <select> nativo é desenhada pelo sistema operacional — o CSS daqui
+ * não alcança. Estas duas linhas são o pouco que Chrome/Firefox no Windows e no Linux
+ * respeitam, e existem para a lista não sair branca no tema escuro. No iOS/Android a
+ * roda é do sistema e ignora tudo — de propósito: é a melhor experiência de toque que
+ * existe, e é justamente por ela que o modo nativo é o padrão.
+ * (`appearance: base-select` daria controle total — Chrome 135+ e Safari 27 —, mas o
+ * Firefox ainda não tem, então não construímos nada em cima disso.)
+ */
+.amb-selecao__campo option,
+.amb-selecao__campo optgroup {
+  color: var(--amb-color-text-primary);
+  background: var(--amb-color-surface);
+}
+
+/* ── Seta ───────────────────────────────────────────────────────────────────
+ * pointer-events:none é obrigatório: sem isso, clicar exatamente em cima da seta —
+ * que é justo onde a pessoa mira — não abre a lista, porque o clique morre no ícone.
+ */
+.amb-selecao__seta {
+  position: absolute;
+  right: var(--amb-espaco-3);
+  display: flex;
+  pointer-events: none;
+  color: var(--amb-color-text-muted);
+}
+
+/* ── Limpar ─────────────────────────────────────────────────────────────────
+ * Fica à esquerda da seta. Este SIM recebe clique (é um botão de verdade, com rótulo
+ * acessível) — por isso não herda o pointer-events:none da seta.
+ */
+.amb-selecao__limpar {
+  position: absolute;
+  right: var(--amb-espaco-8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: var(--amb-espaco-1);
+  border-radius: var(--amb-raio-sm);
+  color: var(--amb-color-text-muted);
+  cursor: pointer;
+}
+.amb-selecao__limpar:hover {
+  color: var(--amb-color-text-primary);
+  background: var(--amb-color-surfaceSunken);
+}
+
+/* ── Erro ───────────────────────────────────────────────────────────────────
+ * Borda + MENSAGEM. A borda vermelha sozinha não diz o que está errado, e quem não
+ * distingue vermelho não vê aviso nenhum — o texto é que carrega o recado.
+ */
+.amb-selecao--erro .amb-selecao__campo { border-color: var(--amb-color-danger-solid); }
+.amb-selecao--erro .amb-selecao__campo:hover:not(:disabled) { border-color: var(--amb-color-danger-solid); }
+
+.amb-selecao__erro {
+  margin: 0;
+  font-size: var(--amb-texto-sm);
+  line-height: var(--amb-leading-snug);
+  color: var(--amb-color-danger-text);
+}
+
+/* ── Lista (só no modo buscável) ────────────────────────────────────────────
+ * Raio maior que o do campo: o painel que flutua é uma superfície, o campo é um controle.
+ */
+.amb-selecao__lista {
+  position: absolute;
+  top: calc(100% + var(--amb-espaco-1));
+  left: 0;
+  right: 0;
+  z-index: var(--amb-camada-dropdown);
+  margin: 0;
+  padding: var(--amb-espaco-1);
+  list-style: none;
+  /* Teto na altura: uma lista de 200 itens tomaria a tela inteira e esconderia o campo
+     que a pessoa está usando para filtrar. */
+  max-height: 16rem;
+  overflow-y: auto;
+  background: var(--amb-color-surface);
+  border: 1px solid var(--amb-color-border-default);
+  border-radius: var(--amb-raio-lg);
+  box-shadow: var(--amb-shadow-lg);
+  animation: amb-selecao-entrada var(--amb-duracao-fast) var(--amb-easing-entrada);
+}
+
+.amb-selecao__grupo {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.amb-selecao__grupo-rotulo {
+  padding: var(--amb-espaco-2) var(--amb-espaco-3) var(--amb-espaco-1);
+  font-size: var(--amb-texto-xs);
+  font-weight: var(--amb-peso-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--amb-color-text-muted);
+}
+
+.amb-selecao__opcao {
+  display: flex;
+  align-items: center;
+  /* Alvo de toque: uma opção de 20px é impossível de acertar com o dedo. */
+  min-height: var(--amb-altura-sm);
+  padding: 0 var(--amb-espaco-3);
+  border-radius: var(--amb-raio-sm);
+  font-size: var(--amb-texto-base);
+  color: var(--amb-color-text-primary);
+  cursor: pointer;
+}
+
+/* A opção "ativa" é a que a seta está apontando — não a escolhida. O leitor de tela
+   recebe a mesma informação pelo aria-activedescendant, então a cor não está sozinha. */
+.amb-selecao__opcao--ativa { background: var(--amb-color-brand-subtle); }
+
+/* A escolhida é marcada por PESO e cor, não só cor. */
+.amb-selecao__opcao[aria-selected='true'] {
+  font-weight: var(--amb-peso-semibold);
+  color: var(--amb-color-brand-text);
+}
+
+.amb-selecao__opcao--desabilitada {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.amb-selecao__vazio {
+  padding: var(--amb-espaco-3);
+  font-size: var(--amb-texto-base);
+  color: var(--amb-color-text-muted);
+}
+
+@keyframes amb-selecao-entrada {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Quem pediu menos movimento no sistema: a lista aparece direto. Para parte das pessoas
+   animação causa enjoo — não é preferência estética. */
+@media (prefers-reduced-motion: reduce) {
+  .amb-selecao__lista { animation: none; }
+}

@@ -1,0 +1,151 @@
+.amb-avatar {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  width: var(--amb-avatar-tam);
+  height: var(--amb-avatar-tam);
+  /* Sem isto, um nome comprido dentro de um flex empurra o avatar e ele vira um ovo. */
+  min-width: var(--amb-avatar-tam);
+
+  font-family: var(--amb-fonte-sans);
+  font-weight: var(--amb-peso-bold);
+  font-size: var(--amb-avatar-fonte);
+  line-height: 1;
+  /* Iniciais fora do padrão ("WM") ficam apertadas; o kerning negativo compensa. */
+  letter-spacing: -0.02em;
+  user-select: none;
+  overflow: hidden;
+  /* Fundo enquanto a foto não chega: um buraco transparente na lista pisca a cada
+     scroll. Fica cinza, não colorido — o tom só vale para as iniciais. */
+  background: var(--amb-color-surfaceSunken);
+  color: var(--amb-color-text-secondary);
+}
+
+/* ── Tamanhos ───────────────────────────────────────────────────────────────
+ * `--amb-avatar-tam` não é decoração: o GrupoAvatar calcula a sobreposição a partir
+ * dela. Por isso a medida mora aqui e não espalhada em width/height soltos.
+ */
+.amb-avatar--xs { --amb-avatar-tam: 24px; --amb-avatar-fonte: 9px;  }
+.amb-avatar--sm { --amb-avatar-tam: 32px; --amb-avatar-fonte: var(--amb-texto-xs); }
+.amb-avatar--md { --amb-avatar-tam: 40px; --amb-avatar-fonte: var(--amb-texto-base); }
+.amb-avatar--lg { --amb-avatar-tam: 56px; --amb-avatar-fonte: var(--amb-texto-lg); }
+
+.amb-avatar--circulo { border-radius: var(--amb-raio-full); }
+/* Quadrado não é quadrado de verdade: canto vivo em foto de gente fica agressivo, e o
+   raio médio combina com o resto do sistema (Card, Button). */
+.amb-avatar--quadrado { border-radius: var(--amb-raio-md); }
+
+/* `cover` + `center`: foto retangular cortada pelo meio acerta o rosto quase sempre.
+   Sem isto a imagem deforma — e rosto deformado é a única coisa que todo mundo nota. */
+.amb-avatar__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.amb-avatar__iniciais { line-height: 1; }
+
+/* ── Tons das iniciais ──────────────────────────────────────────────────────
+ * Sorteados pelo nome (ver `tomDoNome`). Sempre o par `-subtle` + `-text`, que é o
+ * mesmo par já aprovado no teste de contraste dos tokens — nenhuma combinação nova
+ * foi inventada aqui.
+ */
+.amb-avatar--tom-marca   { background: var(--amb-color-brand-subtle);   color: var(--amb-color-brand-text); }
+.amb-avatar--tom-sucesso { background: var(--amb-color-success-subtle); color: var(--amb-color-success-text); }
+.amb-avatar--tom-aviso   { background: var(--amb-color-warning-subtle); color: var(--amb-color-warning-text); }
+.amb-avatar--tom-perigo  { background: var(--amb-color-danger-subtle);  color: var(--amb-color-danger-text); }
+.amb-avatar--tom-info    { background: var(--amb-color-info-subtle);    color: var(--amb-color-info-text); }
+
+/* ── Status ─────────────────────────────────────────────────────────────────
+ * Os três estados diferem em FORMA além da cor — cheio, cheio com furo, e vazado.
+ * Em preto e branco (ou para quem não distingue verde de âmbar) ainda dá para separar
+ * os três. O texto que o leitor de tela ouve vem do componente.
+ *
+ * `overflow: hidden` no avatar cortaria a bolinha na borda do círculo; ela é
+ * posicionada para dentro, no canto, e sobrevive ao corte.
+ */
+.amb-avatar__status {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 28%;
+  height: 28%;
+  min-width: 8px;
+  min-height: 8px;
+  border-radius: var(--amb-raio-full);
+  /* O anel da cor da superfície separa a bolinha da foto por baixo — sem ele, um
+     ponto verde sobre uma camisa verde some. */
+  box-shadow: 0 0 0 2px var(--amb-color-surface);
+}
+
+/* Online: círculo cheio. */
+.amb-avatar__status--online { background: var(--amb-color-success-solid); }
+
+/* Ausente: cheio com um furo no meio (lembra um relógio, e não depende da cor). */
+.amb-avatar__status--ausente {
+  background: var(--amb-color-warning-solid);
+  /* radial-gradient em vez de um ::after: o furo acompanha o tamanho do avatar sozinho. */
+  background-image: radial-gradient(
+    circle at center,
+    var(--amb-color-surface) 0 32%,
+    transparent 33%
+  );
+}
+
+/* Offline: vazado. Ausência de preenchimento = ausência da pessoa. */
+.amb-avatar__status--offline {
+  background: var(--amb-color-surface);
+  border: 2px solid var(--amb-color-text-muted);
+}
+
+/* ── GrupoAvatar ────────────────────────────────────────────────────────────*/
+
+.amb-grupo-avatar {
+  display: inline-flex;
+  align-items: center;
+  /* `isolate` cria contexto de empilhamento próprio: sem isto, o anel de um avatar
+     pode passar por cima de um dropdown aberto na página. */
+  isolation: isolate;
+}
+
+/* Sobreposição proporcional ao tamanho do avatar (30% dele), lida da variável que a
+   classe de tamanho define. É por isso que xs e lg empilham igual de bonito sem
+   ninguém recalcular margem à mão. */
+.amb-grupo-avatar > * + * {
+  margin-left: calc(var(--amb-avatar-tam) * -0.3);
+}
+
+/* O anel separa um avatar do outro na pilha. Cor da superfície: a pilha vive dentro de
+   um card, e no tema escuro o mesmo código dá um anel escuro sem nenhum ajuste. */
+.amb-grupo-avatar > * {
+  box-shadow: 0 0 0 2px var(--amb-color-surface);
+}
+
+.amb-grupo-avatar__mais {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  width: var(--amb-avatar-tam);
+  height: var(--amb-avatar-tam);
+  min-width: var(--amb-avatar-tam);
+
+  font-family: var(--amb-fonte-sans);
+  font-weight: var(--amb-peso-bold);
+  font-size: var(--amb-avatar-fonte);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+
+  /* Neutro de propósito: o "+3" é contagem, não pessoa. Se sorteasse um tom como as
+     iniciais, pareceria mais um participante da pilha. */
+  background: var(--amb-color-surfaceSunken);
+  color: var(--amb-color-text-secondary);
+  border-radius: var(--amb-raio-full);
+}

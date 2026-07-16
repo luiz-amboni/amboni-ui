@@ -1,0 +1,92 @@
+.amb-progresso {
+  font-family: var(--amb-fonte-sans);
+  width: 100%;
+}
+
+.amb-progresso__topo {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--amb-espaco-2);
+  margin-bottom: var(--amb-espaco-2);
+}
+
+.amb-progresso__rotulo {
+  font-size: var(--amb-texto-sm);
+  font-weight: var(--amb-peso-medium);
+  color: var(--amb-color-text-secondary);
+  line-height: var(--amb-leading-snug);
+}
+
+.amb-progresso__valor {
+  font-size: var(--amb-texto-sm);
+  font-weight: var(--amb-peso-bold);
+  color: var(--amb-color-text-primary);
+  /* tabular: sem isso o número balança a cada tique de 1% e o olho é puxado para o lado
+     errado da tela. */
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+/* ── Trilho ─────────────────────────────────────────────────────────────────
+ * `surfaceSunken` (e não uma borda) para o vazio parecer um sulco: o contraste com a
+ * barra é o que informa, então o trilho tem que ser visível mas discreto.
+ */
+.amb-progresso__trilho {
+  width: 100%;
+  background: var(--amb-color-surfaceSunken);
+  border-radius: var(--amb-raio-full);
+  /* Recorta a barra no cantos arredondados — inclusive a indeterminada quando ela passa
+     pelas pontas. */
+  overflow: hidden;
+}
+
+.amb-progresso__trilho--sm { height: 4px; }
+.amb-progresso__trilho--md { height: 8px; }
+.amb-progresso__trilho--lg { height: 12px; }
+
+.amb-progresso__barra {
+  height: 100%;
+  border-radius: var(--amb-raio-full);
+  /* Anima a largura para o avanço não "teleportar". `width` não é a propriedade mais
+     barata de animar, mas aqui é uma caixa só, sem filhos: o custo é irrelevante e o
+     ganho é a pessoa perceber que andou. */
+  transition: width var(--amb-duracao-normal) var(--amb-easing-standard);
+}
+
+/* Tons vêm do tema e já passaram no teste de contraste (@amboni/tokens). `-solid`
+   porque a barra é forma preenchida, não texto. */
+.amb-progresso__barra--brand   { background: var(--amb-color-brand-solid); }
+.amb-progresso__barra--success { background: var(--amb-color-success-solid); }
+.amb-progresso__barra--warning { background: var(--amb-color-warning-solid); }
+.amb-progresso__barra--danger  { background: var(--amb-color-danger-solid); }
+
+/* ── Indeterminada ──────────────────────────────────────────────────────────
+ * Um segmento curto atravessando o trilho. Curto de propósito: uma barra que enche até
+ * o fim e recomeça é lida como "chegou a 100% e reiniciou", que é exatamente o que não
+ * está acontecendo.
+ */
+.amb-progresso__barra--indeterminada {
+  width: 40%;
+  transition: none; /* a largura é fixa aqui; a transição só atrapalharia o keyframe */
+  animation: amb-progresso-vaivem 1.2s var(--amb-easing-standard) infinite;
+}
+
+@keyframes amb-progresso-vaivem {
+  /* Entra e sai do trilho: começa fora à esquerda, some fora à direita. */
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(250%); }
+}
+
+/* Reduced motion: o segmento para de atravessar, mas NÃO vira barra cheia — barra cheia
+   parada significa "terminou", o oposto da verdade. Ele fica um bloco parcial e apagado
+   no trilho: "tem algo em curso, o tamanho não quer dizer nada". Quem ouve não perde
+   nada, porque a informação real está na AUSÊNCIA de aria-valuenow (ver Progresso.tsx).
+   Para parte das pessoas, animação em loop causa enjoo — não é preferência estética. */
+@media (prefers-reduced-motion: reduce) {
+  .amb-progresso__barra--indeterminada {
+    animation: none;
+    transform: translateX(75%);
+    opacity: 0.5;
+  }
+}

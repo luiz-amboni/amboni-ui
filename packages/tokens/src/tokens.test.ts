@@ -81,6 +81,36 @@ describe.each(MARCAS_NOMES)('tema %s', marca => {
       expect(r.passa, `muted: ${r.razao}:1 (mín ${r.minimo})`).toBe(true)
     })
 
+    // ── Botão colorido: o par que ninguém testava ────────────────────────────
+    // O botão de perigo era `danger.solid` com `#fff` cravado no CSS: 3,76:1 nas quatro
+    // combinações. Passou meses porque o `#fff` furava os tokens — nenhuma variável,
+    // logo nenhum teste alcançava — e porque não existe token "texto sobre danger.solid"
+    // para alguém pensar em cobrir.
+    //
+    // A saída não foi inventar uma cor: foi INVERTER um par já aprovado. Contraste é
+    // simétrico, então `surface` sobre `<estado>.text` rende o mesmo que o testado
+    // `<estado>.text` sobre `surface`. Este teste trava o par na direção em que os
+    // componentes realmente o usam (Button danger, Selo sólido).
+    test.each(['danger', 'success', 'warning', 'info'] as const)(
+      'botão/selo sólido de %s é legível (superfície sobre a cor)',
+      estado => {
+        const r = relatorio(t.color.surface, t.color[estado].text)
+        expect(r.passa, `surface sobre ${estado}.text: ${r.razao}:1`).toBe(true)
+      },
+    )
+
+    test.each(['danger', 'success', 'warning', 'info'] as const)(
+      'o caminho ÓBVIO do sólido de %s seria armadilha — fica registrado',
+      estado => {
+        // Não é teste de vaidade: é o guarda-corpo. Se um dia alguém "simplificar" o
+        // Button para `background: <estado>.solid; color: white`, que este número aqui
+        // explique por que não. Nenhuma biblioteca séria entrega selo sólido assim, e
+        // quase todas entregam.
+        const ingenuo = contraste('#ffffff', t.color[estado].solid)
+        expect(ingenuo).toBeLessThan(WCAG.AA_TEXTO)
+      },
+    )
+
     test('a hierarquia de texto é visível: primary > secondary > muted', () => {
       // Três tokens que passam no contraste mas rendem quase o mesmo não são hierarquia,
       // são três cinzas iguais. Se colapsarem, isto reprova antes de virar design.

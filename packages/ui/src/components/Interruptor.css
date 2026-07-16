@@ -1,0 +1,150 @@
+/* ── A decisão que sustenta este arquivo ────────────────────────────────────
+ * Igual à <Caixa> e ao <Radio>: o <input type="checkbox"> NATIVO fica no DOM,
+ * invisível (`appearance: none`) e sobreposto ao trilho, que é um irmão pintado por
+ * `:checked + .amb-interruptor__trilho`.
+ *
+ * O interruptor é o componente onde a tentação de usar <div onClick> é maior — ele
+ * "não parece" um campo de formulário. E é justamente onde dói mais: interruptor
+ * costuma ligar coisa que vale na hora (o robô, o envio), então perder o teclado
+ * significa que parte das pessoas simplesmente não consegue desligar o sistema.
+ *
+ * `appearance: none` e não `opacity: 0` para o outline do .amb-focus-ring sobreviver
+ * — ver o comentário longo do Caixa.css.
+ */
+
+.amb-interruptor {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: var(--amb-espaco-3);
+  align-items: start;
+  font-family: var(--amb-fonte-sans);
+}
+
+.amb-interruptor__input,
+.amb-interruptor__trilho {
+  grid-area: 1 / 1;
+  box-sizing: border-box;
+}
+
+.amb-interruptor__input {
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  /* Por cima do trilho: o alvo do clique é o input inteiro, não só o botão. */
+  z-index: 1;
+  /* Invisível — existe para o anel de foco contornar o trilho, e não um retângulo. */
+  border-radius: var(--amb-raio-full);
+}
+
+.amb-interruptor__trilho {
+  display: flex;
+  align-items: center;
+  /* Desligado é CINZA NEUTRO, nunca vermelho: desligado não é erro. */
+  background: var(--amb-color-border-strong);
+  border-radius: var(--amb-raio-full);
+  pointer-events: none;
+  transition: background-color var(--amb-duracao-normal) var(--amb-easing-standard);
+}
+
+.amb-interruptor__polegar {
+  border-radius: var(--amb-raio-full);
+  /* Não existe token para "objeto que desliza sobre cor sólida". `surface` é o mais
+     próximo e é o certo pelo motivo certo: o botão é um objeto ERGUIDO acima do
+     trilho, e surface é a cor de tudo que fica erguido. Cravar #fff aqui pareceria
+     mais seguro e seria pior — ignoraria o tema, e no escuro um disco branco estoura
+     sobre o trilho. A sombra é que separa o botão do trilho nos dois temas. */
+  background: var(--amb-color-surface);
+  box-shadow: var(--amb-shadow-sm);
+  transition: transform var(--amb-duracao-normal) var(--amb-easing-standard);
+}
+
+.amb-interruptor__input:checked + .amb-interruptor__trilho {
+  background: var(--amb-color-brand-solid);
+}
+
+.amb-interruptor__input:hover:not(:disabled) + .amb-interruptor__trilho {
+  background: var(--amb-color-text-muted);
+}
+.amb-interruptor__input:checked:hover:not(:disabled) + .amb-interruptor__trilho {
+  background: var(--amb-color-brand-solidHover);
+}
+
+/* ── Tamanhos ───────────────────────────────────────────────────────────────
+ * O deslocamento do botão é sempre (largura − altura) do trilho: assim a folga de
+ * cada lado é a mesma, sem número mágico que quebra quando o tamanho muda.
+ */
+.amb-interruptor--md .amb-interruptor__input,
+.amb-interruptor--md .amb-interruptor__trilho {
+  width: 2.25rem;
+  height: 1.25rem;
+  /* alinha o trilho ao centro óptico da primeira linha do rótulo */
+  margin: 0;
+}
+.amb-interruptor--md .amb-interruptor__polegar {
+  width: 1rem;
+  height: 1rem;
+  margin-left: 0.125rem;
+}
+.amb-interruptor--md .amb-interruptor__input:checked + .amb-interruptor__trilho .amb-interruptor__polegar {
+  transform: translateX(1rem);
+}
+
+.amb-interruptor--sm .amb-interruptor__input,
+.amb-interruptor--sm .amb-interruptor__trilho {
+  width: 1.75rem;
+  height: 1rem;
+  margin: 2px 0 0;
+}
+.amb-interruptor--sm .amb-interruptor__polegar {
+  width: 0.75rem;
+  height: 0.75rem;
+  margin-left: 0.125rem;
+}
+.amb-interruptor--sm .amb-interruptor__input:checked + .amb-interruptor__trilho .amb-interruptor__polegar {
+  transform: translateX(0.75rem);
+}
+
+.amb-interruptor__rotulo {
+  grid-column: 2;
+  font-size: var(--amb-texto-base);
+  line-height: var(--amb-leading-snug);
+  color: var(--amb-color-text-primary);
+  /* Clicar no texto aciona (for/id) — o trilho sozinho é alvo pequeno demais. */
+  cursor: pointer;
+}
+
+.amb-interruptor__descricao {
+  grid-column: 2;
+  margin: var(--amb-espaco-1) 0 0;
+  font-size: var(--amb-texto-sm);
+  line-height: var(--amb-leading-snug);
+  color: var(--amb-color-text-secondary);
+}
+
+/* Ver Caixa.css: a .amb-disabled da base usa pointer-events:none e o cursor
+   "not-allowed" nunca chegaria a aparecer. */
+.amb-interruptor__input:disabled {
+  cursor: not-allowed;
+}
+.amb-interruptor__input:disabled + .amb-interruptor__trilho,
+.amb-interruptor__input:disabled ~ .amb-interruptor__rotulo,
+.amb-interruptor__input:disabled ~ .amb-interruptor__descricao {
+  opacity: 0.5;
+}
+.amb-interruptor__input:disabled ~ .amb-interruptor__rotulo {
+  cursor: not-allowed;
+}
+
+/* O deslize é o que dá a sensação de "ligou". Para quem pediu menos movimento ele
+   some e o botão salta direto para o outro lado: o estado é dito pela posição e pela
+   cor do trilho — a animação nunca foi a informação. */
+@media (prefers-reduced-motion: reduce) {
+  .amb-interruptor__trilho,
+  .amb-interruptor__polegar {
+    transition: none;
+  }
+}

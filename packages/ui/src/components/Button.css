@@ -22,17 +22,22 @@
 }
 
 /* ── Tamanhos ───────────────────────────────────────────────────────────────
- * Altura mínima de 32px mesmo no `sm`: alvos menores que isso são difíceis de
- * acertar no toque (a recomendação da WCAG é 24px de alvo; 32 dá folga real).
+ * As alturas vêm do token `--amb-altura-*` (36/44/52px), NÃO de px cravado aqui.
+ * O motivo é concreto: botão e campo vivem lado a lado num formulário, e se cada um
+ * decide a própria altura eles divergem por 2px na primeira vez que alguém mexer em um
+ * só. Ninguém abre chamado para isso — todo mundo só acha o formulário "meio torto".
+ * Um token, os dois alinhados para sempre.
+ *
+ * Mesmo o `sm` (36px) fica acima do alvo de 24px da WCAG, com folga real para o dedo.
  */
-.amb-btn--sm { height: 32px; padding: 0 var(--amb-espaco-3); font-size: var(--amb-texto-sm); }
-.amb-btn--md { height: 40px; padding: 0 var(--amb-espaco-4); font-size: var(--amb-texto-base); }
-.amb-btn--lg { height: 48px; padding: 0 var(--amb-espaco-6); font-size: var(--amb-texto-md); }
+.amb-btn--sm { height: var(--amb-altura-sm); padding: 0 var(--amb-espaco-3); font-size: var(--amb-texto-sm); }
+.amb-btn--md { height: var(--amb-altura-md); padding: 0 var(--amb-espaco-4); font-size: var(--amb-texto-base); }
+.amb-btn--lg { height: var(--amb-altura-lg); padding: 0 var(--amb-espaco-6); font-size: var(--amb-texto-md); }
 
 /* Botão só de ícone é quadrado — senão vira um retângulo torto. */
-.amb-btn--icon.amb-btn--sm { width: 32px; padding: 0; }
-.amb-btn--icon.amb-btn--md { width: 40px; padding: 0; }
-.amb-btn--icon.amb-btn--lg { width: 48px; padding: 0; }
+.amb-btn--icon.amb-btn--sm { width: var(--amb-altura-sm); padding: 0; }
+.amb-btn--icon.amb-btn--md { width: var(--amb-altura-md); padding: 0; }
+.amb-btn--icon.amb-btn--lg { width: var(--amb-altura-lg); padding: 0; }
 
 /* ── Variantes ──────────────────────────────────────────────────────────────
  * `brand-solid` e `text-onBrand` vêm do tema e JÁ passaram no teste de contraste
@@ -69,11 +74,24 @@
 }
 
 /* Destrutivo: apagar, cancelar de vez. Cor + PALAVRA — nunca só a cor: 1 em cada
-   12 homens não distingue vermelho de verde. O rótulo é que carrega o aviso. */
+   12 homens não distingue vermelho de verde. O rótulo é que carrega o aviso.
+ *
+ * O fundo é `danger-text`, não `danger-solid`, e isso não é engano de nome.
+ * Este botão já foi `danger-solid` com `#fff` cravado: dava 3,76:1 nas quatro
+ * combinações de marca × tema — reprovado. Escapou por dois motivos que valem mais que
+ * o bug: o `#fff` furava os tokens (nenhuma variável, nenhum teste alcança), e não
+ * existe token "texto sobre danger-solid" para um teste cobrir.
+ *
+ * O único par vermelho que a biblioteca TESTA é `danger-text` sobre `surface`. Como
+ * contraste é simétrico, inverter os dois preserva exatamente a razão aprovada —
+ * 6,47:1. Nenhuma combinação nova é inventada aqui, e o tema escuro inverte sozinho
+ * (fundo vermelho claro, texto escuro), igual ao botão da marca.
+ */
 .amb-btn--danger {
-  background: var(--amb-color-danger-solid);
-  color: #fff;
+  background: var(--amb-color-danger-text);
+  color: var(--amb-color-surface);
 }
+/* `filter` em vez de trocar a cor: escurece fundo E texto juntos, mantendo a razão. */
 .amb-btn--danger:hover:not(:disabled) { filter: brightness(0.92); }
 
 .amb-btn:disabled { opacity: 0.5; cursor: not-allowed; }

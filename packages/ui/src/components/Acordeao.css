@@ -1,0 +1,150 @@
+/* ── Acordeão ───────────────────────────────────────────────────────────────
+ * Cada seção é um cartão solto, com respiro entre elas — em vez de uma lista única com
+ * divisórias. Não é só gosto: a lista única pediria `overflow: hidden` no container
+ * para arredondar as pontas, e `overflow: hidden` CORTA o anel de foco (que fica 2px
+ * para fora, ver base.css) do primeiro e do último gatilho. O foco sumindo pela metade
+ * na primeira e na última seção é caro demais por uma borda arredondada.
+ */
+.amb-acordeao {
+  display: flex;
+  flex-direction: column;
+  gap: var(--amb-espaco-3);
+  font-family: var(--amb-fonte-sans);
+}
+
+.amb-acordeao__item {
+  background: var(--amb-color-surface);
+  border: 1px solid var(--amb-color-border-default);
+  border-radius: var(--amb-raio-lg);
+  box-shadow: var(--amb-shadow-sm);
+  transition: border-color var(--amb-duracao-fast) var(--amb-easing-standard);
+}
+
+/* Aberto ganha a borda da marca: com quatro cartões iguais na tela, é o que diz "você
+   está aqui" sem precisar procurar qual chevron está virado. */
+.amb-acordeao__item[data-amb-aberto] {
+  border-color: var(--amb-color-brand-solid);
+}
+
+/* O heading existe para o leitor de tela navegar (ver Acordeao.tsx). Visualmente ele
+   não é nada: sem margem, sem tamanho próprio, sem peso. Quem manda no visual é o
+   botão dentro dele. Sem este reset, um <h3> traria a margem e o corpo 1.17em do
+   navegador e o cartão nasceria torto. */
+.amb-acordeao__cabecalho {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+}
+
+.amb-acordeao__gatilho {
+  appearance: none;
+  width: 100%;
+  min-height: var(--amb-altura-lg); /* alvo generoso: a seção inteira é clicável */
+  display: flex;
+  align-items: center;
+  gap: var(--amb-espaco-3);
+  padding: var(--amb-espaco-4) var(--amb-espaco-5);
+
+  border: none;
+  /* Mesmo raio do cartão: o fundo do hover encostaria fora da curva e apareceria um
+     canto quadrado por baixo. */
+  border-radius: var(--amb-raio-lg);
+  background: transparent;
+
+  font-family: inherit;
+  font-size: var(--amb-texto-md);
+  font-weight: var(--amb-peso-semibold);
+  color: var(--amb-color-text-primary);
+  text-align: start;
+  cursor: pointer;
+  transition: background-color var(--amb-duracao-fast) var(--amb-easing-standard);
+}
+
+.amb-acordeao__gatilho:hover:not(:disabled) {
+  background: var(--amb-color-surfaceRaised);
+}
+
+.amb-acordeao__gatilho:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.amb-acordeao__icone {
+  flex-shrink: 0;
+  display: inline-flex;
+  color: var(--amb-color-text-muted);
+}
+
+.amb-acordeao__titulo {
+  flex: 1;
+  min-width: 0; /* deixa o título longo quebrar em vez de empurrar o chevron para fora */
+}
+
+.amb-acordeao__chevron {
+  flex-shrink: 0;
+  color: var(--amb-color-text-muted);
+  transition: transform var(--amb-duracao-fast) var(--amb-easing-standard);
+}
+
+/* O chevron aponta para baixo (fechado) e vira para cima (aberto). É redundante com o
+   `aria-expanded` de propósito: um diz para quem ouve, o outro para quem vê. */
+.amb-acordeao__item[data-amb-aberto] .amb-acordeao__chevron {
+  transform: rotate(180deg);
+}
+
+/* ── Painel ─────────────────────────────────────────────────────────────────
+ * A animação: a linha do grid vai de 0fr a 1fr. `height: auto` não anima porque o
+ * navegador não tem para qual número ir; `1fr` é "o que o conteúdo pedir" — e ISSO ele
+ * sabe interpolar. Sem medir nada no JS, sem altura cravada que envelhece quando o
+ * conteúdo muda.
+ */
+.amb-acordeao__painel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--amb-duracao-normal) var(--amb-easing-standard);
+}
+
+.amb-acordeao__painel--expandido {
+  grid-template-rows: 1fr;
+}
+
+/* ⚠️ A linha mais importante deste arquivo.
+ *
+ * `display: grid` na classe acima VENCE o `[hidden] { display: none }` do navegador —
+ * regra de autor ganha de regra de user-agent, mesmo com a mesma especificidade. Sem
+ * esta linha, o `hidden` que o JS coloca no painel fechado não faz absolutamente nada:
+ * o painel volta a ser alcançável pelo Tab e o foco some dentro de uma seção fechada.
+ *
+ * O bug seria invisível — o painel continua com altura 0, ninguém vê diferença. Só
+ * aparece para quem navega por teclado. É exatamente o que este componente promete não
+ * ter, e uma linha de CSS separa uma coisa da outra.
+ */
+.amb-acordeao__painel[hidden] {
+  display: none;
+}
+
+/* Corta o conteúdo enquanto a linha encolhe. `min-height: 0` é obrigatório: o padrão de
+   um filho de grid é `min-height: auto`, que se recusa a ficar menor que o conteúdo —
+   com ele, a linha nunca chega a 0fr e o painel "fecha" mostrando tudo. */
+.amb-acordeao__painel-interno {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.amb-acordeao__conteudo {
+  padding: 0 var(--amb-espaco-5) var(--amb-espaco-5);
+  font-size: var(--amb-texto-base);
+  line-height: var(--amb-leading-normal);
+  color: var(--amb-color-text-secondary);
+}
+
+/* Quem pediu menos movimento: abre e fecha na hora. Os tokens já zeram as durações —
+   e o JS lê a duração do próprio CSS (ver `duracaoDaTransicao`), então o painel também
+   passa a ser escondido na hora, sem esperar uma animação que não vai acontecer. */
+@media (prefers-reduced-motion: reduce) {
+  .amb-acordeao__painel,
+  .amb-acordeao__chevron {
+    transition: none;
+  }
+}

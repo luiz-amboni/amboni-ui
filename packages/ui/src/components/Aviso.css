@@ -1,0 +1,197 @@
+/* ── Avisos (toast) ─────────────────────────────────────────────────────────
+ * A região fica no canto inferior direito: longe da ação principal (que costuma ficar
+ * no topo e no centro) e perto do polegar no celular.
+ *
+ * Ela existe desde o primeiro render mesmo vazia — o motivo está em Aviso.tsx, e é o
+ * bug do anúncio mudo. O que isso cria aqui é um problema físico: uma caixa fixa,
+ * invisível, ocupando um canto da tela para sempre. Sem `pointer-events: none` ela
+ * engoliria os cliques desse canto — em toda tela, o tempo todo, sem nada aparecer
+ * para explicar o porquê. Os avisos devolvem `pointer-events: auto` para si mesmos.
+ */
+.amb-avisos {
+  position: fixed;
+  z-index: var(--amb-camada-toast);
+  inset-block-end: var(--amb-espaco-6);
+  inset-inline-end: var(--amb-espaco-6);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--amb-espaco-3);
+  width: min(24rem, calc(100vw - var(--amb-espaco-8)));
+
+  pointer-events: none;
+}
+
+/* No celular o aviso ocupa a largura toda: 24rem numa tela de 20rem sairia pela
+   lateral, e a mensagem some justamente onde a tela é menor. */
+@media (max-width: 30rem) {
+  .amb-avisos {
+    inset-inline: var(--amb-espaco-4);
+    inset-block-end: var(--amb-espaco-4);
+    width: auto;
+  }
+}
+
+.amb-aviso {
+  pointer-events: auto;
+
+  display: flex;
+  align-items: flex-start;
+  gap: var(--amb-espaco-3);
+  padding: var(--amb-espaco-4);
+
+  /* Fundo SÓLIDO, diferente do Alerta (que é tingido e translúcido no tema escuro).
+     O Alerta vive dentro do layout, com fundo conhecido atrás. O aviso flutua sobre
+     qualquer coisa — uma tabela, um gráfico, outro aviso. Fundo translúcido aqui vira
+     texto sobre listra. */
+  background: var(--amb-color-surface);
+  border: 1px solid var(--amb-color-border-default);
+  border-radius: var(--amb-raio-lg);
+  /* A sombra é o que diz "isto flutua, não faz parte da página". */
+  box-shadow: var(--amb-shadow-lg);
+
+  font-family: var(--amb-fonte-sans);
+  font-size: var(--amb-texto-base);
+  line-height: var(--amb-leading-snug);
+  color: var(--amb-color-text-primary);
+
+  animation: amb-aviso-entrada var(--amb-duracao-normal) var(--amb-easing-entrada);
+}
+
+/* ── Tons ───────────────────────────────────────────────────────────────────
+ * A cor aparece em dois lugares (faixa lateral e ícone) e em nenhum deles sozinha:
+ * cada tom tem uma FORMA de ícone diferente (ver ICONES em Aviso.tsx). A faixa é
+ * redundância proposital — quem enxerga cor identifica o tom de longe, sem ler.
+ */
+.amb-aviso {
+  border-inline-start: 3px solid var(--amb-color-border-strong);
+}
+.amb-aviso--sucesso {
+  border-inline-start-color: var(--amb-color-success-solid);
+}
+.amb-aviso--sucesso .amb-aviso__icone {
+  color: var(--amb-color-success-text);
+}
+.amb-aviso--erro {
+  border-inline-start-color: var(--amb-color-danger-solid);
+}
+.amb-aviso--erro .amb-aviso__icone {
+  color: var(--amb-color-danger-text);
+}
+.amb-aviso--aviso {
+  border-inline-start-color: var(--amb-color-warning-solid);
+}
+.amb-aviso--aviso .amb-aviso__icone {
+  color: var(--amb-color-warning-text);
+}
+.amb-aviso--info {
+  border-inline-start-color: var(--amb-color-info-solid);
+}
+.amb-aviso--info .amb-aviso__icone {
+  color: var(--amb-color-info-text);
+}
+
+.amb-aviso__icone {
+  flex-shrink: 0;
+  display: inline-flex;
+  /* Alinha com a primeira LINHA do título, não com o topo da caixa: num aviso de três
+     linhas o ícone centralizado fica boiando no meio do texto. */
+  margin-top: 1px;
+}
+
+.amb-aviso__corpo {
+  flex: 1;
+  min-width: 0; /* deixa o texto longo quebrar em vez de esticar a caixa */
+}
+
+.amb-aviso__titulo {
+  margin: 0;
+  font-weight: var(--amb-peso-bold);
+}
+
+/* Cor secundária, não a do tom: um parágrafo inteiro em vermelho cansa a leitura. */
+.amb-aviso__descricao {
+  margin-top: var(--amb-espaco-1);
+  font-size: var(--amb-texto-sm);
+  color: var(--amb-color-text-secondary);
+  line-height: var(--amb-leading-normal);
+}
+
+/* ── Ação ───────────────────────────────────────────────────────────────────
+ * Não usa <Button> de propósito: importar o Button aqui acoplaria os dois componentes
+ * para sempre por causa de um link. Visualmente é um link com peso — a cor da marca já
+ * passou no teste de contraste (@amboni/tokens).
+ */
+.amb-aviso__acao {
+  appearance: none;
+  margin-top: var(--amb-espaco-3);
+  padding: var(--amb-espaco-1) var(--amb-espaco-2);
+  margin-inline-start: calc(var(--amb-espaco-2) * -1); /* recolhe a folga: alinha com o título */
+  border: none;
+  border-radius: var(--amb-raio-sm);
+  background: transparent;
+  font-family: inherit;
+  font-size: var(--amb-texto-sm);
+  font-weight: var(--amb-peso-bold);
+  color: var(--amb-color-brand-text);
+  cursor: pointer;
+  transition: background-color var(--amb-duracao-fast) var(--amb-easing-standard);
+}
+.amb-aviso__acao:hover {
+  background: var(--amb-color-brand-subtle);
+}
+
+/* ── Fechar ─────────────────────────────────────────────────────────────────
+ * 28px de alvo. O X é discreto por educação visual, mas a área de clique não pode ser:
+ * alvo minúsculo é ruim no toque e pior para quem tem tremor. (Mesmo número do Alerta.)
+ */
+.amb-aviso__x {
+  appearance: none;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  margin: -4px -4px 0 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: var(--amb-raio-sm);
+  background: transparent;
+  color: var(--amb-color-text-muted);
+  cursor: pointer;
+  transition:
+    background-color var(--amb-duracao-fast) var(--amb-easing-standard),
+    color var(--amb-duracao-fast) var(--amb-easing-standard);
+}
+.amb-aviso__x:hover {
+  /* color-mix sobre o texto: um véu escuro no tema claro e claro no escuro, com o
+     mesmo código e sem cor fixa. */
+  background: color-mix(in srgb, var(--amb-color-text-primary) 10%, transparent);
+  color: var(--amb-color-text-primary);
+}
+
+/* ── Entrada ────────────────────────────────────────────────────────────────
+ * Sobe um pouco e aparece. O movimento tem função: mostra de ONDE o aviso veio, senão
+ * ele pisca do nada no canto do olho e a pessoa não sabe se leu ou imaginou.
+ *
+ * Não há animação de SAÍDA de propósito. Um aviso saindo continua no DOM enquanto a
+ * animação roda: ainda recebe Tab, ainda é lido pelo leitor de tela, e a fila fica
+ * presa esperando um lugar que "já vagou". O ganho estético não paga um elemento
+ * fantasma alcançável pelo teclado.
+ */
+@keyframes amb-aviso-entrada {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem) scale(0.98);
+  }
+}
+
+/* Quem pediu menos movimento no sistema: o aviso aparece, sem deslizar. A informação
+   é a mesma. Para parte das pessoas, movimento na tela causa enjoo — não é preferência
+   estética. (Os tokens já zeram as durações; aqui é explícito porque `animation` com
+   duração 0 ainda aplicaria o keyframe por um quadro.) */
+@media (prefers-reduced-motion: reduce) {
+  .amb-aviso {
+    animation: none;
+  }
+}

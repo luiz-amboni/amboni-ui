@@ -1,0 +1,194 @@
+/* ── Moldura ────────────────────────────────────────────────────────────────
+ * A borda, o fundo e o raio vivem no <div>, não no <input>. É o que permite ter
+ * prefixo ("R$") e ícone DENTRO da moldura: eles são irmãos do input, e a caixa
+ * que se vê é o pai dos três.
+ */
+.amb-campo {
+  display: flex;
+  align-items: center;
+  background: var(--amb-color-surface);
+  border: 1px solid var(--amb-color-border-default);
+  border-radius: var(--amb-raio-md);
+  color: var(--amb-color-text-primary);
+  font-family: var(--amb-fonte-sans);
+
+  /* O afixo tem fundo próprio e precisa ser cortado pelo raio do canto — sem isto
+     ele vaza um quadradinho para fora da moldura arredondada. */
+  overflow: hidden;
+
+  transition:
+    border-color var(--amb-duracao-fast) var(--amb-easing-standard),
+    background-color var(--amb-duracao-fast) var(--amb-easing-standard);
+}
+
+/* ── Tamanhos ───────────────────────────────────────────────────────────────
+ * Alturas dos tokens (36/44/52px). O `md` de 44px não é estética: é o alvo de toque
+ * confortável no celular — campo de 32px faz o dedo errar e o teclado abrir no lugar
+ * errado.
+ */
+.amb-campo--sm {
+  height: var(--amb-altura-sm);
+  font-size: var(--amb-texto-sm);
+}
+.amb-campo--md {
+  height: var(--amb-altura-md);
+  font-size: var(--amb-texto-base);
+}
+.amb-campo--lg {
+  height: var(--amb-altura-lg);
+  font-size: var(--amb-texto-md);
+}
+
+.amb-campo:hover:not(.amb-campo--desabilitado) {
+  border-color: var(--amb-color-border-strong);
+}
+
+/* ── Foco ───────────────────────────────────────────────────────────────────
+ * Aqui NÃO dá para usar `.amb-focus-ring` da base.css direto: ela casa com
+ * `:focus-visible`, e quem recebe foco é o <input> lá dentro — o anel sairia desenhado
+ * por dentro da moldura, colado no texto.
+ *
+ * `:focus-within` no lugar de `:focus-visible` é seguro justamente aqui: o navegador
+ * já trata campo de texto como sempre-focus-visible (clicar com o mouse num input
+ * mostra o anel, ao contrário de um botão). Ou seja, o resultado é o mesmo — e o
+ * desenho do anel continua saindo de um lugar só, com o token `border-focus`.
+ */
+.amb-campo:focus-within {
+  outline: 2px solid var(--amb-color-border-focus);
+  outline-offset: 2px;
+  border-color: var(--amb-color-border-focus);
+}
+
+/* Erro: a moldura muda de cor E o anel de foco vem vermelho junto — um anel azul em
+   volta de uma borda vermelha faz a pessoa achar que já corrigiu. Lembrando que a cor
+   nunca é o único aviso: quem conta o que houve é a mensagem do <CampoForm erro="...">. */
+.amb-campo--erro {
+  border-color: var(--amb-color-danger-solid);
+}
+.amb-campo--erro:focus-within {
+  outline-color: var(--amb-color-danger-solid);
+  border-color: var(--amb-color-danger-solid);
+}
+
+/* Desabilitado por fundo, não por `opacity: .5`. Meia opacidade joga o contraste do
+   texto para baixo de 2:1 e o campo vira um borrão ilegível — inclusive o valor que ele
+   ainda precisa mostrar. Fundo afundado + texto secundário dizem "bloqueado" e continuam
+   legíveis. */
+.amb-campo--desabilitado {
+  background: var(--amb-color-surfaceSunken);
+  border-color: var(--amb-color-border-default);
+  cursor: not-allowed;
+}
+.amb-campo--desabilitado .amb-campo__input {
+  color: var(--amb-color-text-muted);
+  cursor: not-allowed;
+  /* Safari/iOS lava o texto de input desabilitado por conta própria. */
+  -webkit-text-fill-color: var(--amb-color-text-muted);
+  opacity: 1;
+}
+
+/* ── O input ────────────────────────────────────────────────────────────────
+ * `outline: none` aqui é a exceção que a base.css proíbe — e ela é intencional: o anel
+ * de foco não sumiu, ele subiu para a moldura (`.amb-campo:focus-within`, acima). Sem
+ * este `none`, apareceriam DOIS anéis, um dentro do outro.
+ */
+.amb-campo__input {
+  appearance: none;
+  background: none;
+  border: 0;
+  outline: none;
+  margin: 0;
+
+  font: inherit;
+  color: inherit;
+  height: 100%;
+  padding: 0 var(--amb-espaco-3);
+
+  /* flex-item não encolhe abaixo do conteúdo por padrão: sem `min-width: 0` o campo
+     estoura a largura do card assim que alguém digita um texto longo. */
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* O Firefox aplica opacity 0.54 no placeholder por conta própria — o texto some sobre
+   fundo claro. `opacity: 1` devolve o controle ao token, que já tem contraste testado. */
+.amb-campo__input::placeholder {
+  color: var(--amb-color-text-muted);
+  opacity: 1;
+}
+
+/* O X de "limpar" nativo do Chrome/Edge em type="search" duplicaria o nosso botão. */
+.amb-campo__input::-webkit-search-cancel-button {
+  appearance: none;
+}
+
+/* ── Afixos ("R$", "kg") ────────────────────────────────────────────────────
+ * Fundo afundado + linha divisória: sem a divisória, "R$" parece texto já digitado
+ * dentro do campo e as pessoas apagam.
+ */
+.amb-campo__afixo {
+  display: inline-flex;
+  align-items: center;
+  align-self: stretch;
+  flex-shrink: 0;
+  padding: 0 var(--amb-espaco-3);
+  background: var(--amb-color-surfaceSunken);
+  color: var(--amb-color-text-secondary);
+  font-size: var(--amb-texto-sm);
+  font-weight: var(--amb-peso-medium);
+  white-space: nowrap;
+  /* Arrastar o mouse para selecionar o valor não deve pegar o "R$" junto. */
+  user-select: none;
+}
+.amb-campo__afixo--prefixo {
+  border-right: 1px solid var(--amb-color-border-default);
+}
+.amb-campo__afixo--sufixo {
+  border-left: 1px solid var(--amb-color-border-default);
+}
+
+/* ── Ícones ─────────────────────────────────────────────────────────────────*/
+.amb-campo__icone {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding-left: var(--amb-espaco-3);
+  color: var(--amb-color-text-muted);
+}
+.amb-campo__icone:last-child {
+  padding-left: 0;
+  padding-right: var(--amb-espaco-3);
+}
+/* Com ícone à esquerda o texto não precisa do respiro cheio — senão fica um vão. */
+.amb-campo__icone + .amb-campo__input {
+  padding-left: var(--amb-espaco-2);
+}
+
+/* ── Botão de limpar ────────────────────────────────────────────────────────
+ * 1.5rem = 24px de alvo, o mínimo do WCAG 2.2 (2.5.8). Parece pequeno, mas ele mora
+ * dentro de um campo de 44px de altura, então o alvo real do dedo é bem maior.
+ */
+.amb-campo__limpar {
+  appearance: none;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  flex-shrink: 0;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--amb-espaco-6);
+  block-size: var(--amb-espaco-6);
+  margin-right: var(--amb-espaco-2);
+
+  border-radius: var(--amb-raio-full);
+  color: var(--amb-color-text-muted);
+  transition:
+    background-color var(--amb-duracao-fast) var(--amb-easing-standard),
+    color var(--amb-duracao-fast) var(--amb-easing-standard);
+}
+.amb-campo__limpar:hover {
+  background: var(--amb-color-surfaceSunken);
+  color: var(--amb-color-text-primary);
+}

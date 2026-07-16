@@ -13,10 +13,21 @@
  * As cores vêm dos tokens (tok-* no docs.css) — os dois temas funcionam de graça.
  */
 
-export type Linguagem = 'jsx' | 'css'
+/**
+ * `js` e `ts` são apelidos de `jsx`: as regras já cobrem os três, e forçar quem escreve
+ * a documentação a lembrar que "um trecho de TypeScript se marca como jsx" é atrito sem
+ * ganho. `text` desliga o realce — para saída de terminal e mensagem de erro, onde
+ * colorir palavra solta ("const" no meio de uma frase) inventa sintaxe que não existe.
+ */
+export type Linguagem = 'jsx' | 'js' | 'ts' | 'css' | 'text'
+
+type Dialeto = 'jsx' | 'css'
+const APELIDO: Record<Exclude<Linguagem, 'text'>, Dialeto> = {
+  jsx: 'jsx', js: 'jsx', ts: 'jsx', css: 'css',
+}
 
 /** Grupos NOMEADOS: o nome do grupo que casou É a classe CSS. */
-const PADRAO: Record<Linguagem, RegExp> = {
+const PADRAO: Record<Dialeto, RegExp> = {
   // ordem = precedência: comentário e string primeiro, senão o conteúdo deles é lido
   // como código ("// <Button> não é uma tag, é um comentário")
   jsx: new RegExp(
@@ -47,7 +58,11 @@ const escapar = (s: string) =>
   s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 
 export function realcar(codigo: string, lang: Linguagem = 'jsx'): string {
-  const re = new RegExp(PADRAO[lang].source, 'g') // cópia: lastIndex é estado mutável
+  // `text` sai escapado e cru: é saída de terminal e mensagem de erro, onde marcar
+  // palavra solta ("const" no meio de uma frase) inventaria sintaxe que não existe.
+  if (lang === 'text') return escapar(codigo)
+
+  const re = new RegExp(PADRAO[APELIDO[lang]].source, 'g') // cópia: lastIndex é mutável
   let out = ''
   let fim = 0
 

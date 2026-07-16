@@ -1,0 +1,53 @@
+/* ── Giro ───────────────────────────────────────────────────────────────────
+ * `currentColor`: o giro herda a cor de onde for colocado. Assim ele funciona sobre
+ * o botão primário, dentro de um card e num alerta sem uma variante para cada caso —
+ * e nunca "some" no fundo, porque acompanha o texto vizinho.
+ */
+.amb-giro {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--amb-color-brand-solid);
+}
+
+.amb-giro--centralizado {
+  display: flex;
+  width: 100%;
+  padding: var(--amb-espaco-6) 0;
+}
+
+.amb-giro__anel {
+  display: block;
+  border-style: solid;
+  border-color: currentColor;
+  /* Um lado transparente é o que cria a "abertura" — sem ela o anel é um círculo
+     parado, e círculo parado girando não parece girar. */
+  border-right-color: transparent;
+  border-radius: var(--amb-raio-full);
+  animation: amb-giro-rotacao 0.6s linear infinite;
+}
+
+/* Espessura cresce junto com o tamanho: 3px num anel de 16px vira uma bolacha; 2px
+   num de 40px vira um fio que some. */
+.amb-giro__anel--sm { width: 16px; height: 16px; border-width: 2px; }
+.amb-giro__anel--md { width: 24px; height: 24px; border-width: 2.5px; }
+.amb-giro__anel--lg { width: 40px; height: 40px; border-width: 3px; }
+
+/* Nome próprio para o keyframe (e não o `amb-spin` do Button): @keyframes é global no
+   CSS, e dois arquivos declarando o mesmo nome fazem o último importado vencer. Se um
+   dia o giro do botão mudar de ritmo, não pode arrastar este junto. */
+@keyframes amb-giro-rotacao {
+  to { transform: rotate(360deg); }
+}
+
+/* Quem pediu menos movimento no sistema: o giro para. O estado continua chegando —
+   por role="status" + aria-label para quem ouve, e pelo anel fechado e apagado para
+   quem vê (o mesmo desenho de "ocupado" do Button, sem o movimento). Para parte das
+   pessoas, animação em loop causa enjoo — não é preferência estética. */
+@media (prefers-reduced-motion: reduce) {
+  .amb-giro__anel {
+    animation: none;
+    border-right-color: currentColor;
+    opacity: 0.4;
+  }
+}

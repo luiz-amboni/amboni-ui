@@ -163,13 +163,34 @@ export const espaco = {
   24: '6rem',   // 96px
 } as const
 
+/**
+ * Cantos. A escala foi aberta depois de MEDIR a referência (o CRM da Bevean): controles
+ * de 48px com 9,6px de raio. O 8px anterior, na mesma altura, lia como "quadrado com o
+ * canto lixado" — o bastante para a interface parecer datada sem ninguém saber apontar
+ * o motivo. É o upgrade de aparência mais barato que existe.
+ */
 export const raio = {
   none: '0',
-  sm: '0.25rem',  //  4px
-  md: '0.5rem',   //  8px — padrão de botão/campo
-  lg: '0.75rem',  // 12px — padrão de card
-  xl: '1rem',     // 16px
+  sm: '0.375rem', //  6px — selo, caixa de seleção
+  md: '0.625rem', // 10px — padrão de botão/campo
+  lg: '0.875rem', // 14px — padrão de card
+  xl: '1.25rem',  // 20px — modal, painel
   full: '9999px', // pílula/círculo
+} as const
+
+/**
+ * Altura dos controles. Mora aqui, e não solta no CSS de cada componente, porque botão,
+ * campo, select e combo PRECISAM bater no milímetro: um formulário com o botão 4px mais
+ * baixo que o campo ao lado é o tipo de desalinho que ninguém reporta e todo mundo
+ * sente. Um token, todos alinhados.
+ *
+ * Os 44px do padrão saem da referência (48px lá) puxados para o alvo de toque de 44px
+ * do iOS — o menor tamanho que ainda se acerta com o dedo em movimento.
+ */
+export const alturaControle = {
+  sm: '2.25rem', // 36px
+  md: '2.75rem', // 44px
+  lg: '3.25rem', // 52px
 } as const
 
 /** Sombras discretas: elevação se sugere, não se grita. */
@@ -181,10 +202,24 @@ export const sombra = {
   xl: '0 20px 40px -8px rgb(15 23 42 / 0.16)',
 } as const
 
+/**
+ * Manrope no lugar de Inter + Sora, depois de medir a referência (Bevean usa Manrope em
+ * tudo). Duas razões, e a segunda é a que pesa:
+ *
+ * 1. A Inter é a fonte-padrão de "app feito por dev" — correta, onipresente, sem
+ *    memória. A Manrope é geométrica e de terminações arredondadas: conversa com o raio
+ *    de 10px em vez de brigar com ele.
+ * 2. UMA família em vez de duas. Sora só aparecia em título e ainda assim custava um
+ *    arquivo inteiro de fonte. A Manrope vai de 400 a 800 e cobre corpo e título — menos
+ *    bytes, menos decisão, e a página deixa de ter dois "temperamentos" tipográficos.
+ *
+ * `display` continua existindo e apontando para a mesma família: quem já escreveu
+ * var(--amb-fonte-display) não quebra, e um dia dá para divergir de novo sem caçar uso.
+ */
 export const fonte = {
-  sans: "'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif",
-  /** Títulos. Cai no sans se não carregar — nunca use display em texto corrido. */
-  display: "'Sora', 'Inter', system-ui, sans-serif",
+  sans: "'Manrope', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
+  /** Títulos. Hoje é a mesma família do corpo, em peso maior. */
+  display: "'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif",
   /** Números em tabela e código. */
   mono: "'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace",
 } as const

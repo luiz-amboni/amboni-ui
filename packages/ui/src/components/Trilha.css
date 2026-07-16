@@ -1,0 +1,93 @@
+.amb-trilha {
+  font-family: var(--amb-fonte-sans);
+  font-size: var(--amb-texto-base);
+}
+
+/* flex-wrap: um caminho fundo em tela estreita quebra em duas linhas em vez de rolar a
+   página inteira na horizontal. Rolagem horizontal na página toda é o pior desfecho. */
+.amb-trilha__lista {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--amb-espaco-2);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.amb-trilha__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--amb-espaco-2);
+  /* min-width: 0 — sem isto o item flex se recusa a encolher e o .amb-truncate de dentro
+     nunca corta o texto (o famoso "ellipsis que não funciona"). */
+  min-width: 0;
+}
+
+.amb-trilha__link,
+.amb-trilha__texto,
+.amb-trilha__atual,
+.amb-trilha__colapso {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--amb-espaco-2);
+  min-width: 0;
+  /* reset de <button>/<a>: os dois precisam parecer a mesma coisa aqui. */
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  line-height: var(--amb-leading-snug);
+  text-decoration: none;
+  border-radius: var(--amb-raio-sm);
+}
+
+.amb-trilha__link,
+.amb-trilha__colapso {
+  color: var(--amb-color-text-muted);
+  cursor: pointer;
+}
+
+/* Sublinhado no hover/foco, não só cor: o caminho de volta precisa parecer clicável para
+   quem não distingue o cinza do azul. */
+.amb-trilha__link:hover,
+.amb-trilha__link:focus-visible,
+.amb-trilha__colapso:hover,
+.amb-trilha__colapso:focus-visible {
+  color: var(--amb-color-brand-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.amb-trilha__texto {
+  color: var(--amb-color-text-muted);
+}
+
+/* O lugar atual é o único em cor cheia: contraste é o que diz "você está aqui". */
+.amb-trilha__atual {
+  color: var(--amb-color-text-primary);
+  font-weight: var(--amb-peso-semibold);
+}
+
+.amb-trilha__icone {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.amb-trilha__sep {
+  color: var(--amb-color-border-strong);
+  /* flex-shrink: 0 — a barra some antes do texto quando o espaço aperta, e aí o caminho
+     vira uma sopa de palavras coladas. */
+  flex-shrink: 0;
+  user-select: none;
+}
+
+/* O "…" é botão e precisa de alvo de toque; 24px é o mínimo da WCAG para alvo. */
+.amb-trilha__colapso {
+  min-width: 24px;
+  min-height: 24px;
+  justify-content: center;
+  font-weight: var(--amb-peso-bold);
+  letter-spacing: 0.05em;
+}

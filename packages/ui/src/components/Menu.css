@@ -1,0 +1,138 @@
+/**
+ * Menu
+ * ═════════════════════════════════════════════════════════════════════════════
+ * O painel é uma SUPERFÍCIE que flutua (raio-lg + sombra), os itens são controles
+ * dentro dela (raio-sm). Mesma hierarquia do Card: quem flutua tem canto mais generoso.
+ */
+
+.amb-menu {
+  /* A âncora do painel: ele é absoluto em relação a este wrapper, não à página. */
+  position: relative;
+  display: inline-block;
+}
+
+.amb-menu__painel {
+  position: absolute;
+  top: calc(100% + var(--amb-espaco-1));
+  z-index: var(--amb-camada-dropdown);
+  /* Largura mínima para os itens não ficarem espremidos num gatilho pequeno (um botão de
+     3 pontinhos abriria um menu de 32px de largura). */
+  min-width: 11rem;
+  padding: var(--amb-espaco-1);
+  background: var(--amb-color-surface);
+  border: 1px solid var(--amb-color-border-default);
+  border-radius: var(--amb-raio-lg);
+  box-shadow: var(--amb-shadow-lg);
+  font-family: var(--amb-fonte-sans);
+  animation: amb-menu-entrada var(--amb-duracao-fast) var(--amb-easing-entrada);
+}
+
+/**
+ * De que lado o painel cresce.
+ * LIMITAÇÃO ASSUMIDA: não há detecção de colisão com a borda da janela — isso exigiria
+ * medir a tela a cada abertura (ou uma dependência tipo floating-ui, que esta biblioteca
+ * não tem). Perto da borda direita, use `alinhamento="fim"`; é o caso de menu no fim de
+ * linha de tabela, que é justamente onde isso importa.
+ */
+.amb-menu__painel--inicio { left: 0; }
+.amb-menu__painel--fim { right: 0; }
+
+.amb-menu__item {
+  /* reset: <button> traz estilo do navegador */
+  appearance: none;
+  border: 0;
+  background: transparent;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--amb-espaco-3);
+  /* Altura pelo token: alinha com o resto dos controles e dá alvo de toque de verdade. */
+  min-height: var(--amb-altura-sm);
+  padding: 0 var(--amb-espaco-3);
+  border-radius: var(--amb-raio-sm);
+  font-family: inherit;
+  font-size: var(--amb-texto-base);
+  font-weight: var(--amb-peso-medium);
+  color: var(--amb-color-text-primary);
+  text-align: left;
+  cursor: pointer;
+  transition: background-color var(--amb-duracao-instant) var(--amb-easing-standard);
+}
+
+/**
+ * :focus e não só :focus-visible. O foco aqui chega pela SETA, e o item precisa se destacar
+ * sempre que estiver focado — inclusive quando o menu foi aberto no mouse, caso em que o
+ * navegador não considera o foco "visível". Sem isto, navegar com a seta depois de abrir no
+ * clique não destacaria nada e a pessoa apertaria Enter às cegas.
+ * O anel do .amb-focus-ring continua por cima, para quem veio pelo teclado.
+ */
+.amb-menu__item:hover,
+.amb-menu__item:focus {
+  background: var(--amb-color-surfaceRaised);
+}
+
+/* O anel padrão fica para dentro: no offset normal ele seria cortado pela borda do painel. */
+.amb-menu__item.amb-focus-ring:focus-visible {
+  outline-offset: -2px;
+}
+
+/* Destrutivo: a cor REFORÇA o rótulo ("Excluir"), nunca substitui. Ver o comentário da
+   prop `perigo` — para quem não distingue vermelho, esta regra simplesmente não existe. */
+.amb-menu__item--perigo { color: var(--amb-color-danger-text); }
+.amb-menu__item--perigo:hover,
+.amb-menu__item--perigo:focus {
+  background: var(--amb-color-danger-subtle);
+}
+
+.amb-menu__item[aria-disabled='true'] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.amb-menu__item-icone {
+  display: inline-flex;
+  flex-shrink: 0;
+  color: var(--amb-color-text-muted);
+}
+/* No item de perigo o ícone acompanha o texto — um ícone cinza num item vermelho parece bug. */
+.amb-menu__item--perigo .amb-menu__item-icone { color: inherit; }
+
+.amb-menu__item-rotulo {
+  flex: 1;
+  min-width: 0;
+}
+
+/* margin-left:auto empurra o atalho para a direita mesmo sem o rótulo esticar. */
+.amb-menu__item-atalho {
+  margin-left: auto;
+  padding-left: var(--amb-espaco-4);
+  font-family: var(--amb-fonte-mono);
+  font-size: var(--amb-texto-xs);
+  color: var(--amb-color-text-muted);
+}
+
+.amb-menu__separador {
+  height: 1px;
+  margin: var(--amb-espaco-1) 0;
+  background: var(--amb-color-border-default);
+}
+
+.amb-menu__rotulo {
+  padding: var(--amb-espaco-2) var(--amb-espaco-3) var(--amb-espaco-1);
+  font-size: var(--amb-texto-xs);
+  font-weight: var(--amb-peso-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--amb-color-text-muted);
+}
+
+@keyframes amb-menu-entrada {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Quem pediu menos movimento no sistema: o menu aparece direto. Para parte das pessoas
+   animação causa enjoo — não é preferência estética. */
+@media (prefers-reduced-motion: reduce) {
+  .amb-menu__painel { animation: none; }
+}

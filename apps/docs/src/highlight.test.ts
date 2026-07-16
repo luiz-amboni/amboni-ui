@@ -56,6 +56,21 @@ describe('realce — jsx', () => {
   })
 })
 
+describe('realce — apelidos e texto cru', () => {
+  test('js e ts usam as regras do jsx — quem escreve doc não deveria ter que saber disso', () => {
+    expect(realcar('const x = 1', 'js')).toContain('<span class="tok-kw">const</span>')
+    expect(realcar('const x = 1', 'ts')).toContain('<span class="tok-kw">const</span>')
+  })
+
+  test('text NÃO marca nada — mas ainda escapa', () => {
+    // Saída de terminal e mensagem de erro: colorir um "const" solto no meio de uma
+    // frase inventaria sintaxe que não existe ali.
+    const r = realcar('Erro: const não encontrado em <App>', 'text')
+    expect(r).not.toContain('tok-')
+    expect(r).toContain('&lt;App&gt;') // escapar continua obrigatório: é conteúdo, não markup
+  })
+})
+
 describe('realce — css', () => {
   test('marca variável, função e cor', () => {
     const r = realcar('color: var(--amb-color-bg);', 'css')

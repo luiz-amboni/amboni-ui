@@ -1,0 +1,108 @@
+.amb-selo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--amb-espaco-1);
+  white-space: nowrap;
+  vertical-align: middle;
+
+  font-family: var(--amb-fonte-sans);
+  font-weight: var(--amb-peso-semibold);
+  line-height: 1;
+  /* Pílula: a forma diferencia o selo do texto ao redor mesmo sem cor nenhuma
+     (impressão em preto e branco, tema de alto contraste, print de tela). */
+  border-radius: var(--amb-raio-full);
+  border: 1px solid transparent;
+}
+
+/* ── Tamanhos ───────────────────────────────────────────────────────────────
+ * Sem altura fixa: o selo acompanha a linha da tabela onde mora. `sm` existe para
+ * caber em célula densa — abaixo disso o texto para de ser lido, e o texto é o
+ * componente inteiro.
+ */
+.amb-selo--sm { padding: 2px var(--amb-espaco-2); font-size: var(--amb-texto-xs); }
+.amb-selo--md { padding: var(--amb-espaco-1) var(--amb-espaco-3); font-size: var(--amb-texto-xs); }
+
+/* ── Tons ───────────────────────────────────────────────────────────────────
+ * Cada tom só declara TRÊS variáveis; as variantes abaixo montam a aparência a
+ * partir delas. Assim uma variante nova não precisa de 6 regras novas, e é
+ * impossível alguém combinar um fundo com um texto que não foi testado junto.
+ *
+ * `neutro` não tem token próprio na paleta (não é um estado, é a ausência de um).
+ * Mapeia para os cinzas de texto/superfície, que passam pelos mesmos testes de
+ * contraste em @amboni/tokens.
+ */
+.amb-selo--neutro {
+  --amb-selo-fundo: var(--amb-color-surfaceSunken);
+  --amb-selo-texto: var(--amb-color-text-secondary);
+  --amb-selo-borda: var(--amb-color-border-strong);
+}
+.amb-selo--marca {
+  --amb-selo-fundo: var(--amb-color-brand-subtle);
+  --amb-selo-texto: var(--amb-color-brand-text);
+  /* A marca é o único tom sem `-border` nos tokens (só os estados têm). Deriva do
+     próprio sólido em vez de inventar um hex — o color-mix segue o tema sozinho. */
+  --amb-selo-borda: color-mix(in srgb, var(--amb-color-brand-solid) 40%, transparent);
+}
+.amb-selo--sucesso {
+  --amb-selo-fundo: var(--amb-color-success-subtle);
+  --amb-selo-texto: var(--amb-color-success-text);
+  --amb-selo-borda: var(--amb-color-success-border);
+}
+.amb-selo--aviso {
+  --amb-selo-fundo: var(--amb-color-warning-subtle);
+  --amb-selo-texto: var(--amb-color-warning-text);
+  --amb-selo-borda: var(--amb-color-warning-border);
+}
+.amb-selo--perigo {
+  --amb-selo-fundo: var(--amb-color-danger-subtle);
+  --amb-selo-texto: var(--amb-color-danger-text);
+  --amb-selo-borda: var(--amb-color-danger-border);
+}
+.amb-selo--info {
+  --amb-selo-fundo: var(--amb-color-info-subtle);
+  --amb-selo-texto: var(--amb-color-info-text);
+  --amb-selo-borda: var(--amb-color-info-border);
+}
+
+/* ── Variantes ──────────────────────────────────────────────────────────────*/
+
+.amb-selo--suave {
+  background: var(--amb-selo-fundo);
+  color: var(--amb-selo-texto);
+}
+
+/* Sólido usa `-text` como FUNDO e a superfície como texto — não o `-solid`.
+ *
+ * Parece contraintuitivo, mas é o único jeito honesto: o par testado em
+ * @amboni/tokens é "`<estado>.text` sobre `surface` passa em AA". Contraste é
+ * simétrico, então inverter o par mantém exatamente a mesma razão aprovada. Já
+ * `-solid` (#10b981 do sucesso, #f59e0b do aviso) com texto branco rende ~2,5:1 e
+ * ~2,1:1 — reprova feio, e é assim que quase toda biblioteca entrega "badge sólido".
+ * Um selo vermelho ilegível é pior que nenhum selo.
+ */
+.amb-selo--solido {
+  background: var(--amb-selo-texto);
+  color: var(--amb-color-surface);
+  /* O sólido do neutro cai no cinza de texto, que inverte junto com o tema:
+     escuro sobre claro no tema claro, claro sobre escuro no escuro. */
+}
+
+/* Contorno: fundo transparente de propósito, para o selo herdar a superfície onde
+   for parar (linha de tabela zebrada, card tingido, dropdown). */
+.amb-selo--contorno {
+  background: transparent;
+  color: var(--amb-selo-texto);
+  border-color: var(--amb-selo-borda);
+}
+
+/* ── Pontinho ───────────────────────────────────────────────────────────────
+ * `currentColor` de propósito: o pontinho nunca pode divergir do texto que ele
+ * acompanha — inclusive no sólido, onde o texto vira a cor da superfície.
+ */
+.amb-selo__pontinho {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--amb-raio-full);
+  background: currentColor;
+  flex-shrink: 0;
+}

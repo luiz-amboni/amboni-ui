@@ -1,0 +1,234 @@
+/**
+ * Tabela — arejada, sem zebra, linhas separadas por uma borda discreta.
+ *
+ * Sem cor alternada nas linhas: com 10 colunas, a zebra vira listra e cansa. Uma borda
+ * de 1px já guia o olho na horizontal e deixa o dado ser o que aparece.
+ */
+
+.amb-tabela__rolagem {
+  overflow-x: auto;
+  /* Firefox/Safari respeitam; o Chrome já ignora `scrollbar-width` fora do padrão. */
+  scrollbar-width: thin;
+}
+
+.amb-tabela {
+  width: 100%;
+  font-family: var(--amb-fonte-sans);
+  font-size: var(--amb-texto-base);
+  color: var(--amb-color-text-primary);
+
+  /* `separate` + spacing 0, e NÃO `collapse`. Com border-collapse:collapse o navegador
+     funde as bordas em uma grade só e as bordas das células `position: sticky` somem
+     ao rolar (bug antigo do Chrome/Safari) — a coluna fixa fica sem o corte que a
+     separa do resto. Com `separate` cada célula pinta a própria borda e a coluna fixa
+     continua inteira. É por isso que a borda vive nas células, não na <tr>. */
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+/* ── Cabeçalho ──────────────────────────────────────────────────────────────
+ * Versalete pequeno: o cabeçalho é referência, não conteúdo. Ele precisa ser
+ * encontrável quando a pessoa procura, e invisível quando ela está lendo os dados.
+ */
+.amb-tabela__th {
+  font-size: var(--amb-texto-xs);
+  font-weight: var(--amb-peso-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--amb-color-text-secondary);
+  white-space: nowrap;
+  text-align: left;
+  padding: var(--amb-espaco-3) var(--amb-espaco-4);
+  border-bottom: 1px solid var(--amb-color-border-default);
+  background: var(--amb-color-surface);
+}
+
+/* Botão de ordenar: some dentro do cabeçalho até alguém precisar dele. */
+.amb-tabela__botao-ordem {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--amb-espaco-1);
+  border-radius: var(--amb-raio-sm);
+  transition: color var(--amb-duracao-fast) var(--amb-easing-standard);
+}
+.amb-tabela__botao-ordem:hover { color: var(--amb-color-brand-text); }
+
+/* A seta da coluna não ordenada fica fantasma: sinaliza "dá para clicar" sem competir
+   com a seta que está de fato dizendo por onde a tabela está ordenada. */
+.amb-tabela__seta {
+  opacity: 0;
+  flex-shrink: 0;
+  transition: opacity var(--amb-duracao-fast) var(--amb-easing-standard);
+}
+.amb-tabela__botao-ordem:hover .amb-tabela__seta,
+.amb-tabela__botao-ordem:focus-visible .amb-tabela__seta { opacity: 0.45; }
+.amb-tabela__seta--ativa { opacity: 1; color: var(--amb-color-brand-text); }
+.amb-tabela__botao-ordem:hover .amb-tabela__seta--ativa { opacity: 1; }
+
+/* ── Células ────────────────────────────────────────────────────────────────*/
+.amb-tabela__td,
+.amb-tabela__th-linha {
+  padding: var(--amb-espaco-4);
+  border-bottom: 1px solid var(--amb-color-border-default);
+  text-align: left;
+  font-weight: var(--amb-peso-normal);
+  vertical-align: middle;
+  line-height: var(--amb-leading-snug);
+  background: var(--amb-color-surface);
+}
+
+/* O <th scope="row"> é o nome da linha — o único dado que a pessoa procura primeiro.
+   Peso maior porque é a âncora da varredura vertical. */
+.amb-tabela__th-linha {
+  font-weight: var(--amb-peso-semibold);
+  color: var(--amb-color-text-primary);
+  white-space: nowrap;
+}
+
+/* A última linha não leva borda: o Card em volta já fecha o desenho, e duas linhas
+   coladas viram uma borda grossa torta. */
+.amb-tabela tbody tr:last-child .amb-tabela__td,
+.amb-tabela tbody tr:last-child .amb-tabela__th-linha { border-bottom: 0; }
+
+.amb-tabela__celula--esquerda { text-align: left; }
+.amb-tabela__celula--centro   { text-align: center; }
+.amb-tabela__celula--direita  { text-align: right; }
+
+/* ── Números ────────────────────────────────────────────────────────────────
+ * O detalhe que decide se uma coluna de dinheiro é comparável ou não.
+ *
+ * Em fonte proporcional (Manrope inclusive) o "1" é mais estreito que o "8". Então
+ * R$ 1.111,11 e R$ 8.888,88 têm larguras diferentes, as casas decimais não caem no
+ * mesmo lugar e a coluna vira um serrote — comparar valor vira adivinhação. Com
+ * tabular-nums todo dígito ocupa a mesma largura: unidade embaixo de unidade, e a
+ * ordem de grandeza aparece pelo comprimento do número, batendo o olho.
+ *
+ * À direita pelo mesmo motivo: alinhados pela direita, os dígitos das casas decimais
+ * ficam na mesma coluna vertical.
+ */
+.amb-tabela__celula--num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.amb-tabela__sem-valor { color: var(--amb-color-text-muted); }
+
+/* ── Linha ──────────────────────────────────────────────────────────────────*/
+.amb-tabela__linha--clicavel { cursor: pointer; }
+
+.amb-tabela__linha--clicavel:hover .amb-tabela__td,
+.amb-tabela__linha--clicavel:hover .amb-tabela__th-linha {
+  background: var(--amb-color-surfaceRaised);
+}
+
+/* Selecionada: fundo da marca, discreto. A caixa marcada é que carrega o significado —
+   a cor só reforça, porque nem todo mundo distingue o tingido do branco. */
+.amb-tabela__linha--marcada .amb-tabela__td,
+.amb-tabela__linha--marcada .amb-tabela__th-linha {
+  background: var(--amb-color-brand-subtle);
+}
+
+/* O anel de foco da linha por dentro: `outline-offset: 2px` numa <tr> desenha o anel
+   por cima da linha vizinha e some sob a coluna fixa. */
+.amb-tabela__linha--clicavel:focus-visible {
+  outline: 2px solid var(--amb-color-border-focus);
+  outline-offset: -2px;
+}
+
+/* ── Seleção ────────────────────────────────────────────────────────────────*/
+.amb-tabela__cel-sel {
+  /* Largura fixa e conhecida: é ela que a coluna fixa usa de deslocamento (ver abaixo). */
+  width: 44px;
+  padding: 0 0 0 var(--amb-espaco-4);
+  border-bottom: 1px solid var(--amb-color-border-default);
+  background: var(--amb-color-surface);
+  vertical-align: middle;
+}
+.amb-tabela tbody tr:last-child .amb-tabela__cel-sel { border-bottom: 0; }
+
+.amb-tabela__caixa {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  /* accent-color pinta a caixa nativa com a cor da marca — sem recriar o checkbox do
+     zero. Checkbox caseiro perde o `indeterminate`, o teclado e o modo de alto
+     contraste do sistema, e não vale a economia estética. */
+  accent-color: var(--amb-color-brand-solid);
+}
+
+/* ── Coluna fixa ────────────────────────────────────────────────────────────
+ * Rolando na horizontal, o nome fica preso — sem ele a pessoa lê "R$ 8.400" sem saber
+ * de quem é e volta a rolar para conferir.
+ */
+.amb-tabela--fixa .amb-tabela__celula--fixa,
+.amb-tabela--fixa .amb-tabela__cel-sel {
+  position: sticky;
+  z-index: 1; /* z local da tabela, não camada global: só precisa vencer as células vizinhas */
+}
+
+.amb-tabela--fixa .amb-tabela__cel-sel { left: 0; }
+
+/* 44px = a largura da coluna das caixas, definida logo acima. Sem seleção, a primeira
+   coluna gruda em 0 (regra seguinte). */
+.amb-tabela--fixa .amb-tabela__celula--fixa { left: 44px; }
+.amb-tabela--fixa thead .amb-tabela__th:first-child:not(.amb-tabela__cel-sel),
+.amb-tabela--fixa tbody .amb-tabela__celula--fixa:first-child { left: 0; }
+
+/* O corte que avisa "daqui para a direita, isso rola". Como cada célula fixa tem fundo
+   próprio (senão o resto passa por baixo e o texto embola), a borda vai em cada uma. */
+.amb-tabela--fixa .amb-tabela__celula--fixa,
+.amb-tabela--fixa .amb-tabela__cel-sel {
+  border-right: 1px solid var(--amb-color-border-default);
+}
+
+/* ── Esqueleto ──────────────────────────────────────────────────────────────*/
+.amb-tabela__esqueleto {
+  height: 14px;
+  border-radius: var(--amb-raio-sm);
+  background: linear-gradient(
+    90deg,
+    var(--amb-color-surfaceRaised) 25%,
+    var(--amb-color-surfaceSunken) 50%,
+    var(--amb-color-surfaceRaised) 75%
+  );
+  background-size: 200% 100%;
+  /* Keyframes próprio, mesmo com um igual no StatCard.css: um componente não pode
+     depender do CSS de outro para não quebrar quando importado sozinho. */
+  animation: amb-tabela-shimmer 1.4s ease-in-out infinite;
+}
+
+/* Larguras diferentes por coluna: bloco tudo do mesmo tamanho parece grade de layout
+   quebrada, não texto carregando. */
+.amb-tabela__td:nth-child(2n) .amb-tabela__esqueleto { width: 60%; }
+.amb-tabela__td:nth-child(2n + 1) .amb-tabela__esqueleto { width: 80%; }
+.amb-tabela__cel-sel .amb-tabela__esqueleto { width: 16px; height: 16px; }
+
+@keyframes amb-tabela-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Animação infinita é o pior caso para quem tem sensibilidade a movimento: não acaba
+   nunca e fica na periferia da visão o tempo todo. */
+@media (prefers-reduced-motion: reduce) {
+  .amb-tabela__esqueleto { animation: none; }
+  .amb-tabela__seta,
+  .amb-tabela__botao-ordem { transition: none; }
+}
+
+/* ── Vazio ──────────────────────────────────────────────────────────────────*/
+.amb-tabela__td-vazio {
+  padding: 0;
+  border-bottom: 0;
+  background: var(--amb-color-surface);
+}

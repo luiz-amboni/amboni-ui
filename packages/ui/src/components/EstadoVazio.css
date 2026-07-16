@@ -1,0 +1,70 @@
+/**
+ * EstadoVazio — centralizado, respirando, sem peso visual.
+ *
+ * De propósito não tem borda nem fundo próprio: ele quase sempre aparece DENTRO de um
+ * Card ou de uma Tabela, que já têm a sua superfície. Caixa dentro de caixa é ruído.
+ */
+.amb-vazio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  /* O texto não pode atravessar a tela toda: linha longa demais é cansativa de ler,
+     e aqui são 1-2 frases que precisam ser lidas de fato. */
+  max-width: 42ch;
+  margin-inline: auto;
+}
+
+.amb-vazio--sm { padding: var(--amb-espaco-8) var(--amb-espaco-4); gap: var(--amb-espaco-2); }
+.amb-vazio--md { padding: var(--amb-espaco-12) var(--amb-espaco-5); gap: var(--amb-espaco-2); }
+.amb-vazio--lg { padding: var(--amb-espaco-20) var(--amb-espaco-6); gap: var(--amb-espaco-3); }
+
+/* Ícone discreto: ele é enfeite. Um ícone gigante e colorido rouba a atenção do texto,
+   que é a única parte que resolve o problema da pessoa. */
+.amb-vazio__icone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--amb-raio-full);
+  background: var(--amb-color-surfaceSunken);
+  color: var(--amb-color-text-muted);
+  margin-bottom: var(--amb-espaco-1);
+}
+
+.amb-vazio--sm .amb-vazio__icone { width: 36px; height: 36px; }
+.amb-vazio--md .amb-vazio__icone { width: 48px; height: 48px; }
+.amb-vazio--lg .amb-vazio__icone { width: 60px; height: 60px; }
+
+.amb-vazio__titulo {
+  font-family: var(--amb-fonte-display);
+  font-weight: var(--amb-peso-bold);
+  line-height: var(--amb-leading-tight);
+  letter-spacing: -0.01em;
+  color: var(--amb-color-text-primary);
+  margin: 0;
+}
+
+.amb-vazio--sm .amb-vazio__titulo { font-size: var(--amb-texto-base); }
+.amb-vazio--md .amb-vazio__titulo { font-size: var(--amb-texto-md); }
+.amb-vazio--lg .amb-vazio__titulo { font-size: var(--amb-texto-xl); }
+
+/* Secundário, não `muted`: esta linha é a que EXPLICA. Se ficar cinza demais ninguém
+   lê, e aí o componente inteiro perde a razão de existir. */
+.amb-vazio__descricao {
+  font-size: var(--amb-texto-base);
+  line-height: var(--amb-leading-normal);
+  color: var(--amb-color-text-secondary);
+  margin: 0;
+  text-wrap: pretty; /* evita a última linha com uma palavra órfã; ignorado por quem não suporta */
+}
+
+.amb-vazio--lg .amb-vazio__descricao { font-size: var(--amb-texto-md); }
+
+.amb-vazio__acao {
+  margin-top: var(--amb-espaco-2);
+  display: flex;
+  gap: var(--amb-espaco-2);
+  flex-wrap: wrap;
+  justify-content: center;
+}

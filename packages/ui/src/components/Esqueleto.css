@@ -1,0 +1,67 @@
+/* ── Esqueleto ──────────────────────────────────────────────────────────────
+ * O brilho que atravessa vem do StatCard, mas com keyframe de nome próprio:
+ * @keyframes é global no CSS e dois arquivos com o mesmo nome fazem o último
+ * importado vencer — um ajuste no esqueleto do StatCard não pode arrastar este.
+ */
+.amb-esqueleto {
+  display: flex;
+  flex-direction: column;
+  gap: var(--amb-espaco-2);
+}
+
+/* Círculo e retângulo são uma forma só: flex-column aqui esticaria a caixa à toa. */
+.amb-esqueleto--circulo,
+.amb-esqueleto--retangulo {
+  display: block;
+}
+
+.amb-esqueleto__forma {
+  display: block;
+  /* Duas superfícies do tema, não um cinza fixo: no tema escuro o esqueleto precisa ser
+     mais CLARO que o fundo, e no claro mais ESCURO. Um cinza cravado acerta um dos dois
+     e vira um bloco gritando no outro. */
+  background: linear-gradient(
+    90deg,
+    var(--amb-color-surfaceRaised) 25%,
+    var(--amb-color-surfaceSunken) 50%,
+    var(--amb-color-surfaceRaised) 75%
+  );
+  background-size: 200% 100%;
+  animation: amb-esqueleto-brilho 1.4s ease-in-out infinite;
+}
+
+/* Altura em `em`: a linha acompanha o tamanho da fonte de onde o esqueleto está. Um
+   esqueleto de título e um de legenda não podem ter a mesma barra. */
+.amb-esqueleto--texto .amb-esqueleto__forma {
+  height: 0.85em;
+  min-height: 10px;
+  border-radius: var(--amb-raio-sm);
+}
+
+.amb-esqueleto--circulo .amb-esqueleto__forma {
+  border-radius: var(--amb-raio-full);
+  flex-shrink: 0;
+}
+
+.amb-esqueleto--retangulo .amb-esqueleto__forma {
+  /* 80px: um bloco com cara de imagem/gráfico. Trocável por `altura`. */
+  height: 80px;
+  border-radius: var(--amb-raio-md);
+}
+
+@keyframes amb-esqueleto-brilho {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Quem pediu menos movimento no sistema: o brilho para e fica a forma estática. O
+   esqueleto continua fazendo o trabalho dele — reservar o espaço e mostrar o formato do
+   que vem — e o anúncio de "carregando" continua no role="status" do container, que
+   nunca dependeu de animação. Para parte das pessoas, animação em loop causa enjoo:
+   não é preferência estética. */
+@media (prefers-reduced-motion: reduce) {
+  .amb-esqueleto__forma {
+    animation: none;
+    background: var(--amb-color-surfaceSunken);
+  }
+}

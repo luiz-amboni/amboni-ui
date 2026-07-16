@@ -1,0 +1,69 @@
+/* O invólucro existe para ter uma CAIXA que o getBoundingClientRect consiga medir e
+ * para ouvir hover/foco do gatilho. `display: contents` seria mais discreto no layout,
+ * mas elemento com `contents` não gera caixa: a medida voltaria zerada e o balão
+ * apareceria sempre no canto da tela.
+ *
+ * `inline-flex` para o invólucro colar no tamanho do gatilho, sem sobrar área que
+ * acenderia a Dica com o mouse longe do alvo. */
+.amb-dica {
+  display: inline-flex;
+  /* Sem `position: relative` de propósito: o balão é `fixed` e se posiciona pela
+     janela. `relative` aqui não ajudaria e ainda criaria um contêiner de empilhamento
+     a mais para depurar. */
+}
+
+.amb-dica__balao {
+  position: fixed;
+  z-index: var(--amb-camada-tooltip);
+
+  /* O ponteiro atravessa: o balão nasce a 8px do gatilho e, sem isto, encostar nele
+     dispararia o mouseleave do gatilho — a Dica piscaria sem parar. É também o que a
+     torna não-hoverable; ver a limitação 3 em Dica.tsx. */
+  pointer-events: none;
+
+  max-width: 20rem;
+  /* `pre-line`: respeita a quebra que o texto pedir, sem virar uma linha infinita. */
+  white-space: pre-line;
+
+  padding: var(--amb-espaco-2) var(--amb-espaco-3);
+  border-radius: var(--amb-raio-md);
+
+  font-family: var(--amb-fonte-sans);
+  font-size: var(--amb-texto-sm);
+  font-weight: var(--amb-peso-medium);
+  line-height: var(--amb-leading-snug);
+
+  /* Invertido de propósito — fundo escuro no tema claro e vice-versa. O balão flutua
+     por cima de qualquer superfície (card, tabela, modal); se usasse `surface`, ele
+     sumiria dentro do que está atrás. `text-primary` × `bg` é o par de maior contraste
+     que os tokens já garantem em cada tema, com os papéis trocados. */
+  background: var(--amb-color-text-primary);
+  color: var(--amb-color-bg);
+  box-shadow: var(--amb-shadow-lg);
+}
+
+/* ── Entrada ────────────────────────────────────────────────────────────────
+ * Um deslize de 4px vindo do lado do gatilho. É o que liga o balão ao que o abriu, já
+ * que não desenhamos setinha (num balão empurrado para o canto, a seta apontaria para
+ * o nada — pior do que não ter).
+ */
+@keyframes amb-dica-de-baixo { from { opacity: 0; transform: translateY(4px); } }
+@keyframes amb-dica-de-cima { from { opacity: 0; transform: translateY(-4px); } }
+@keyframes amb-dica-da-direita { from { opacity: 0; transform: translateX(4px); } }
+@keyframes amb-dica-da-esquerda { from { opacity: 0; transform: translateX(-4px); } }
+
+.amb-dica__balao--cima { animation: amb-dica-de-baixo var(--amb-duracao-fast) var(--amb-easing-entrada); }
+.amb-dica__balao--baixo { animation: amb-dica-de-cima var(--amb-duracao-fast) var(--amb-easing-entrada); }
+.amb-dica__balao--esq { animation: amb-dica-da-direita var(--amb-duracao-fast) var(--amb-easing-entrada); }
+.amb-dica__balao--dir { animation: amb-dica-da-esquerda var(--amb-duracao-fast) var(--amb-easing-entrada); }
+
+/* Menos movimento: a Dica aparece. Ela já é um elemento pequeno surgindo perto do
+   ponteiro — o deslize não carrega significado nenhum que valha o enjoo. */
+@media (prefers-reduced-motion: reduce) {
+  .amb-dica__balao--cima,
+  .amb-dica__balao--baixo,
+  .amb-dica__balao--esq,
+  .amb-dica__balao--dir {
+    animation: none;
+  }
+}

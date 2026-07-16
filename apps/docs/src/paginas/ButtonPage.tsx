@@ -48,8 +48,16 @@ export default function ButtonPage() {
           <Button size="lg">Grande</Button>
         </Demo>
         <P>
-          Mesmo o <code>sm</code> tem 32px de altura. Alvos menores que isso são difíceis de
-          acertar no toque — a recomendação da WCAG é 24px, e 32 dá folga real no celular.
+          As alturas — 36, 44 e 52px — vêm do token <code>--amb-altura-*</code>, não de um
+          número escrito no CSS do botão. <strong>Campo e botão dividem o mesmo token</strong>,
+          e é por isso que eles batem no milímetro num formulário. Quando cada componente
+          decide a própria altura, eles divergem por 2px na primeira vez que alguém mexe em um
+          só; ninguém abre chamado para isso, todo mundo só acha o formulário meio torto.
+        </P>
+        <P>
+          Os 44px do padrão saem do alvo de toque do iOS — o menor tamanho que ainda se acerta
+          com o dedo em movimento. Mesmo o <code>sm</code> fica bem acima dos 24px que a WCAG
+          pede.
         </P>
       </Secao>
 
@@ -139,7 +147,7 @@ export default function ButtonPage() {
         <TabelaProps
           props={[
             { nome: 'variant', tipo: "'primary' | 'secondary' | 'ghost' | 'danger'", padrao: "'secondary'", descricao: 'O peso visual da ação. A primária se pede; não sai por acidente.' },
-            { nome: 'size', tipo: "'sm' | 'md' | 'lg'", padrao: "'md'", descricao: 'Altura: 32, 40 ou 48px.' },
+            { nome: 'size', tipo: "'sm' | 'md' | 'lg'", padrao: "'md'", descricao: <>Altura: 36, 44 ou 52px, vinda de <code>--amb-altura-*</code>.</> },
             { nome: 'loading', tipo: 'boolean', padrao: 'false', descricao: 'Mostra o giro, bloqueia o clique e mantém a largura.' },
             { nome: 'iconLeft', tipo: 'ReactNode', descricao: 'Ícone antes do rótulo. Sem filho de texto, o botão fica quadrado.' },
             { nome: 'iconRight', tipo: 'ReactNode', descricao: 'Ícone depois do rótulo.' },

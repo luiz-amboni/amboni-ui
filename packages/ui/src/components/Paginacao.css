@@ -1,0 +1,83 @@
+/* A linha inteira: resumo à esquerda, botões no meio, seletor à direita. Em tela estreita
+   quebra e centraliza — os botões nunca somem para fora da vista. */
+.amb-pag {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--amb-espaco-4);
+  font-family: var(--amb-fonte-sans);
+  font-size: var(--amb-texto-base);
+}
+
+.amb-pag__resumo {
+  color: var(--amb-color-text-muted);
+  white-space: nowrap;
+}
+
+.amb-pag__lista {
+  display: flex;
+  align-items: center;
+  gap: var(--amb-espaco-1);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* min-width em vez de width: o botão de "1" e o de "100" ficam com a mesma cara até o número
+   não caber mais. Sem isto a régua encolhe e estica conforme a página, e os botões trocam de
+   lugar debaixo do dedo de quem está clicando em sequência. */
+.amb-pag__num {
+  min-width: 40px;
+  padding-left: var(--amb-espaco-2);
+  padding-right: var(--amb-espaco-2);
+}
+
+.amb-pag__elipse {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  color: var(--amb-color-text-muted);
+  user-select: none;
+}
+
+.amb-pag__seletor {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--amb-espaco-2);
+  color: var(--amb-color-text-muted);
+  white-space: nowrap;
+}
+
+.amb-pag__seletor-rotulo {
+  font-size: var(--amb-texto-sm);
+}
+
+/* A seta nativa do <select> fica: desenhar uma própria exige `appearance: none` e um ícone de
+   fundo, e aí o controle perde o comportamento nativo no celular (a roda do iOS) — que é
+   melhor do que qualquer coisa que a gente escreveria aqui. */
+.amb-pag__select {
+  font-family: inherit;
+  font-size: var(--amb-texto-base);
+  font-weight: var(--amb-peso-medium);
+  color: var(--amb-color-text-primary);
+  background: var(--amb-color-surface);
+  border: 1px solid var(--amb-color-border-strong);
+  border-radius: var(--amb-raio-md);
+  padding: var(--amb-espaco-1) var(--amb-espaco-2);
+  cursor: pointer;
+}
+
+/* A altura vem do token, a mesma do <Button> ao lado. Havia um `height: 32px` fixo aqui,
+   que ignorava o `size` do componente: o select ficava 4px mais baixo que os botões no
+   `sm` e 12px no `md`, encostado neles. É o desalinho silencioso que o token existe para
+   matar — e ele nasceu justamente onde o CSS cravou o número em vez de ler o token. */
+.amb-pag__select--sm { height: var(--amb-altura-sm); }
+.amb-pag__select--md { height: var(--amb-altura-md); }
+
+.amb-pag__select:hover {
+  border-color: var(--amb-color-brand-solid);
+}

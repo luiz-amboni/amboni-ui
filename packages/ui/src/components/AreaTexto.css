@@ -1,0 +1,94 @@
+/* O contador mora fora da moldura, embaixo à direita — por isso este wrapper. Dentro da
+   moldura ele brigaria por espaço com o texto na última linha. */
+.amb-area {
+  display: flex;
+  flex-direction: column;
+  gap: var(--amb-espaco-1);
+}
+
+/* Diferente do Campo, aqui a moldura é do próprio <textarea>: sem adorno interno, não há
+   motivo para uma caixa em volta — e assim o anel de foco vem do `.amb-focus-ring` da
+   base.css, sem exceção nenhuma. */
+.amb-area__campo {
+  appearance: none;
+  background: var(--amb-color-surface);
+  border: 1px solid var(--amb-color-border-default);
+  border-radius: var(--amb-raio-md);
+  color: var(--amb-color-text-primary);
+
+  font-family: var(--amb-fonte-sans);
+  font-size: var(--amb-texto-base);
+  line-height: var(--amb-leading-normal);
+  padding: var(--amb-espaco-3);
+  width: 100%;
+
+  /* Duas linhas de texto no mínimo. É o que diferencia à primeira vista de um campo de
+     uma linha — a altura é que diz "escreva à vontade". */
+  min-height: calc(var(--amb-altura-md) * 2);
+
+  /* Só na vertical. O puxador diagonal deixa arrastar a largura para fora do card e
+     estourar o layout. */
+  resize: vertical;
+
+  transition:
+    border-color var(--amb-duracao-fast) var(--amb-easing-standard),
+    background-color var(--amb-duracao-fast) var(--amb-easing-standard);
+}
+
+.amb-area__campo:hover:not(:disabled) {
+  border-color: var(--amb-color-border-strong);
+}
+.amb-area__campo:focus-visible {
+  border-color: var(--amb-color-border-focus);
+}
+
+.amb-area__campo::placeholder {
+  /* Firefox aplica opacity 0.54 por conta própria e apaga o placeholder. */
+  color: var(--amb-color-text-muted);
+  opacity: 1;
+}
+
+/* Erro: cor da moldura + anel vermelho. Quem conta o que houve continua sendo a mensagem
+   do CampoForm — cor sozinha não é aviso. */
+.amb-area__campo--erro {
+  border-color: var(--amb-color-danger-solid);
+}
+.amb-area__campo--erro:focus-visible {
+  outline-color: var(--amb-color-danger-solid);
+  border-color: var(--amb-color-danger-solid);
+}
+
+/* autoResize: quem manda na altura é o JS. `resize: none` porque o puxador manual e o
+   ajuste automático brigam — a pessoa arrasta, digita uma letra e a altura volta sozinha.
+   `overflow-y: hidden` porque a barra de rolagem some por definição (a caixa sempre cabe
+   o texto), e deixá-la ligada faz ela piscar no meio da digitação.
+   A altura NÃO tem transição de propósito: animar cada linha nova deixa o texto tremendo
+   enquanto se escreve. */
+.amb-area__campo--auto {
+  resize: none;
+  overflow-y: hidden;
+}
+
+/* Desabilitado por fundo, não por opacity — meia opacidade derruba o contraste do texto
+   que a pessoa ainda precisa ler. Mesma decisão do Campo. */
+.amb-area__campo:disabled {
+  background: var(--amb-color-surfaceSunken);
+  color: var(--amb-color-text-muted);
+  -webkit-text-fill-color: var(--amb-color-text-muted);
+  opacity: 1;
+  cursor: not-allowed;
+  resize: none;
+}
+
+.amb-area__contador {
+  align-self: flex-end;
+  font-size: var(--amb-texto-xs);
+  color: var(--amb-color-text-muted);
+}
+
+/* Perto do limite. A cor é reforço, não o aviso: o número "480/500" já diz tudo sozinho
+   para quem não distingue a mudança de tom. */
+.amb-area__contador--perto {
+  color: var(--amb-color-warning-text);
+  font-weight: var(--amb-peso-semibold);
+}

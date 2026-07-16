@@ -1,0 +1,159 @@
+.amb-etiqueta {
+  /* reset: quando a etiqueta inteira vira <button>, o navegador traz estilo próprio */
+  appearance: none;
+  font-family: var(--amb-fonte-sans);
+  font-weight: var(--amb-peso-medium);
+  line-height: 1;
+  text-align: left;
+
+  display: inline-flex;
+  align-items: center;
+  gap: var(--amb-espaco-2);
+  max-width: 100%;
+  vertical-align: middle;
+
+  border-radius: var(--amb-raio-full);
+  border: 1px solid var(--amb-etiqueta-borda);
+  background: var(--amb-etiqueta-fundo);
+  color: var(--amb-etiqueta-texto);
+
+  transition:
+    background-color var(--amb-duracao-fast) var(--amb-easing-standard),
+    border-color var(--amb-duracao-fast) var(--amb-easing-standard);
+}
+
+/* ── Tons ───────────────────────────────────────────────────────────────────
+ * Mesma mecânica do Selo: cada tom declara só as três variáveis e as regras acima
+ * montam a aparência. Combinações fora das testadas em @amboni/tokens não existem.
+ *
+ * Etiqueta tem borda SEMPRE (o Selo suave não tem): ela é um alvo de interação, e
+ * borda é a pista de que ali tem algo manipulável — pista que sobrevive ao tema de
+ * alto contraste do sistema, onde os fundos tingidos são descartados pelo navegador.
+ */
+.amb-etiqueta--neutro {
+  --amb-etiqueta-fundo: var(--amb-color-surfaceSunken);
+  --amb-etiqueta-texto: var(--amb-color-text-secondary);
+  --amb-etiqueta-borda: var(--amb-color-border-default);
+  --amb-etiqueta-hover: var(--amb-color-surfaceRaised);
+}
+.amb-etiqueta--marca {
+  --amb-etiqueta-fundo: var(--amb-color-brand-subtle);
+  --amb-etiqueta-texto: var(--amb-color-brand-text);
+  /* A marca é o único tom sem `-border` nos tokens. Deriva do sólido em vez de
+     inventar um hex — o color-mix acompanha o tema sozinho. */
+  --amb-etiqueta-borda: color-mix(in srgb, var(--amb-color-brand-solid) 35%, transparent);
+  --amb-etiqueta-hover: color-mix(in srgb, var(--amb-color-brand-solid) 18%, transparent);
+}
+.amb-etiqueta--sucesso {
+  --amb-etiqueta-fundo: var(--amb-color-success-subtle);
+  --amb-etiqueta-texto: var(--amb-color-success-text);
+  --amb-etiqueta-borda: var(--amb-color-success-border);
+  --amb-etiqueta-hover: color-mix(in srgb, var(--amb-color-success-solid) 18%, transparent);
+}
+.amb-etiqueta--aviso {
+  --amb-etiqueta-fundo: var(--amb-color-warning-subtle);
+  --amb-etiqueta-texto: var(--amb-color-warning-text);
+  --amb-etiqueta-borda: var(--amb-color-warning-border);
+  --amb-etiqueta-hover: color-mix(in srgb, var(--amb-color-warning-solid) 18%, transparent);
+}
+.amb-etiqueta--perigo {
+  --amb-etiqueta-fundo: var(--amb-color-danger-subtle);
+  --amb-etiqueta-texto: var(--amb-color-danger-text);
+  --amb-etiqueta-borda: var(--amb-color-danger-border);
+  --amb-etiqueta-hover: color-mix(in srgb, var(--amb-color-danger-solid) 18%, transparent);
+}
+.amb-etiqueta--info {
+  --amb-etiqueta-fundo: var(--amb-color-info-subtle);
+  --amb-etiqueta-texto: var(--amb-color-info-text);
+  --amb-etiqueta-borda: var(--amb-color-info-border);
+  --amb-etiqueta-hover: color-mix(in srgb, var(--amb-color-info-solid) 18%, transparent);
+}
+
+/* ── Tamanhos ───────────────────────────────────────────────────────────────
+ * Alturas de 24/28px: a etiqueta acompanha um campo de busca, não uma barra de
+ * ferramentas. O alvo real de toque quem garante é o X, que tem área própria.
+ */
+.amb-etiqueta--sm { height: 24px; padding: 0 var(--amb-espaco-2); font-size: var(--amb-texto-xs); }
+.amb-etiqueta--md { height: 28px; padding: 0 var(--amb-espaco-3); font-size: var(--amb-texto-sm); }
+
+/* Com X, a folga da direita fica por conta do próprio botão — senão sobra um vão
+   morto entre o X e a borda que parece desalinhamento. */
+.amb-etiqueta--removivel.amb-etiqueta--sm { padding-right: 2px; }
+.amb-etiqueta--removivel.amb-etiqueta--md { padding-right: var(--amb-espaco-1); }
+
+.amb-etiqueta--clicavel { cursor: pointer; }
+.amb-etiqueta--clicavel:hover { background: var(--amb-etiqueta-hover); }
+
+.amb-etiqueta__icone {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+/* Nome comprido ("Cliente sem telefone cadastrado") vira reticência em vez de
+   esticar a etiqueta e quebrar a barra de filtros. */
+.amb-etiqueta__texto {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Corpo clicável (modo dupla ação) ───────────────────────────────────────
+ * Botão sem cara de botão: a pílula ao redor já é o desenho. Ele existe só para dar
+ * ao corpo da etiqueta um alvo de teclado próprio, separado do X.
+ */
+.amb-etiqueta__corpo {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--amb-espaco-2);
+  min-width: 0;
+  /* Estica na altura toda da pílula: o alvo de clique acompanha o que se vê. */
+  align-self: stretch;
+}
+.amb-etiqueta--dupla:hover { background: var(--amb-etiqueta-hover); }
+
+/* O anel de foco do corpo segue a pílula, não o retângulo do texto — senão aparece
+   um anel quadrado dentro de uma etiqueta arredondada. */
+.amb-etiqueta__corpo:focus-visible { border-radius: var(--amb-raio-full); }
+
+/* ── X de remover ───────────────────────────────────────────────────────────
+ * 20px de alvo: menor que isso vira jogo de mira, e este é o botão que APAGA algo.
+ * Fica visível sempre — X que só aparece no hover não existe para quem usa toque
+ * nem para quem navega por teclado.
+ */
+.amb-etiqueta__x {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  flex-shrink: 0;
+
+  width: 20px;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--amb-raio-full);
+  cursor: pointer;
+  /* `currentColor` com opacidade: o X é secundário ao texto, mas mantém o tom da
+     etiqueta e continua legível em qualquer tema. */
+  color: currentColor;
+  opacity: 0.6;
+  transition:
+    opacity var(--amb-duracao-fast) var(--amb-easing-standard),
+    background-color var(--amb-duracao-fast) var(--amb-easing-standard);
+}
+
+.amb-etiqueta__x:hover,
+.amb-etiqueta__x:focus-visible {
+  opacity: 1;
+  background: color-mix(in srgb, currentColor 18%, transparent);
+}

@@ -1,0 +1,47 @@
+.amb-campo-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--amb-espaco-2);
+  font-family: var(--amb-fonte-sans);
+}
+
+/* `display: block` + `width: fit-content`: um <label> em bloco de largura cheia faz a
+   linha inteira ao lado do texto ser clicável — e o clique cai no campo. Parece detalhe,
+   mas é o clique perdido mais comum em formulário largo. */
+.amb-campo-form__label {
+  display: block;
+  width: fit-content;
+  font-size: var(--amb-texto-base);
+  font-weight: var(--amb-peso-semibold);
+  color: var(--amb-color-text-primary);
+  line-height: var(--amb-leading-snug);
+  cursor: pointer;
+}
+
+/* Vermelho E asterisco E a palavra "(obrigatório)" no leitor de tela: cor sozinha nunca é
+   sinal — 1 em cada 12 homens não distingue vermelho. Aqui a cor é o terceiro reforço. */
+.amb-campo-form__asterisco {
+  color: var(--amb-color-danger-text);
+  margin-left: var(--amb-espaco-1);
+  font-weight: var(--amb-peso-bold);
+}
+
+/* A mensagem de erro vem ANTES da ajuda no DOM — a mesma ordem em que o leitor de tela as
+   anuncia (aria-describedby). Tela e fala contando a mesma história na mesma ordem é o que
+   permite duas pessoas, uma vendo e outra ouvindo, falarem do mesmo formulário. */
+.amb-campo-form__erro {
+  margin: 0;
+  font-size: var(--amb-texto-sm);
+  font-weight: var(--amb-peso-medium);
+  line-height: var(--amb-leading-snug);
+  color: var(--amb-color-danger-text);
+}
+
+.amb-campo-form__ajuda {
+  margin: 0;
+  font-size: var(--amb-texto-sm);
+  line-height: var(--amb-leading-snug);
+  /* `text-secondary` e não `text-muted`: a ajuda é para ser lida. O tom mais apagado da
+     paleta serve para o que é dispensável — e um texto que explica o formato do campo não é. */
+  color: var(--amb-color-text-secondary);
+}

@@ -1,0 +1,168 @@
+.amb-abas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--amb-espaco-5);
+}
+
+/* ── A régua ────────────────────────────────────────────────────────────────
+ * Rola na horizontal em vez de quebrar linha: abas quebradas em duas linhas viram
+ * duas réguas, e a pessoa deixa de ler como "um controle só".
+ *
+ * A barra de rolagem some porque ela cortaria o sublinhado da aba ativa (2px logo
+ * acima dela). Não é perda de acesso: o foco anda de aba em aba pelas setas, e o
+ * navegador rola a aba focada para dentro da vista sozinho.
+ */
+.amb-abas__lista {
+  display: flex;
+  align-items: center;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.amb-abas__lista::-webkit-scrollbar {
+  display: none;
+}
+
+.amb-aba {
+  /* reset: <button> traz estilo de navegador que varia entre Chrome/Safari/Firefox */
+  appearance: none;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+
+  font-family: var(--amb-fonte-sans);
+  font-size: var(--amb-texto-base);
+  /* Mesmo peso em TODAS as abas, ativa ou não. Engrossar só a ativa alarga o texto e
+     empurra as vizinhas de lugar a cada clique — a régua "dança" sob o dedo. Quem marca
+     a ativa é a cor da marca e o sublinhado, que não ocupam espaço extra. */
+  font-weight: var(--amb-peso-semibold);
+  line-height: 1;
+  white-space: nowrap;
+
+  display: inline-flex;
+  align-items: center;
+  gap: var(--amb-espaco-2);
+  /* Alvo confortável no toque, mesma altura do <Button> md — e agora isso é verdade por
+     CONSTRUÇÃO, não por coincidência. Aqui havia `min-height: 40px` sob um comentário
+     afirmando que batia com o botão: batia no dia em que foi escrito e parou de bater
+     quando o token virou 44px, sem ninguém notar. Comentário que repete um número vira
+     mentira na primeira vez que o número muda; lendo o token, não tem como mentir. */
+  min-height: var(--amb-altura-md);
+
+  color: var(--amb-color-text-secondary);
+  transition:
+    color var(--amb-duracao-fast) var(--amb-easing-standard),
+    background-color var(--amb-duracao-fast) var(--amb-easing-standard),
+    border-color var(--amb-duracao-fast) var(--amb-easing-standard);
+}
+
+.amb-aba__icone {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+/* O contador puxa a cor do próprio texto da aba (currentColor). Assim ele funciona na
+   aba inativa (cinza), na ativa da variante linha (cor da marca) e na pastilha sólida
+   (texto sobre a marca) — sem precisar de um token por combinação. */
+.amb-aba__contador {
+  font-size: var(--amb-texto-xs);
+  font-weight: var(--amb-peso-bold);
+  line-height: 1;
+  padding: var(--amb-espaco-1) var(--amb-espaco-2);
+  border-radius: var(--amb-raio-full);
+  background: color-mix(in srgb, currentColor 16%, transparent);
+  /* tabular-nums: o contador atualiza sozinho; sem isto ele muda de largura ao trocar
+     de 11 para 12 e sacode a aba. */
+  font-variant-numeric: tabular-nums;
+}
+
+/* Desabilitada: pointer-events corta o clique. O Enter continua disparando onClick num
+   botão com aria-disabled — quem barra isso é o guarda no TSX. */
+.amb-aba--desabilitada {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ── Variante linha ─────────────────────────────────────────────────────────
+ * Navegação de seção. A régua tem uma linha de base e a aba ativa a interrompe com a
+ * cor da marca.
+ */
+.amb-abas--linha .amb-abas__lista {
+  gap: var(--amb-espaco-5);
+  border-bottom: 1px solid var(--amb-color-border-default);
+}
+
+.amb-abas--linha .amb-aba {
+  padding: 0 var(--amb-espaco-1) var(--amb-espaco-1);
+  border-bottom: 2px solid transparent;
+  /* -1px: o traço de 2px da aba cobre a borda de 1px da régua, em vez de empilhar em
+     cima dela e deslocar o texto. */
+  margin-bottom: -1px;
+}
+
+.amb-abas--linha .amb-aba:hover:not(.amb-aba--desabilitada) {
+  color: var(--amb-color-text-primary);
+  border-bottom-color: var(--amb-color-border-strong);
+}
+
+.amb-abas--linha .amb-aba--ativa,
+.amb-abas--linha .amb-aba--ativa:hover {
+  color: var(--amb-color-brand-text);
+  border-bottom-color: var(--amb-color-brand-solid);
+}
+
+/* ── Variante pilula ────────────────────────────────────────────────────────
+ * Alternar visão do mesmo dado (dia/semana/mês). O fundo rebaixado agrupa: lê-se como
+ * UM controle com N opções, não N botões soltos.
+ */
+.amb-abas--pilula .amb-abas__lista {
+  gap: var(--amb-espaco-1);
+  padding: var(--amb-espaco-1);
+  background: var(--amb-color-surfaceSunken);
+  border-radius: var(--amb-raio-full);
+  /* inline-flex: o fundo abraça só as abas em vez de esticar pela largura da tela. */
+  display: inline-flex;
+  align-self: flex-start;
+  max-width: 100%;
+}
+
+.amb-abas--pilula .amb-aba {
+  padding: 0 var(--amb-espaco-4);
+  min-height: 34px;
+  border-radius: var(--amb-raio-full);
+}
+
+.amb-abas--pilula .amb-aba:hover:not(.amb-aba--desabilitada):not(.amb-aba--ativa) {
+  background: var(--amb-color-surface);
+  color: var(--amb-color-text-primary);
+}
+
+/* brand-solid + text-onBrand é o par que o @amboni/tokens já testa para contraste (o mesmo
+   do Button primary) — por isso a pastilha é legível nas duas marcas e nos dois temas. */
+.amb-abas--pilula .amb-aba--ativa {
+  background: var(--amb-color-brand-solid);
+  color: var(--amb-color-text-onBrand);
+}
+
+/* O anel de foco padrão fica colado na borda da pastilha vizinha dentro da régua; 1px de
+   folga já separa sem descolar do controle. */
+.amb-abas--pilula .amb-aba.amb-focus-ring:focus-visible {
+  outline-offset: 1px;
+}
+
+/* ── Painel ─────────────────────────────────────────────────────────────────
+ * Ele é focável (tabIndex=0) para poder ser rolado pelo teclado. O anel colado no
+ * conteúdo confunde — a folga deixa claro que o foco é no painel inteiro.
+ */
+.amb-abas__painel:focus-visible {
+  outline-offset: 4px;
+  border-radius: var(--amb-raio-sm);
+}
+
+/* As durações já zeram pelos tokens sob prefers-reduced-motion; esta regra é o cinto de
+   segurança para quem sobrescrever as variáveis no produto. */
+@media (prefers-reduced-motion: reduce) {
+  .amb-aba {
+    transition: none;
+  }
+}

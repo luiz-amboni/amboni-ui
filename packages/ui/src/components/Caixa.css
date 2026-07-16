@@ -1,0 +1,163 @@
+/* ── A decisão que sustenta este arquivo ────────────────────────────────────
+ * O <input type="checkbox"> NATIVO continua no DOM, continua focável e continua
+ * sendo o alvo do clique. Ele só fica invisível, sobreposto ao desenho. O quadrado
+ * que se vê é um irmão, pintado por `:checked + .amb-caixa__marca`.
+ *
+ * A alternativa preguiçosa — `display: none` no input e uma <div> desenhada no
+ * lugar — é o que quase toda biblioteca "bonita" faz, e cobra caro: sem input real
+ * não há teclado, não há leitor de tela, não há :focus-visible, o valor não vai no
+ * <form> e o autofill do navegador não enxerga nada. Aqui tudo isso vem de graça,
+ * porque o controle é de verdade — só o desenho é nosso.
+ *
+ * Por que `appearance: none` e NÃO `opacity: 0`: opacity apaga o elemento inteiro,
+ * inclusive o outline do foco. O anel do .amb-focus-ring sumiria junto e a gente
+ * teria que redesenhá-lo no irmão — duas fontes de verdade para o foco. Com
+ * appearance:none o input some mas o outline continua sendo pintado, e cai exato em
+ * volta do quadrado porque os dois ocupam a MESMA célula do grid.
+ */
+
+.amb-caixa {
+  display: grid;
+  /* coluna 1 = o quadrado (e o input por cima dele); coluna 2 = texto */
+  grid-template-columns: auto 1fr;
+  column-gap: var(--amb-espaco-3);
+  align-items: start;
+  font-family: var(--amb-fonte-sans);
+}
+
+.amb-caixa__input,
+.amb-caixa__marca {
+  grid-area: 1 / 1;
+  width: 1.125rem;
+  height: 1.125rem;
+  /* O rótulo tem ~19px de altura de linha e o quadrado tem 18px: 1px empurra a caixa
+     para o centro óptico da primeira linha em vez de deixá-la colada no topo. */
+  margin: 1px 0 0;
+}
+
+.amb-caixa__input {
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  /* Fica por cima do desenho para receber o clique — o irmão pintado nunca é alvo. */
+  z-index: 1;
+  /* Não aparece: serve só para o anel de foco acompanhar o canto do quadrado. */
+  border-radius: var(--amb-raio-sm);
+}
+
+.amb-caixa__marca {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  border: 1.5px solid var(--amb-color-border-strong);
+  border-radius: var(--amb-raio-sm);
+  background: var(--amb-color-surface);
+  color: var(--amb-color-text-onBrand);
+  /* O input por cima é quem recebe tudo; sem isso o desenho roubaria o clique. */
+  pointer-events: none;
+  transition:
+    background-color var(--amb-duracao-fast) var(--amb-easing-standard),
+    border-color var(--amb-duracao-fast) var(--amb-easing-standard);
+}
+
+.amb-caixa__check,
+.amb-caixa__traco {
+  width: 0.75rem;
+  height: 0.75rem;
+  opacity: 0;
+  transform: scale(0.7);
+  transition:
+    opacity var(--amb-duracao-instant) var(--amb-easing-standard),
+    transform var(--amb-duracao-fast) var(--amb-easing-entrada);
+}
+
+/* Marcado E misto pintam a mesma caixa cheia: o que muda é o símbolo dentro. */
+.amb-caixa__input:checked + .amb-caixa__marca,
+.amb-caixa__input:indeterminate + .amb-caixa__marca {
+  background: var(--amb-color-brand-solid);
+  border-color: var(--amb-color-brand-solid);
+}
+
+/* `:indeterminate` ganha de `:checked` — igual ao comportamento nativo. Um pai
+   "selecionar todos" com filhos parciais não pode mostrar check de tudo marcado. */
+.amb-caixa__input:checked:not(:indeterminate) + .amb-caixa__marca .amb-caixa__check,
+.amb-caixa__input:indeterminate + .amb-caixa__marca .amb-caixa__traco {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.amb-caixa__input:hover:not(:disabled) + .amb-caixa__marca {
+  border-color: var(--amb-color-brand-solid);
+}
+
+/* ── Erro ───────────────────────────────────────────────────────────────────
+ * A borda vermelha é reforço, nunca o aviso. Quem informa é o texto do `erro`,
+ * que o leitor de tela lê via aria-describedby — 1 em cada 12 homens não distingue
+ * vermelho.
+ */
+.amb-caixa--erro .amb-caixa__marca {
+  border-color: var(--amb-color-danger-solid);
+}
+
+.amb-caixa__rotulo {
+  grid-column: 2;
+  font-size: var(--amb-texto-base);
+  line-height: var(--amb-leading-snug);
+  color: var(--amb-color-text-primary);
+  /* 18px de quadrado é um alvo minúsculo no toque. O rótulo é ligado por for/id,
+     então clicar no texto marca também — e isso dobra ou triplica a área útil,
+     sem uma linha de JavaScript. */
+  cursor: pointer;
+}
+
+.amb-caixa__descricao {
+  grid-column: 2;
+  margin: var(--amb-espaco-1) 0 0;
+  font-size: var(--amb-texto-sm);
+  line-height: var(--amb-leading-snug);
+  color: var(--amb-color-text-secondary);
+}
+
+.amb-caixa__erro {
+  grid-column: 2;
+  margin: var(--amb-espaco-1) 0 0;
+  font-size: var(--amb-texto-sm);
+  line-height: var(--amb-leading-snug);
+  color: var(--amb-color-danger-text);
+}
+
+/* ── Desabilitada ───────────────────────────────────────────────────────────
+ * Sem a classe .amb-disabled da base de propósito: ela usa pointer-events:none, e
+ * aí o cursor "not-allowed" nunca aparece — o controle fica só inerte, sem explicar
+ * que está bloqueado.
+ */
+.amb-caixa__input:disabled {
+  cursor: not-allowed;
+}
+.amb-caixa__input:disabled + .amb-caixa__marca,
+.amb-caixa__input:disabled ~ .amb-caixa__rotulo,
+.amb-caixa__input:disabled ~ .amb-caixa__descricao {
+  opacity: 0.5;
+}
+.amb-caixa__input:disabled ~ .amb-caixa__rotulo {
+  cursor: not-allowed;
+}
+
+/* Os tokens já zeram --amb-duracao-* com reduced-motion, mas quem instala pode
+   sobrescrever esses tokens no produto. Aqui o corte é explícito: o estado é dito
+   pelo símbolo e pela cor, a animação nunca foi a informação. */
+@media (prefers-reduced-motion: reduce) {
+  .amb-caixa__marca,
+  .amb-caixa__check,
+  .amb-caixa__traco {
+    transition: none;
+  }
+  .amb-caixa__check,
+  .amb-caixa__traco {
+    transform: none;
+  }
+}

@@ -15,7 +15,7 @@ const ESCALA: { token: keyof typeof tamanhoFonte; uso: string }[] = [
 export default function Tipografia() {
   return (
     <>
-      <Titulo eyebrow="Fundamentos" lead="Três famílias, nove tamanhos. Menos escolhas, menos jeitos de errar.">
+      <Titulo eyebrow="Fundamentos" lead="Uma família para a interface, uma para números. Menos escolhas, menos jeitos de errar.">
         Tipografia
       </Titulo>
 
@@ -26,13 +26,13 @@ export default function Tipografia() {
             <tbody>
               <tr>
                 <td><code className="doc-mono-brand">--amb-fonte-sans</code></td>
-                <td style={{ fontFamily: fonte.sans, fontSize: 16 }}>Inter</td>
+                <td style={{ fontFamily: fonte.sans, fontSize: 16 }}>Manrope</td>
                 <td>Tudo. É o padrão.</td>
               </tr>
               <tr>
                 <td><code className="doc-mono-brand">--amb-fonte-display</code></td>
-                <td style={{ fontFamily: fonte.display, fontSize: 16, fontWeight: 700 }}>Sora</td>
-                <td>Só títulos. Tem personalidade demais para um parágrafo.</td>
+                <td style={{ fontFamily: fonte.display, fontSize: 16, fontWeight: 800 }}>Manrope</td>
+                <td>Títulos — hoje a mesma família, em peso maior.</td>
               </tr>
               <tr>
                 <td><code className="doc-mono-brand">--amb-fonte-mono</code></td>
@@ -43,9 +43,23 @@ export default function Tipografia() {
           </table>
         </div>
         <Aviso>
+          <strong>Por que Manrope, e por que uma só.</strong> A escolha saiu de medir uma
+          referência de mercado, não de gosto. A Inter — que estava aqui antes — é a fonte-padrão
+          de "app feito por dev": correta, onipresente, sem memória. A Manrope é geométrica e de
+          terminações arredondadas, então <strong>conversa com o canto de 10px em vez de brigar
+          com ele</strong>. E cobrir título e corpo com uma família só significa menos bytes,
+          menos decisão, e uma página sem dois temperamentos tipográficos discutindo.
+        </Aviso>
+        <P>
+          O token <code>--amb-fonte-display</code> continua existindo e aponta para a mesma
+          família: quem já escreveu não quebra, e um dia dá para divergir de novo sem caçar uso
+          pelo código.
+        </P>
+        <Aviso>
           <strong>Por que mono em número?</strong> Em fonte proporcional o "1" é mais estreito que
           o "8", então R$ 1.111 e R$ 8.888 não alinham numa coluna — e comparar vira adivinhação.
-          Alternativa mais leve: <code>font-variant-numeric: tabular-nums</code> na Inter.
+          Alternativa mais leve: <code>font-variant-numeric: tabular-nums</code>, que a Manrope
+          também tem.
         </Aviso>
       </Secao>
 

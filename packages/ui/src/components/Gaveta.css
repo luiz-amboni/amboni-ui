@@ -1,0 +1,99 @@
+/* A Gaveta é o Dialogo ancorado numa borda. Este arquivo só mexe em posição, tamanho e
+ * deslize — cor, sombra, cabeçalho, corpo e rodapé vêm do Dialogo.css inteiros.
+ *
+ * Toda regra daqui usa `.amb-gaveta` junto da classe do Dialogo (0,2,0 contra 0,1,0)
+ * para vencer por especificidade, e não por ordem de importação: a ordem em que o
+ * bundler junta os CSS não é contrato, e um dia ela vira e o layout quebra sem ninguém
+ * ter tocado no componente.
+ */
+
+/* O `size` do Dialogo (largura máxima) vira aqui UMA medida, que cada lado aplica no
+   eixo que faz sentido: largura na lateral, altura embaixo. */
+.amb-gaveta.amb-dialogo--sm { --amb-gaveta-medida: 20rem; }
+.amb-gaveta.amb-dialogo--md { --amb-gaveta-medida: 28rem; }
+.amb-gaveta.amb-dialogo--lg { --amb-gaveta-medida: 40rem; }
+.amb-gaveta.amb-dialogo--full { --amb-gaveta-medida: 100%; }
+
+/* ── Laterais ───────────────────────────────────────────────────────────────
+ * `margin` é o que ancora: o navegador dá `margin: auto` ao <dialog> modal, que é o
+ * que o centraliza. Zerar um lado e deixar `auto` no outro empurra a gaveta para a
+ * borda — sem `position`, sem `inset`, sem brigar com o top layer.
+ */
+.amb-gaveta.amb-gaveta--esquerda,
+.amb-gaveta.amb-gaveta--direita {
+  /* `min(..., 100vw)`: em `lg` numa tela de celular, 40rem é mais largo que a tela e
+     a gaveta viraria uma barra de rolagem horizontal. */
+  width: min(var(--amb-gaveta-medida), 100vw);
+  max-width: 100vw;
+  height: 100dvh;
+  max-height: 100dvh;
+  /* Encostada na borda, o arredondado de lá não tem o que arredondar. */
+  border-radius: 0;
+}
+
+.amb-gaveta.amb-gaveta--esquerda {
+  margin: 0 auto 0 0;
+  border-left: none;
+  border-radius: 0 var(--amb-raio-xl) var(--amb-raio-xl) 0;
+}
+
+.amb-gaveta.amb-gaveta--direita {
+  margin: 0 0 0 auto;
+  border-right: none;
+  border-radius: var(--amb-raio-xl) 0 0 var(--amb-raio-xl);
+}
+
+/* ── Embaixo (folha do celular) ─────────────────────────────────────────────── */
+.amb-gaveta.amb-gaveta--baixo {
+  /* `top: auto` é o que faz a folha encolher, e não é firula: o navegador dá
+     `inset: 0` ao <dialog> modal, e caixa posicionada com top E bottom fixos e
+     `height: auto` não encolhe — ela ESTICA para preencher os dois. A folha então
+     colava na max-height e virava uma parede de 28rem em branco com três linhas de
+     conteúdo dentro. Medido no Chromium antes de soltar o top: 449px para um conteúdo
+     de ~130px. Soltando o top, a altura volta a sair do conteúdo. */
+  top: auto;
+  bottom: 0;
+  margin: 0 auto;
+
+  width: 100vw;
+  max-width: 100vw;
+  height: auto;
+  /* Altura MÁXIMA, não fixa: a folha cresce só até onde o conteúdo pede. */
+  max-height: min(var(--amb-gaveta-medida), calc(100dvh - var(--amb-espaco-12)));
+  border-bottom: none;
+  border-radius: var(--amb-raio-xl) var(--amb-raio-xl) 0 0;
+}
+
+.amb-gaveta.amb-gaveta--baixo.amb-dialogo--full {
+  height: calc(100dvh - var(--amb-espaco-12));
+}
+
+/* ── Deslize ────────────────────────────────────────────────────────────────
+ * Aqui o movimento não é enfeite: é ele que diz de ONDE a gaveta veio e, portanto,
+ * para onde ela volta. Sem isso, o painel simplesmente pisca na tela.
+ *
+ * Sobrescreve a animação de entrada do Dialogo (que é `scale` + subida, de modal).
+ */
+@keyframes amb-gaveta-da-esquerda { from { transform: translateX(-100%); } }
+@keyframes amb-gaveta-da-direita { from { transform: translateX(100%); } }
+@keyframes amb-gaveta-de-baixo { from { transform: translateY(100%); } }
+
+.amb-gaveta.amb-gaveta--esquerda[open] {
+  animation: amb-gaveta-da-esquerda var(--amb-duracao-normal) var(--amb-easing-entrada);
+}
+.amb-gaveta.amb-gaveta--direita[open] {
+  animation: amb-gaveta-da-direita var(--amb-duracao-normal) var(--amb-easing-entrada);
+}
+.amb-gaveta.amb-gaveta--baixo[open] {
+  animation: amb-gaveta-de-baixo var(--amb-duracao-normal) var(--amb-easing-entrada);
+}
+
+/* Sem deslize para quem pediu menos movimento: a gaveta aparece no lugar. O fundo
+   escurecido (que vem do Dialogo) continua sendo o aviso de que o contexto mudou. */
+@media (prefers-reduced-motion: reduce) {
+  .amb-gaveta.amb-gaveta--esquerda[open],
+  .amb-gaveta.amb-gaveta--direita[open],
+  .amb-gaveta.amb-gaveta--baixo[open] {
+    animation: none;
+  }
+}

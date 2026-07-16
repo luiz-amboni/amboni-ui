@@ -1,0 +1,163 @@
+/* ── A decisão que sustenta este arquivo ────────────────────────────────────
+ * Mesma técnica da <Caixa>, e pelo mesmo motivo: o <input type="radio"> NATIVO
+ * continua no DOM, focável e recebendo o clique — apenas invisível (`appearance:
+ * none`), sobreposto ao desenho. A bolinha é um irmão pintado por
+ * `:checked + .amb-radio__marca`.
+ *
+ * No rádio o preço de trocar o input por uma <div> é ainda mais alto que na caixa:
+ * a navegação por setas entre as opções, o "1 de 4" que o leitor de tela anuncia e
+ * o roving tabindex (o grupo inteiro é UMA parada de Tab) são comportamentos que o
+ * navegador dá de graça para inputs de mesmo `name`. Reimplementar tudo isso à mão
+ * é onde as bibliotecas erram.
+ *
+ * `appearance: none` e não `opacity: 0` porque opacity apagaria junto o outline do
+ * .amb-focus-ring — ver o comentário longo no Caixa.css.
+ */
+
+.amb-radio {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: var(--amb-espaco-3);
+  align-items: start;
+  font-family: var(--amb-fonte-sans);
+}
+
+.amb-radio__input,
+.amb-radio__marca {
+  grid-area: 1 / 1;
+  width: 1.125rem;
+  height: 1.125rem;
+  /* Centro óptico da primeira linha do rótulo — ver Caixa.css. */
+  margin: 1px 0 0;
+}
+
+.amb-radio__input {
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  z-index: 1;
+  /* Invisível: existe só para o anel de foco sair redondo, e não quadrado. */
+  border-radius: var(--amb-raio-full);
+}
+
+.amb-radio__marca {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  border: 1.5px solid var(--amb-color-border-strong);
+  border-radius: var(--amb-raio-full);
+  background: var(--amb-color-surface);
+  pointer-events: none;
+  transition: border-color var(--amb-duracao-fast) var(--amb-easing-standard);
+}
+
+/* Bolinha vazada, não preenchida como a caixa: é a diferença de forma que diz
+   "escolha UMA" contra "marque quantas quiser" — quem usa o painel todo dia lê isso
+   antes de ler o rótulo. */
+.amb-radio__ponto {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: var(--amb-raio-full);
+  background: var(--amb-color-brand-solid);
+  transform: scale(0);
+  transition: transform var(--amb-duracao-fast) var(--amb-easing-entrada);
+}
+
+.amb-radio__input:checked + .amb-radio__marca {
+  border-color: var(--amb-color-brand-solid);
+}
+.amb-radio__input:checked + .amb-radio__marca .amb-radio__ponto {
+  transform: scale(1);
+}
+
+.amb-radio__input:hover:not(:disabled) + .amb-radio__marca {
+  border-color: var(--amb-color-brand-solid);
+}
+
+.amb-radio__rotulo {
+  grid-column: 2;
+  font-size: var(--amb-texto-base);
+  line-height: var(--amb-leading-snug);
+  color: var(--amb-color-text-primary);
+  /* Clicar no texto escolhe a opção (for/id). Sem isso o alvo seria a bolinha de
+     18px — impossível de acertar com o dedo. */
+  cursor: pointer;
+}
+
+.amb-radio__descricao {
+  grid-column: 2;
+  margin: var(--amb-espaco-1) 0 0;
+  font-size: var(--amb-texto-sm);
+  line-height: var(--amb-leading-snug);
+  color: var(--amb-color-text-secondary);
+}
+
+/* Ver Caixa.css: a classe .amb-disabled da base mata o pointer-events e junto vai o
+   cursor "not-allowed" — o controle ficaria inerte sem dizer que está bloqueado. */
+.amb-radio__input:disabled {
+  cursor: not-allowed;
+}
+.amb-radio__input:disabled + .amb-radio__marca,
+.amb-radio__input:disabled ~ .amb-radio__rotulo,
+.amb-radio__input:disabled ~ .amb-radio__descricao {
+  opacity: 0.5;
+}
+.amb-radio__input:disabled ~ .amb-radio__rotulo {
+  cursor: not-allowed;
+}
+
+/* ── O grupo ────────────────────────────────────────────────────────────────── */
+
+.amb-radio-grupo {
+  font-family: var(--amb-fonte-sans);
+}
+
+.amb-radio-grupo__label {
+  display: block;
+  margin-bottom: var(--amb-espaco-3);
+  font-size: var(--amb-texto-base);
+  font-weight: var(--amb-peso-semibold);
+  line-height: var(--amb-leading-snug);
+  color: var(--amb-color-text-primary);
+}
+
+.amb-radio-grupo__itens {
+  display: flex;
+  gap: var(--amb-espaco-3);
+}
+
+.amb-radio-grupo__itens--vertical {
+  flex-direction: column;
+}
+
+/* `wrap` sempre: no celular as opções lado a lado não cabem, e sem quebrar elas
+   espremem o rótulo até virar uma coluna de uma letra por linha. */
+.amb-radio-grupo__itens--horizontal {
+  flex-direction: row;
+  flex-wrap: wrap;
+  column-gap: var(--amb-espaco-6);
+}
+
+/* A borda vermelha é reforço; quem avisa é o texto do erro, lido via
+   aria-describedby. Cor nunca é o único sinal. */
+.amb-radio-grupo--erro .amb-radio__marca {
+  border-color: var(--amb-color-danger-solid);
+}
+
+.amb-radio-grupo__erro {
+  margin: var(--amb-espaco-2) 0 0;
+  font-size: var(--amb-texto-sm);
+  line-height: var(--amb-leading-snug);
+  color: var(--amb-color-danger-text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .amb-radio__marca,
+  .amb-radio__ponto {
+    transition: none;
+  }
+}

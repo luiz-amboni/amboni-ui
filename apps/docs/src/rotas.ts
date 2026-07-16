@@ -5,9 +5,35 @@ import Cores from './paginas/Cores'
 import Tipografia from './paginas/Tipografia'
 import Espacamento from './paginas/Espacamento'
 import Acessibilidade from './paginas/Acessibilidade'
+
 import ButtonPage from './paginas/ButtonPage'
+import MenuPage from './paginas/MenuPage'
+
+import CampoFormPage from './paginas/CampoFormPage'
+import CampoPage from './paginas/CampoPage'
+import AreaTextoPage from './paginas/AreaTextoPage'
+import SelecaoPage from './paginas/SelecaoPage'
+import CaixaPage from './paginas/CaixaPage'
+
 import CardPage from './paginas/CardPage'
 import StatCardPage from './paginas/StatCardPage'
+import TabelaPage from './paginas/TabelaPage'
+import EstadoVazioPage from './paginas/EstadoVazioPage'
+
+import SeloPage from './paginas/SeloPage'
+import AvatarPage from './paginas/AvatarPage'
+
+import AlertaPage from './paginas/AlertaPage'
+import AvisoPage from './paginas/AvisoPage'
+import CarregandoPage from './paginas/CarregandoPage'
+
+import DialogoPage from './paginas/DialogoPage'
+import DicaPage from './paginas/DicaPage'
+
+import AbasPage from './paginas/AbasPage'
+import AcordeaoPage from './paginas/AcordeaoPage'
+import TrilhaPage from './paginas/TrilhaPage'
+import PaginacaoPage from './paginas/PaginacaoPage'
 
 export interface Pagina {
   slug: string
@@ -19,7 +45,11 @@ export interface Pagina {
 
 /**
  * A ordem aqui É a ordem do menu, e o primeiro item é o destino de qualquer rota
- * desconhecida. Sem router: um site de nove páginas não justifica a dependência.
+ * desconhecida. Sem router: um site de vinte e poucas páginas não justifica a
+ * dependência — `hashchange` do navegador resolve, e é o que o App.tsx escuta.
+ *
+ * Os grupos batem com os do `index.ts` da biblioteca de propósito: quem procura "como
+ * mostro um erro" acha a família inteira no mesmo lugar, no menu e no import.
  */
 export const PAGINAS: Pagina[] = [
   { slug: 'inicio', titulo: 'Visão geral', grupo: 'Começar', componente: Inicio },
@@ -30,7 +60,34 @@ export const PAGINAS: Pagina[] = [
   { slug: 'espacamento', titulo: 'Espaço e forma', grupo: 'Fundamentos', componente: Espacamento },
   { slug: 'acessibilidade', titulo: 'Acessibilidade', grupo: 'Fundamentos', selo: 'testado', componente: Acessibilidade },
 
-  { slug: 'button', titulo: 'Button', grupo: 'Componentes', componente: ButtonPage },
-  { slug: 'card', titulo: 'Card', grupo: 'Componentes', componente: CardPage },
-  { slug: 'statcard', titulo: 'StatCard', grupo: 'Componentes', componente: StatCardPage },
+  { slug: 'button', titulo: 'Button', grupo: 'Ação', componente: ButtonPage },
+  { slug: 'menu', titulo: 'Menu', grupo: 'Ação', componente: MenuPage },
+
+  // CampoForm vem primeiro: é ele que amarra label, ajuda e erro ao controle. Quem lê a
+  // família na ordem entende por que os outros quatro não repetem essa fiação.
+  { slug: 'campoform', titulo: 'CampoForm', grupo: 'Formulário', componente: CampoFormPage },
+  { slug: 'campo', titulo: 'Campo', grupo: 'Formulário', componente: CampoPage },
+  { slug: 'areatexto', titulo: 'AreaTexto', grupo: 'Formulário', componente: AreaTextoPage },
+  { slug: 'selecao', titulo: 'Seleção', grupo: 'Formulário', componente: SelecaoPage },
+  { slug: 'caixa', titulo: 'Caixa, Rádio e Interruptor', grupo: 'Formulário', componente: CaixaPage },
+
+  { slug: 'card', titulo: 'Card', grupo: 'Dados', componente: CardPage },
+  { slug: 'statcard', titulo: 'StatCard', grupo: 'Dados', componente: StatCardPage },
+  { slug: 'tabela', titulo: 'Tabela', grupo: 'Dados', componente: TabelaPage },
+  { slug: 'estadovazio', titulo: 'EstadoVazio', grupo: 'Dados', componente: EstadoVazioPage },
+
+  { slug: 'selo', titulo: 'Selo e Etiqueta', grupo: 'Identidade', componente: SeloPage },
+  { slug: 'avatar', titulo: 'Avatar', grupo: 'Identidade', componente: AvatarPage },
+
+  { slug: 'alerta', titulo: 'Alerta', grupo: 'Retorno', componente: AlertaPage },
+  { slug: 'aviso', titulo: 'Aviso (toast)', grupo: 'Retorno', componente: AvisoPage },
+  { slug: 'carregando', titulo: 'Giro, Progresso e Esqueleto', grupo: 'Retorno', componente: CarregandoPage },
+
+  { slug: 'dialogo', titulo: 'Diálogo e Gaveta', grupo: 'Sobreposição', componente: DialogoPage },
+  { slug: 'dica', titulo: 'Dica', grupo: 'Sobreposição', componente: DicaPage },
+
+  { slug: 'abas', titulo: 'Abas', grupo: 'Navegação', componente: AbasPage },
+  { slug: 'acordeao', titulo: 'Acordeão', grupo: 'Navegação', componente: AcordeaoPage },
+  { slug: 'trilha', titulo: 'Trilha', grupo: 'Navegação', componente: TrilhaPage },
+  { slug: 'paginacao', titulo: 'Paginação', grupo: 'Navegação', componente: PaginacaoPage },
 ]

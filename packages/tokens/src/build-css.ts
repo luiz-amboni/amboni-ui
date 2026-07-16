@@ -2,7 +2,7 @@ import { writeFileSync, mkdirSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { construirTema, MARCAS, type Marca, type TokensSemanticos } from './semantic.js'
-import { espaco, raio, fonte, tamanhoFonte, peso, alturaLinha, duracao, easing, camada } from './primitives.js'
+import { espaco, raio, fonte, tamanhoFonte, peso, alturaLinha, duracao, easing, camada, alturaControle } from './primitives.js'
 
 /**
  * Gera o CSS da biblioteca a partir dos tokens em TypeScript.
@@ -36,7 +36,7 @@ const vars = (t: object, ind = '  ') =>
 /** Tokens que não dependem de tema (espaço, raio, fonte, movimento). */
 function baseCss(): string {
   const blocos = [
-    ['espaco', espaco], ['raio', raio], ['fonte', fonte],
+    ['espaco', espaco], ['raio', raio], ['fonte', fonte], ['altura', alturaControle],
     ['texto', tamanhoFonte], ['peso', peso], ['leading', alturaLinha],
     ['duracao', duracao], ['easing', easing], ['camada', camada],
   ] as const

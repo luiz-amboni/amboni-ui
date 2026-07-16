@@ -1,0 +1,113 @@
+/* ── Alerta ─────────────────────────────────────────────────────────────────
+ * Fundo tingido + borda do próprio tom. Os pares `-subtle` (fundo) e `-text`
+ * (texto/ícone) vêm do tema e já passaram no teste de contraste (@amboni/tokens),
+ * então o alerta é legível em iSafe/VEAR × claro/escuro sem ajuste no produto.
+ *
+ * Sem animação de entrada de propósito: um alerta que desliza para dentro chega
+ * DEPOIS de a pessoa já ter olhado para o lugar errado — e, no caso do erro, atrasa
+ * a informação mais urgente da tela. Ele simplesmente está lá.
+ */
+.amb-alerta {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--amb-espaco-3);
+  padding: var(--amb-espaco-4);
+  border: 1px solid transparent;
+  border-radius: var(--amb-raio-lg);
+  font-family: var(--amb-fonte-sans);
+  font-size: var(--amb-texto-base);
+  line-height: var(--amb-leading-normal);
+  color: var(--amb-color-text-primary);
+}
+
+.amb-alerta__icone {
+  flex-shrink: 0;
+  display: inline-flex;
+  /* Alinha o ícone com a primeira LINHA do texto, não com o topo da caixa: no alerta
+     de 3 linhas ele fica boiando no meio se centralizar. */
+  margin-top: 1px;
+}
+
+.amb-alerta__corpo {
+  flex: 1;
+  min-width: 0; /* deixa o texto longo quebrar em vez de esticar a caixa */
+}
+
+.amb-alerta__titulo {
+  margin: 0;
+  font-weight: var(--amb-peso-bold);
+  line-height: var(--amb-leading-snug);
+}
+
+/* O texto de apoio herda a cor primária, não a do tom: um parágrafo inteiro em vermelho
+   cansa a leitura e some no fundo tingido. A cor do tom fica no ícone e na borda. */
+.amb-alerta__texto {
+  color: var(--amb-color-text-secondary);
+  font-size: var(--amb-texto-sm);
+}
+
+.amb-alerta__titulo + .amb-alerta__texto {
+  margin-top: var(--amb-espaco-1);
+}
+
+.amb-alerta__acao {
+  margin-top: var(--amb-espaco-3);
+}
+
+/* ── Tons ───────────────────────────────────────────────────────────────────
+ * A cor NUNCA vai sozinha: cada tom entra com um ícone de forma diferente (ver
+ * ICONES em Alerta.tsx). Quem não distingue vermelho de verde lê a forma.
+ */
+.amb-alerta--info {
+  background: var(--amb-color-info-subtle);
+  border-color: var(--amb-color-info-border);
+}
+.amb-alerta--info .amb-alerta__icone { color: var(--amb-color-info-text); }
+
+.amb-alerta--sucesso {
+  background: var(--amb-color-success-subtle);
+  border-color: var(--amb-color-success-border);
+}
+.amb-alerta--sucesso .amb-alerta__icone { color: var(--amb-color-success-text); }
+
+.amb-alerta--aviso {
+  background: var(--amb-color-warning-subtle);
+  border-color: var(--amb-color-warning-border);
+}
+.amb-alerta--aviso .amb-alerta__icone { color: var(--amb-color-warning-text); }
+
+.amb-alerta--perigo {
+  background: var(--amb-color-danger-subtle);
+  border-color: var(--amb-color-danger-border);
+}
+.amb-alerta--perigo .amb-alerta__icone { color: var(--amb-color-danger-text); }
+
+/* ── Dispensar ──────────────────────────────────────────────────────────────
+ * 28px de alvo. O X é pequeno por educação visual, mas a área de clique não pode ser:
+ * alvo minúsculo é ruim no toque e pior ainda para quem tem tremor.
+ */
+.amb-alerta__x {
+  appearance: none;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  margin: -4px -4px 0 0; /* recolhe a folga do alvo para não desalinhar do canto */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: var(--amb-raio-sm);
+  background: transparent;
+  color: var(--amb-color-text-secondary);
+  cursor: pointer;
+  transition:
+    background-color var(--amb-duracao-fast) var(--amb-easing-standard),
+    color var(--amb-duracao-fast) var(--amb-easing-standard);
+}
+
+.amb-alerta__x:hover {
+  /* color-mix sobre o texto: funciona nos dois temas sem cor fixa — no escuro o mesmo
+     código produz um véu claro, no claro um véu escuro. */
+  background: color-mix(in srgb, var(--amb-color-text-primary) 10%, transparent);
+  color: var(--amb-color-text-primary);
+}

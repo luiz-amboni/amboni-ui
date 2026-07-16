@@ -1,0 +1,178 @@
+/* ── Fundo escurecido (scrim) ────────────────────────────────────────────────
+ * O @amboni/tokens ainda não tem um token de scrim, e nenhum token existente serve
+ * nos dois temas: no claro o que escurece é o `text-primary` (quase preto); no
+ * escuro esse token é quase BRANCO e clarearia o fundo em vez de escurecer. Então
+ * derivamos aqui, por tema, do token mais escuro de cada um.
+ *
+ * Pendência para o @amboni/tokens: `--amb-color-scrim`. Quando existir, estas três
+ * regras viram uma linha.
+ */
+:root {
+  --amb-dialogo-scrim: color-mix(in srgb, var(--amb-color-text-primary) 55%, transparent);
+}
+[data-amb-theme='dark'] {
+  --amb-dialogo-scrim: color-mix(in srgb, var(--amb-color-bg) 75%, transparent);
+}
+
+.amb-dialogo {
+  /* reset: a folha do navegador dá ao <dialog> `border: solid`, `padding: 1em`,
+     `background: white` e `color: black` — branco cravado, que no tema escuro
+     apareceria como um retângulo branco. */
+  padding: 0;
+  border: 1px solid var(--amb-color-border-default);
+  background: var(--amb-color-surface);
+  color: var(--amb-color-text-primary);
+  font-family: var(--amb-fonte-sans);
+
+  /* O <dialog> nasce `content-box`, e aí `height: 100dvh` quer dizer "100dvh MAIS as
+     duas bordas" — a Gaveta ficava 2px mais alta que a tela e o rodapé saía por baixo.
+     Medido no Chromium: 802px de altura numa janela de 800. */
+  box-sizing: border-box;
+
+  border-radius: var(--amb-raio-xl);
+  box-shadow: var(--amb-shadow-xl);
+
+  /* O <dialog> modal é `position: fixed; inset: 0; margin: auto` pelo navegador — ou
+     seja, já vem centralizado. Aqui só mandamos o tamanho.
+     `dvh` e não `vh`: no celular a barra do navegador entra e sai, e `vh` é a altura
+     COM a barra escondida — o rodapé do modal fica embaixo dela, inalcançável. */
+  width: calc(100vw - var(--amb-espaco-8));
+  max-height: calc(100dvh - var(--amb-espaco-16));
+
+  /* Corta o cabeçalho/rodapé no arredondado. Quem rola é o corpo, não o dialog. */
+  overflow: hidden;
+}
+
+/* `display` SÓ com [open]. Parece detalhe e não é: quem esconde o dialog fechado é a
+   regra `dialog:not([open]) { display: none }` da folha do NAVEGADOR — e folha de
+   navegador perde para qualquer regra do autor, por menor que seja a especificidade.
+   Um `.amb-dialogo { display: flex }` solto deixa o modal visível na tela, fechado,
+   empilhado no meio do conteúdo. */
+.amb-dialogo[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+.amb-dialogo::backdrop {
+  background: var(--amb-dialogo-scrim);
+}
+
+/* ── Tamanhos ───────────────────────────────────────────────────────────────
+ * Largura máxima em rem: acompanha o zoom do texto. Uma pessoa que aumenta a fonte
+ * do navegador ganha um modal maior junto, em vez de um funil de texto.
+ */
+.amb-dialogo--sm { max-width: 24rem; }
+.amb-dialogo--md { max-width: 32rem; }
+.amb-dialogo--lg { max-width: 48rem; }
+
+/* `full` é para o que precisa de espaço de verdade (tabela, pré-visualização). Não
+   encosta na borda: a moldura de fundo é o que diz "isto está por cima, tem um fora". */
+.amb-dialogo--full {
+  max-width: none;
+  width: calc(100vw - var(--amb-espaco-8));
+  height: calc(100dvh - var(--amb-espaco-12));
+  max-height: none;
+}
+
+/* ── Cabeçalho ──────────────────────────────────────────────────────────────
+ * Fica FORA do corpo rolável: o título some junto com a rolagem em modal longo, e a
+ * pessoa perde a referência do que está fazendo no meio do formulário.
+ */
+.amb-dialogo__cabecalho {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--amb-espaco-4);
+  padding: var(--amb-espaco-5) var(--amb-espaco-5) var(--amb-espaco-4);
+  flex-shrink: 0;
+}
+
+.amb-dialogo__textos { min-width: 0; }
+
+.amb-dialogo__titulo {
+  font-family: var(--amb-fonte-display);
+  font-size: var(--amb-texto-xl);
+  font-weight: var(--amb-peso-bold);
+  line-height: var(--amb-leading-tight);
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.amb-dialogo__descricao {
+  margin: var(--amb-espaco-2) 0 0;
+  font-size: var(--amb-texto-base);
+  line-height: var(--amb-leading-snug);
+  color: var(--amb-color-text-secondary);
+}
+
+.amb-dialogo__fechar {
+  flex-shrink: 0;
+  /* Puxa o X para o canto óptico sem encolher o alvo de toque: o espaço clicável
+     continua os 32px do botão `sm`. */
+  margin: calc(var(--amb-espaco-1) * -1) calc(var(--amb-espaco-2) * -1) 0 0;
+}
+
+/* ── Corpo ──────────────────────────────────────────────────────────────────
+ * `min-height: 0` é obrigatório: item de flex tem `min-height: auto`, que se recusa a
+ * encolher abaixo do conteúdo. Sem isso o corpo não rola — ele estoura o modal e
+ * empurra o rodapé para fora da tela.
+ */
+.amb-dialogo__corpo {
+  padding: 0 var(--amb-espaco-5) var(--amb-espaco-5);
+  overflow-y: auto;
+  flex: 1 1 auto;
+  min-height: 0;
+  font-size: var(--amb-texto-base);
+  line-height: var(--amb-leading-normal);
+  color: var(--amb-color-text-secondary);
+}
+
+/* ── Rodapé ─────────────────────────────────────────────────────────────────
+ * Ações à direita, e a primária por último: é a ordem que o olho e o polegar
+ * encontram primeiro no fim da leitura.
+ */
+.amb-dialogo__rodape {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--amb-espaco-2);
+  padding: var(--amb-espaco-4) var(--amb-espaco-5);
+  border-top: 1px solid var(--amb-color-border-default);
+  background: var(--amb-color-surfaceRaised);
+  flex-shrink: 0;
+}
+
+/* No celular os botões viram uma coluna: dois botões espremidos lado a lado numa tela
+   estreita é onde se erra o alvo e se aperta "Excluir" sem querer. */
+@media (max-width: 30rem) {
+  .amb-dialogo__rodape {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+}
+
+/* ── Entrada ────────────────────────────────────────────────────────────────
+ * Só na entrada. A saída ficaria de fora do `<dialog>` sem `allow-discrete`, que é
+ * novo demais para a base de navegadores que o iSafe atende — e um modal que some na
+ * hora incomoda muito menos do que um que demora a sumir.
+ */
+@keyframes amb-dialogo-entrada {
+  from { opacity: 0; transform: translateY(var(--amb-espaco-2)) scale(0.98); }
+}
+@keyframes amb-dialogo-fundo {
+  from { opacity: 0; }
+}
+
+.amb-dialogo[open] {
+  animation: amb-dialogo-entrada var(--amb-duracao-normal) var(--amb-easing-entrada);
+}
+.amb-dialogo[open]::backdrop {
+  animation: amb-dialogo-fundo var(--amb-duracao-normal) var(--amb-easing-entrada);
+}
+
+/* Quem pediu menos movimento: o modal aparece, sem escala e sem deslize. Para parte
+   das pessoas o movimento causa enjoo — não é preferência estética. O escurecer do
+   fundo continua, porque ele não se move: é só a mudança de contexto ficando clara. */
+@media (prefers-reduced-motion: reduce) {
+  .amb-dialogo[open] { animation: none; }
+}
