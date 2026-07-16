@@ -5,6 +5,8 @@
 **Um design system para produtos de verdade.**
 Neutro (funciona com MUI, Tailwind ou CSS puro) · Temável · Acessível por prova.
 
+**[📖 Documentação e exemplos ao vivo →](https://luiz-amboni.github.io/amboni-ui/)**
+
 </div>
 
 ---
@@ -23,7 +25,11 @@ publicada.
 | Pacote | O que é |
 |---|---|
 | [`@amboni/tokens`](packages/tokens) | Cor, tipografia, espaço, movimento. CSS vars — serve qualquer stack. |
-| `@amboni/ui` | Componentes React em cima dos tokens. *(em construção)* |
+| [`@amboni/ui`](packages/ui) | Componentes React em cima dos tokens: `Button`, `Card`, `StatCard`. |
+
+No site da documentação dá para **trocar a marca e o tema no topo** e ver o mesmo
+componente virar iSafe (ciano) ou VEAR (roxo), claro ou escuro. E a tabela de contraste
+é **calculada no seu navegador**, com a nota real de cada par.
 
 ## Princípios
 
