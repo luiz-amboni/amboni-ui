@@ -8,21 +8,48 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
     "./styles.css": "./dist/styles.css"
   },
-  "files": ["dist"],
-  "sideEffects": ["*.css"],
-  "publishConfig": { "access": "public" },
-  "repository": { "type": "git", "url": "git+https://github.com/luiz-amboni/amboni-ui.git", "directory": "packages/ui" },
-  "keywords": ["react","design-system","ui","components","a11y","wcag","headless"],
+  "files": [
+    "dist",
+    "LICENSE"
+  ],
+  "sideEffects": [
+    "*.css"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luiz-amboni/amboni-ui.git",
+    "directory": "packages/ui"
+  },
+  "keywords": [
+    "react",
+    "design-system",
+    "ui",
+    "components",
+    "a11y",
+    "wcag",
+    "headless"
+  ],
   "scripts": {
     "build": "vite build && tsc -p tsconfig.build.json",
     "test": "vitest run",
     "dev": "vite build --watch"
   },
-  "peerDependencies": { "react": ">=18", "react-dom": ">=18" },
-  "dependencies": { "@amboni/tokens": "0.0.0" },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "dependencies": {
+    "@amboni/tokens": "0.0.0"
+  },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.1.0",

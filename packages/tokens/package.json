@@ -24,7 +24,9 @@
   },
   "files": [
     "dist",
-    "tokens.css"
+    "tokens.css",
+    "LICENSE",
+    "README.md"
   ],
   "sideEffects": [
     "*.css"

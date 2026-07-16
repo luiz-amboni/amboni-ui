@@ -1,5 +1,5 @@
 import { useState, useEffect, type ReactNode } from 'react'
-import { Button } from '@amboni/ui'
+import { Button, Card, CardHeader, CardBody, StatCard } from '@amboni/ui'
 import { construirTema, contraste, MARCAS, type Marca } from '@amboni/tokens'
 
 /**
@@ -287,6 +287,80 @@ export default function Demo() {
           ]} />
         </Secao>
 
+
+        <Secao
+          id="statcard"
+          titulo="StatCard"
+          desc="Um número que importa. É o padrão mais copiado de qualquer painel — hoje existe reescrito em 3 páginas de um CRM e 4 do outro, todos ligeiramente diferentes. Este é o único."
+        >
+          <Exemplo codigo={`<StatCard label="Investido no período" value="R$ 1.994,31" sub="159.111 exibições" />
+
+<StatCard
+  label="Custo por pessoa" value="R$ 14,25" tone="warning"
+  delta={{ percent: 46, betterWhenUp: false }}
+  sub="quanto menor, melhor"
+/>`}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(230px,1fr))', gap: 12, width: '100%' }}>
+              <StatCard label="Investido no período" value="R$ 1.994,31" sub="159.111 exibições"
+                tone="neutral" icon={<span style={{ fontWeight: 800 }}>$</span>}
+                delta={{ percent: -23 }} />
+              <StatCard label="Pessoas que chamaram" value="140" sub="via anúncio"
+                icon={<span>💬</span>} delta={{ percent: -47, betterWhenUp: true }} />
+              <StatCard label="Custo por pessoa" value="R$ 14,25" tone="warning" sub="quanto menor, melhor"
+                icon={<span>◎</span>} delta={{ percent: 46, betterWhenUp: false }} />
+            </div>
+          </Exemplo>
+
+          <h3 style={{ font: '700 15px Sora', margin: '24px 0 10px' }}>Os três estados</h3>
+          <Exemplo codigo={`<StatCard label="Carregando" value={null} />
+<StatCard label="Retorno (ROAS)" value="—" emptyReason="precisa de vendas atribuídas" />`}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(230px,1fr))', gap: 12, width: '100%' }}>
+              <StatCard label="Carregando" value={null} icon={<span>⏳</span>} />
+              <StatCard label="Retorno (ROAS)" value="—" emptyReason="precisa de vendas atribuídas" icon={<span>↗</span>} />
+            </div>
+          </Exemplo>
+
+          <FacaNaoFaca
+            faca={{ t: 'Vazio explica o motivo', d: '"precisa de vendas atribuídas" — a pessoa entende que não quebrou.' }}
+            naoFaca={{ t: 'Um traço solto', d: 'Quem lê fica sem saber se é zero, se falhou, ou se ainda vai carregar.' }}
+          />
+          <FacaNaoFaca
+            faca={{ t: 'Investido sem julgamento', d: 'Omita betterWhenUp: gastar menos não é bom nem ruim por si só. Fica cinza.' }}
+            naoFaca={{ t: 'Verde porque caiu', d: 'Pintar de verde uma queda de investimento mente para quem lê.' }}
+          />
+
+          <h3 style={{ font: '700 15px Sora', margin: '24px 0 10px' }}>Propriedades</h3>
+          <Props linhas={[
+            ['label', 'string', '—', 'O que o número significa. Curto — vira versalete.'],
+            ['value', 'string | null', '—', "Já formatado. null = carregando (esqueleto). '—' ou '' = vazio."],
+            ['delta', '{ percent, betterWhenUp?, suffix? }', '—', 'Variação vs. anterior. Um número sozinho não diz se está bom.'],
+            ['emptyReason', 'string', '—', 'Por que está vazio. Aparece no lugar do sub.'],
+            ['tone', "'brand' | 'success' | 'warning' | 'danger' | 'neutral'", "'brand'", 'Cor do ícone. Decorativa — o rótulo é que informa.'],
+            ['sub', 'ReactNode', '—', 'Linha de apoio: de onde vem o número, ou o cálculo.'],
+          ]} />
+        </Secao>
+
+        <Secao
+          id="card"
+          titulo="Card"
+          desc="A superfície que agrupa. Plano por padrão: numa tela cheia de dados, sombra em tudo vira ruído — quando tudo está elevado, nada está."
+        >
+          <Exemplo codigo={`<Card>
+  <CardHeader title="Campanhas" subtitle="ativas primeiro" />
+  <CardBody>conteúdo</CardBody>
+</Card>`}>
+            <div style={{ width: '100%', maxWidth: 420 }}>
+              <Card>
+                <CardHeader title="Campanhas" subtitle="ativas primeiro" action={<Button size="sm" variant="ghost">Ver</Button>} />
+                <CardBody><span style={{ fontSize: 14, color: 'var(--amb-color-text-secondary)' }}>conteúdo do card</span></CardBody>
+              </Card>
+            </div>
+          </Exemplo>
+          <FacaNaoFaca
+            faca={{ t: '<Card onCardClick={...}>', d: 'Vira um <button> de verdade: foco, Enter e leitor de tela funcionam.' }}
+            naoFaca={{ t: '<div onClick={...}>', d: 'Não recebe foco, ignora o teclado, e o leitor não anuncia que dá para clicar.' }}
+          />
+        </Secao>
         <Secao
           id="tokens"
           titulo="Tokens"

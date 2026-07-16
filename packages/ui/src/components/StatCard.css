@@ -1,0 +1,114 @@
+.amb-stat {
+  display: flex;
+  gap: var(--amb-espaco-4);
+  padding: var(--amb-espaco-5);
+  align-items: flex-start;
+}
+
+.amb-stat__icon {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--amb-raio-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Fundo tingido do próprio tom, discreto o bastante para o NÚMERO dominar.
+   color-mix respeita o tema — no escuro o mesmo código dá um tingido mais suave. */
+.amb-stat__icon--brand   { background: color-mix(in srgb, var(--amb-color-brand-solid) 14%, transparent);   color: var(--amb-color-brand-text); }
+.amb-stat__icon--success { background: color-mix(in srgb, var(--amb-color-success-solid) 14%, transparent); color: var(--amb-color-success-text); }
+.amb-stat__icon--warning { background: color-mix(in srgb, var(--amb-color-warning-solid) 14%, transparent); color: var(--amb-color-warning-text); }
+.amb-stat__icon--danger  { background: color-mix(in srgb, var(--amb-color-danger-solid) 14%, transparent);  color: var(--amb-color-danger-text); }
+.amb-stat__icon--neutral { background: var(--amb-color-surfaceRaised); color: var(--amb-color-text-secondary); }
+
+.amb-stat__content { flex: 1; min-width: 0; }
+
+.amb-stat__label {
+  font-size: var(--amb-texto-xs);
+  font-weight: var(--amb-peso-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--amb-color-text-secondary);
+  display: flex;
+  align-items: center;
+  gap: var(--amb-espaco-1);
+  line-height: var(--amb-leading-snug);
+}
+
+.amb-stat__value {
+  font-family: var(--amb-fonte-display);
+  font-size: var(--amb-texto-2xl);
+  font-weight: var(--amb-peso-extrabold);
+  line-height: var(--amb-leading-tight);
+  letter-spacing: -0.02em;
+  margin-top: var(--amb-espaco-1);
+  /* tabular: sem isso a coluna "dança" a cada atualização em tempo real */
+  font-variant-numeric: tabular-nums;
+}
+
+.amb-stat__value--empty { color: var(--amb-color-text-muted); }
+
+.amb-stat__foot {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--amb-espaco-2);
+  margin-top: var(--amb-espaco-1);
+  min-height: 18px; /* reserva a linha: sem isso os cards de uma fileira ficam desalinhados */
+}
+
+.amb-stat__sub {
+  font-size: var(--amb-texto-xs);
+  color: var(--amb-color-text-secondary);
+  line-height: var(--amb-leading-snug);
+}
+
+.amb-stat__sub--empty { color: var(--amb-color-text-muted); }
+
+/* ── Variação vs. período anterior ──────────────────────────────────────────
+ * A cor NUNCA carrega o significado sozinha: vem sempre com seta e texto.
+ * 1 em cada 12 homens não distingue verde de vermelho.
+ */
+.amb-stat__delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: var(--amb-texto-xs);
+  font-weight: var(--amb-peso-bold);
+  font-variant-numeric: tabular-nums;
+}
+.amb-stat__delta--good    { color: var(--amb-color-success-text); }
+.amb-stat__delta--bad     { color: var(--amb-color-danger-text); }
+.amb-stat__delta--neutral { color: var(--amb-color-text-secondary); }
+
+.amb-stat__delta-sufixo {
+  color: var(--amb-color-text-muted);
+  font-weight: var(--amb-peso-normal);
+}
+
+/* Esqueleto de carregamento */
+.amb-stat__skeleton {
+  height: 30px;
+  width: 96px;
+  margin-top: var(--amb-espaco-1);
+  border-radius: var(--amb-raio-sm);
+  background: linear-gradient(
+    90deg,
+    var(--amb-color-surfaceRaised) 25%,
+    var(--amb-color-surfaceSunken) 50%,
+    var(--amb-color-surfaceRaised) 75%
+  );
+  background-size: 200% 100%;
+  animation: amb-shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes amb-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .amb-stat__skeleton { animation: none; }
+}

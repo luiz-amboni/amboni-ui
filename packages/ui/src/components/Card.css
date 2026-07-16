@@ -1,0 +1,71 @@
+.amb-card {
+  background: var(--amb-color-surface);
+  border: 1px solid var(--amb-color-border-default);
+  border-radius: var(--amb-raio-lg);
+  color: var(--amb-color-text-primary);
+  /* Sem overflow:hidden por padrão: quebraria menu/tooltip que precisa "vazar". */
+}
+
+/* ── Elevação ───────────────────────────────────────────────────────────────
+ * `flat` é o padrão: numa tela cheia de dados, sombra em tudo vira ruído — e
+ * quando tudo está elevado, nada está. Sombra é para o que precisa flutuar
+ * de verdade (menu, modal).
+ */
+.amb-card--flat { box-shadow: none; }
+.amb-card--raised { box-shadow: var(--amb-shadow-sm); }
+.amb-card--floating { box-shadow: var(--amb-shadow-lg); }
+
+/* Clicável: precisa PARECER clicável antes do clique, não só no hover. */
+.amb-card--interactive {
+  cursor: pointer;
+  text-align: inherit;
+  width: 100%;
+  font: inherit;
+  transition:
+    border-color var(--amb-duracao-fast) var(--amb-easing-standard),
+    box-shadow   var(--amb-duracao-fast) var(--amb-easing-standard);
+}
+.amb-card--interactive:hover {
+  border-color: var(--amb-color-brand-solid);
+  box-shadow: var(--amb-shadow-md);
+}
+
+.amb-card__header {
+  padding: var(--amb-espaco-5) var(--amb-espaco-5) 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--amb-espaco-4);
+}
+
+.amb-card__title {
+  font-family: var(--amb-fonte-display);
+  font-size: var(--amb-texto-lg);
+  font-weight: var(--amb-peso-bold);
+  line-height: var(--amb-leading-tight);
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.amb-card__subtitle {
+  font-size: var(--amb-texto-base);
+  color: var(--amb-color-text-secondary);
+  margin: var(--amb-espaco-1) 0 0;
+  line-height: var(--amb-leading-snug);
+}
+
+.amb-card__body { padding: var(--amb-espaco-5); }
+
+/* Cabeçalho + corpo juntos: o corpo não repete o respiro de cima. */
+.amb-card__header + .amb-card__body { padding-top: var(--amb-espaco-4); }
+
+.amb-card__footer {
+  padding: var(--amb-espaco-4) var(--amb-espaco-5);
+  border-top: 1px solid var(--amb-color-border-default);
+  display: flex;
+  align-items: center;
+  gap: var(--amb-espaco-2);
+}
+
+/* Para tabela dentro de card: ela precisa encostar na borda. */
+.amb-card__body--flush { padding: 0; }

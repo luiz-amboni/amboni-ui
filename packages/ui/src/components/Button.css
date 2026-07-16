@@ -78,6 +78,11 @@
 
 .amb-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
+/* Carregando NÃO é desabilitado. O botão usa disabled por baixo (para bloquear o
+   clique), mas visualmente continua ativo — só ocupado. Sem esta regra ele ficava
+   lavado a 50%, parecendo indisponível, e o giro quase sumia. */
+.amb-btn[data-amb-loading='true']:disabled { opacity: 1; }
+
 /* Ocupa a linha inteira — comum em formulário no celular. */
 .amb-btn--block { width: 100%; }
 
