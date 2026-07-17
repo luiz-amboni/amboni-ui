@@ -42,7 +42,8 @@
     "build": "vite build && tsc -p tsconfig.build.json",
     "test": "npm run typecheck && vitest run",
     "dev": "vite build --watch",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "size": "size-limit"
   },
   "peerDependencies": {
     "react": ">=18",
@@ -52,6 +53,7 @@
     "@amboni/tokens": "0.0.0"
   },
   "devDependencies": {
+    "@size-limit/preset-small-lib": "^12.1.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.1.0",
     "@testing-library/user-event": "^14.5.2",
@@ -59,15 +61,36 @@
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
     "@vitejs/plugin-react": "^4.3.4",
+    "axe-core": "^4.12.1",
     "jsdom": "^25.0.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "size-limit": "^12.1.0",
     "typescript": "^5.7.2",
     "vite": "^7.3.6",
-    "vitest": "^4.1.10"
+    "vitest": "^4.1.10",
+    "vitest-axe": "^0.1.0"
   },
   "homepage": "https://luiz-amboni.github.io/amboni-ui/",
   "bugs": {
     "url": "https://github.com/luiz-amboni/amboni-ui/issues"
-  }
+  },
+  "size-limit": [
+    {
+      "name": "a biblioteca inteira (JS)",
+      "path": "dist/index.js",
+      "limit": "15 kB"
+    },
+    {
+      "name": "o CSS inteiro",
+      "path": "dist/styles.css",
+      "limit": "9 kB"
+    },
+    {
+      "name": "importando só o Button",
+      "path": "dist/index.js",
+      "import": "{ Button }",
+      "limit": "7 kB"
+    }
+  ]
 }

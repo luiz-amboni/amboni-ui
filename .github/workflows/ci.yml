@@ -29,5 +29,10 @@ jobs:
       - name: Testes (inclui contraste WCAG)
         run: npm test
 
+      # "A biblioteca é leve" vira contrato aqui. Sem este passo, o número do README é
+      # só uma alegação que envelhece — e ninguém percebe o dia em que dobra.
+      - name: Orçamento de tamanho
+        run: npm run size -w @amboni/ui
+
       - name: Build do site de documentação
         run: npm run build -w @amboni/docs
