@@ -1,5 +1,5 @@
 import { Campo, CampoForm } from '@amboni/ui'
-import { Secao, P, Demo, Titulo, H3, Aviso, TabelaProps, FacaNaoFaca, Bloco } from '../lib/blocos'
+import { Secao, P, Demo, Titulo, H3, Aviso, TabelaProps, FacaNaoFaca, Bloco, Teclado } from '../lib/blocos'
 import { Playground } from '../lib/Playground'
 
 export default function CampoPage() {
@@ -214,6 +214,30 @@ input.dispatchEvent(new Event('input', { bubbles: true }))`}</Bloco>
           joga o contraste do texto para baixo de 2:1 e o campo vira um borrão — inclusive o
           valor que ele ainda precisa mostrar. Fundo afundado + texto secundário dizem
           "bloqueado" e continuam legíveis.
+        </P>
+      </Secao>
+
+      <Secao titulo="Teclado">
+        <P>
+          <strong>O <code>Campo</code> não tem atalho próprio — e isso é a decisão, não a
+          ausência dela.</strong> Ele é um <code>&lt;input&gt;</code> nativo: não há uma linha de{' '}
+          <code>onKeyDown</code> no componente, e nenhuma tecla é sequestrada. Todo o teclado de
+          edição de texto — seleção, palavra a palavra, desfazer, a barra de sugestões do celular,
+          o preenchimento automático do navegador — é do campo nativo, e continua inteiro
+          justamente porque não reescrevemos nada.
+        </P>
+        <Teclado
+          atalhos={[
+            { tecla: 'Tab', faz: <>Move o foco para o campo. Com <code>limpar</code>, o X é a <strong>parada seguinte</strong>: ele é focável de propósito — <code>tabIndex=-1</code> faria a ação existir só para quem tem mouse.</> },
+            { tecla: 'Enter', faz: <>Dentro de um <code>&lt;form&gt;</code>, envia — é o envio implícito do HTML, não coisa nossa. O Campo não intercepta a tecla.</> },
+            { tecla: '← → Home End', faz: <>Andam pelo texto. Edição nativa do <code>&lt;input&gt;</code>, intocada.</> },
+          ]}
+        />
+        <P>
+          Vale dizer o que <strong>não</strong> existe: Esc não limpa o campo. Seria um atalho
+          inventado por nós, que ninguém descobriria e que atropelaria o Esc de quem estiver dentro
+          de um <code>Dialogo</code> — a pessoa quer fechar o modal, e o campo comeria a tecla.
+          Quem limpa é o X, que se vê.
         </P>
       </Secao>
 

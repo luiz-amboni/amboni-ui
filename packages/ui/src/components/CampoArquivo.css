@@ -1,0 +1,163 @@
+/* ── CampoArquivo ───────────────────────────────────────────────────────────
+ * O input nativo está aqui dentro, escondido por `.amb-sr-only` (base.css) — que
+ * recorta em 1px SEM tirar da árvore de acessibilidade nem do Tab. `display: none`
+ * faria as duas coisas, e é por isso que ele não aparece em lugar nenhum deste arquivo.
+ */
+.amb-campo-arquivo {
+  font-family: var(--amb-fonte-sans);
+  display: flex;
+  flex-direction: column;
+  gap: var(--amb-espaco-2);
+}
+
+/* `position: relative` para conter o input (que é `position: absolute` pelo sr-only).
+   Sem isto ele se ancora no primeiro ancestral posicionado — que pode ser a página
+   inteira — e o 1px dele vai parar no canto superior esquerdo do documento, levando o
+   foco do teclado para longe da área que a pessoa está vendo. */
+.amb-campo-arquivo__area {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--amb-espaco-2);
+  text-align: center;
+
+  padding: var(--amb-espaco-6) var(--amb-espaco-4);
+  border: 1.5px dashed var(--amb-color-border-strong);
+  border-radius: var(--amb-raio-lg);
+  background: var(--amb-color-surfaceSunken);
+  color: var(--amb-color-text-secondary);
+  cursor: pointer;
+
+  /* ── Sobre `prefers-reduced-motion` ───────────────────────────────────────
+   * Não tem bloco de media query aqui, e é de propósito: `--amb-duracao-fast` já vira
+   * 0ms sozinho quando o sistema pede menos movimento (tokens.css), então a transição
+   * some por tabela. O <Button> precisa do bloco explícito porque o giro dele é um
+   * `@keyframes` em LOOP — e loop não é duração, continua rodando por mais que a
+   * transição zere. Aqui não há animação nenhuma, só transição: o token basta. */
+  transition:
+    border-color var(--amb-duracao-fast) var(--amb-easing-standard),
+    background-color var(--amb-duracao-fast) var(--amb-easing-standard);
+}
+
+/* Tracejado e não sólido: é a convenção universal de "solte algo aqui". Uma borda
+   sólida lê como caixa de texto, e ninguém arrasta um arquivo para dentro de um campo. */
+.amb-campo-arquivo__area:hover {
+  border-color: var(--amb-color-brand-solid);
+  background: var(--amb-color-surfaceRaised);
+}
+
+/* ── O anel de foco ─────────────────────────────────────────────────────────
+ * O foco vive no input, que tem 1px e está escondido — um anel nele seria invisível.
+ * Então o anel vai na ÁREA, que é o que a pessoa vê.
+ *
+ * `:has(:focus-visible)` e não `:focus-within`: o `:focus-within` acenderia também no
+ * clique de mouse (clicar no label foca o input), e aí sobra um anel na tela depois que
+ * a janela do sistema fecha. O `:focus-visible` já distingue teclado de mouse — a mesma
+ * regra do `.amb-focus-ring` do base.css, que aqui não serve porque o elemento focado e
+ * o elemento desenhado são dois.
+ */
+.amb-campo-arquivo__area:has(.amb-campo-arquivo__input:focus-visible) {
+  outline: 2px solid var(--amb-color-border-focus);
+  outline-offset: 2px;
+  border-color: var(--amb-color-brand-solid);
+}
+
+/* Arrastando por cima: a área precisa dizer "pode soltar" ANTES de a pessoa soltar —
+   é o único retorno que existe nesse meio segundo. */
+.amb-campo-arquivo__area[data-amb-arrastando='true'] {
+  border-color: var(--amb-color-brand-solid);
+  border-style: solid;
+  background: var(--amb-color-brand-subtle);
+  color: var(--amb-color-brand-text);
+}
+
+/* Desabilitado usa o `[data-amb-disabled]` do base.css (opacidade + pointer-events:none),
+   e aqui só o cursor. O `pointer-events: none` de lá também barra o arrasto de graça —
+   e mesmo assim o JS confere, porque um evento de teclado ou um `dispatchEvent` não
+   passam por pointer-events. */
+.amb-campo-arquivo__area[data-amb-disabled='true'] { cursor: not-allowed; }
+
+.amb-campo-arquivo__icone {
+  display: inline-flex;
+  color: currentColor;
+  opacity: 0.7;
+}
+
+.amb-campo-arquivo__texto {
+  font-size: var(--amb-texto-base);
+  font-weight: var(--amb-peso-semibold);
+  color: var(--amb-color-text-primary);
+  line-height: var(--amb-leading-snug);
+}
+
+.amb-campo-arquivo__area[data-amb-arrastando='true'] .amb-campo-arquivo__texto {
+  color: var(--amb-color-brand-text);
+}
+
+/* "ou arraste até aqui" é o atalho, não a ação: peso e cor de apoio. Ele está no nome
+   acessível de propósito (é informação), mas não pode competir com o rótulo no olho. */
+.amb-campo-arquivo__atalho {
+  font-weight: var(--amb-peso-normal);
+  color: var(--amb-color-text-muted);
+}
+
+.amb-campo-arquivo__ajuda {
+  margin: 0;
+  font-size: var(--amb-texto-xs);
+  color: var(--amb-color-text-muted);
+  line-height: var(--amb-leading-snug);
+}
+
+/* ── Erros ──────────────────────────────────────────────────────────────────
+ * Cor + PALAVRA, nunca só a cor: a mensagem diz o tamanho que veio e o limite que existe
+ * ("tem 12 MB; o limite é 5 MB"). Quem não distingue vermelho lê a mesma coisa.
+ */
+.amb-campo-arquivo__erros {
+  display: flex;
+  flex-direction: column;
+  gap: var(--amb-espaco-1);
+}
+
+.amb-campo-arquivo__erro {
+  margin: 0;
+  font-size: var(--amb-texto-xs);
+  line-height: var(--amb-leading-snug);
+  color: var(--amb-color-danger-text);
+}
+
+/* ── A lista de escolhidos ──────────────────────────────────────────────────
+ * <ul> porque são vários itens irmãos e o leitor de tela anuncia quantos. Sem ordem
+ * (<ol>) de propósito: "o terceiro anexo" não quer dizer nada.
+ */
+.amb-campo-arquivo__lista {
+  /* Some com o marcador — e é por isso que o JSX escreve `role="list"` à mão: o Safari
+     larga a semântica de lista junto com o `list-style`, e é ela que diz quantos anexos
+     existem para quem não vê as etiquetas. */
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--amb-espaco-2);
+}
+
+.amb-campo-arquivo__nome {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 18ch;
+}
+
+/* O peso do arquivo é dado secundário dentro da etiqueta: tabular para a coluna de
+   pesos não "dançar" quando um vira 9,9 MB e o outro 10 MB. */
+.amb-campo-arquivo__peso {
+  font-variant-numeric: tabular-nums;
+  opacity: 0.7;
+  font-size: var(--amb-texto-xs);
+}
+
+.amb-campo-arquivo__progresso { margin-top: var(--amb-espaco-1); }

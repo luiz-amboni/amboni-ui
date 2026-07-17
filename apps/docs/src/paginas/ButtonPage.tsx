@@ -1,5 +1,5 @@
 import { Button } from '@amboni/ui'
-import { Secao, P, Demo, Titulo, H3, Aviso, TabelaProps, FacaNaoFaca, Bloco } from '../lib/blocos'
+import { Secao, P, Demo, Titulo, H3, Aviso, TabelaProps, FacaNaoFaca, Bloco, Teclado } from '../lib/blocos'
 import { Playground } from '../lib/Playground'
 
 export default function ButtonPage() {
@@ -161,6 +161,29 @@ export default function ButtonPage() {
             texto: 'Quebra o Ctrl+clique, o "abrir em nova aba" e o botão direito. A pessoa acha que o site está com defeito.',
           }}
         />
+      </Secao>
+
+      <Secao titulo="Teclado">
+        <P>
+          O <code>Button</code> não implementa teclado nenhum, e é essa a graça: ele é um{' '}
+          <code>&lt;button&gt;</code> de verdade, então Enter e Espaço vêm do navegador — junto com
+          a ordem de foco, o <code>:focus-visible</code> e o clique do leitor de tela. Uma
+          <code> &lt;div onClick&gt;</code> teria que reimplementar tudo isso, e é sempre aqui que
+          a reimplementação fica pela metade.
+        </P>
+        <Teclado
+          atalhos={[
+            { tecla: 'Tab', faz: <>Move o foco para o botão. Com <code>disabled</code> — ou <code>loading</code>, que usa <code>disabled</code> por baixo — ele sai da ordem de foco.</> },
+            { tecla: 'Enter Espaço', faz: <>Aciona o botão. Nativo do <code>&lt;button&gt;</code>: não há <code>onKeyDown</code> neste componente.</> },
+          ]}
+        />
+        <Aviso>
+          A tecla que mais surpreende aqui não é tecla nenhuma: dentro de um{' '}
+          <code>&lt;form&gt;</code>, o Enter num campo dispara o <strong>envio implícito</strong> do
+          HTML, que aciona o primeiro botão <code>submit</code> do formulário. Como o padrão daqui é{' '}
+          <code>type="button"</code>, um <code>&lt;Button&gt;</code> qualquer não é fisgado por
+          esse Enter sem querer — veja a nota em Props.
+        </Aviso>
       </Secao>
 
       <Secao titulo="Props">

@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest'
-import { readFileSync } from 'node:fs'
+import { readFileSync, readdirSync } from 'node:fs'
 import { resolve } from 'node:path'
 
 /**
@@ -17,6 +17,23 @@ const dist = (arq: string) => {
   } catch {
     return null
   }
+}
+
+/** Todo `.js` publicado — o pacote virou um arquivo por componente, não um bundle só. */
+const todosOsJs = (): { nome: string; fonte: string }[] => {
+  const raiz = resolve(__dirname, '../dist')
+  const achar = (dir: string): string[] => {
+    try {
+      return readdirSync(dir, { withFileTypes: true }).flatMap(e => {
+        const caminho = resolve(dir, e.name)
+        if (e.isDirectory()) return achar(caminho)
+        return e.name.endsWith('.js') ? [caminho] : []
+      })
+    } catch {
+      return []
+    }
+  }
+  return achar(raiz).map(c => ({ nome: c.replace(raiz + '/', ''), fonte: readFileSync(c, 'utf8') }))
 }
 
 describe('o pacote publicado', () => {
@@ -37,14 +54,36 @@ describe('o pacote publicado', () => {
     expect(js.split('\n')[0].trim()).toMatch(/^["']use client["'];?$/)
   })
 
-  test('não empacota o React junto', () => {
-    const js = dist('index.js')
-    if (!js) return
+  test('nenhum arquivo empacota o React junto', () => {
+    const arquivos = todosOsJs()
+    if (arquivos.length === 0) return
 
-    // React empacotado = duas cópias do React na página de quem instala = hooks
-    // quebrados, com erro que não menciona a causa. Tem que ser `import ... from "react"`.
-    expect(js).toMatch(/from\s*["']react["']/)
-    expect(js).not.toMatch(/ReactCurrentDispatcher/)
+    // React empacotado = duas cópias do React na página de quem instala = hooks quebrados,
+    // com um erro que não menciona a causa.
+    //
+    // A varredura é sobre TODOS os arquivos, e isto é uma correção: o teste olhava só o
+    // `index.js`. Quando o pacote virou um arquivo por componente, o index virou só
+    // re-export e o React passou a ser importado lá dentro — o teste reprovou por olhar
+    // no lugar errado, e teria passado a proteger nada se eu tivesse afrouxado a régua.
+    // Agora ele cobre 40 arquivos em vez de 1.
+    const empacotados = arquivos.filter(a => a.fonte.includes('ReactCurrentDispatcher'))
+    expect(empacotados.map(a => a.nome), 'estes arquivos trazem o React dentro').toEqual([])
+
+    // E quem USA React tem que importá-lo de fora, nunca redeclarar.
+    const usaHook = arquivos.filter(a => /\buseState\b|\buseEffect\b|\buseRef\b/.test(a.fonte))
+    const semImport = usaHook.filter(a => !/from\s*["']react["']/.test(a.fonte))
+    expect(semImport.map(a => a.nome), 'usam hook sem importar do react').toEqual([])
+  })
+
+  test("cada arquivo de componente declara 'use client'", () => {
+    const arquivos = todosOsJs()
+    if (arquivos.length === 0) return
+
+    // Com um arquivo por componente, a diretiva vale POR ARQUIVO — e é assim que ela
+    // deveria ter sido desde o começo. Se um único componente perder a linha, importá-lo
+    // num Server Component do Next derruba o build daquele produto, e só daquele.
+    const mudos = arquivos.filter(a => !/^["']use client["']/.test(a.fonte.trimStart()))
+    expect(mudos.map(a => a.nome), "sem 'use client' na primeira linha").toEqual([])
   })
 
   test('o CSS sai com o nome que o package.json promete', () => {

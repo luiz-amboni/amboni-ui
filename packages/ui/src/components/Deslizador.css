@@ -1,0 +1,203 @@
+/**
+ * Deslizador
+ * ═════════════════════════════════════════════════════════════════════════════
+ * Os dois modos (nativo e intervalo) compartilham a trilha e o preenchimento, e é de
+ * propósito: trocar `intervalo` não pode mudar a aparência do controle, só o número de
+ * pontas. Por isso o nativo NÃO usa a trilha que o navegador desenha — ele fica
+ * transparente por cima da nossa, e só a ponta dele é pintada.
+ */
+
+.amb-deslizador {
+  display: flex;
+  flex-direction: column;
+  gap: var(--amb-espaco-2);
+  width: 100%;
+  font-family: var(--amb-fonte-sans);
+  /* touch-action: sem isto, arrastar a ponta no celular ROLA A PÁGINA junto — o navegador
+     entende o gesto como rolagem e o valor não muda. É o bug nº 1 de slider no toque. */
+  touch-action: none;
+}
+
+.amb-deslizador__valor {
+  font-size: var(--amb-texto-sm);
+  font-weight: var(--amb-peso-semibold);
+  color: var(--amb-color-text-primary);
+  /* Largura fixa por dígito: sem isto o rótulo "dança" a cada passo e o olho persegue o
+     número em vez de ler. */
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Trilha ─────────────────────────────────────────────────────────────────
+ * A altura da trilha é o desenho; o ALVO é maior (ver `__ponta` e `__nativo`). Os dois não
+ * precisam ter o mesmo tamanho — e não devem.
+ */
+.amb-deslizador__trilha {
+  position: relative;
+  width: 100%;
+  border-radius: var(--amb-raio-full);
+  background: var(--amb-color-surfaceSunken);
+  /* Espaço para a ponta não ser cortada nas extremidades (ela é centrada no valor, então
+     metade dela fica para fora da trilha em min e max). */
+  margin: 0 0;
+}
+
+.amb-deslizador--sm .amb-deslizador__trilha { height: 0.25rem; }
+.amb-deslizador--md .amb-deslizador__trilha { height: 0.375rem; }
+.amb-deslizador--lg .amb-deslizador__trilha { height: 0.5rem; }
+
+.amb-deslizador__preenchimento {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-radius: var(--amb-raio-full);
+  background: var(--amb-color-brand-solid);
+}
+
+/* ── A ponta (modo intervalo) ───────────────────────────────────────────────
+ * ALVO DE TOQUE: a caixa tem 24px mesmo com o círculo desenhado menor. É o mínimo da WCAG
+ * 2.5.8 (Target Size), e é a diferença entre acertar a ponta de primeira e caçá-la com o
+ * dedo. O que se vê é o `::after`; o que se toca é o quadrado inteiro.
+ *
+ * `translate(-50%, -50%)` + `top: 50%`: a ponta é CENTRADA no ponto do valor. Sem isso ela
+ * ficaria à direita do valor, e em `max` sairia inteira para fora da trilha.
+ */
+.amb-deslizador__ponta {
+  position: absolute;
+  top: 50%;
+  width: 1.5rem;
+  height: 1.5rem;
+  transform: translate(-50%, -50%);
+  border-radius: var(--amb-raio-full);
+  cursor: grab;
+  /* Sem isto, arrastar a ponta seleciona o texto da página inteira junto. */
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.amb-deslizador__ponta:active { cursor: grabbing; }
+
+.amb-deslizador__ponta::after {
+  content: '';
+  position: absolute;
+  inset: 0.25rem;
+  border-radius: var(--amb-raio-full);
+  background: var(--amb-color-brand-solid);
+  /* A borda na cor da superfície é o que separa as duas pontas quando elas se encostam —
+     sem ela viram uma mancha só e ninguém sabe qual pegar. */
+  border: 2px solid var(--amb-color-surface);
+  box-shadow: var(--amb-shadow-sm);
+  transition: transform var(--amb-duracao-fast) var(--amb-easing-standard);
+}
+
+.amb-deslizador__ponta:hover::after { transform: scale(1.15); }
+
+/* A ponta mínima por cima: encostadas em `max`, é a de baixo que fica inalcançável, e a
+   mínima é a que ainda tem para onde ir (para a esquerda). */
+.amb-deslizador__ponta:first-of-type { z-index: 1; }
+/* Focada, vem para a frente: o anel não pode ficar por baixo da outra ponta. */
+.amb-deslizador__ponta:focus-visible { z-index: 2; }
+
+/* ── A ponta (modo nativo) ──────────────────────────────────────────────────
+ * O input inteiro fica por cima da nossa trilha, transparente. Só a ponta dele é pintada —
+ * e ela precisa ser desenhada DUAS vezes, uma por motor, porque `::-webkit-slider-thumb` e
+ * `::-moz-range-thumb` não podem entrar no mesmo seletor: um navegador que não conhece o
+ * pseudo-elemento do outro descarta a regra INTEIRA.
+ */
+.amb-deslizador__nativo {
+  appearance: none;
+  -webkit-appearance: none;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 100%;
+  /* 24px de alvo de toque, mesmo com a trilha de 6px. Ver a nota em `__ponta`. */
+  height: 1.5rem;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.amb-deslizador__nativo:disabled { cursor: not-allowed; }
+
+.amb-deslizador__nativo::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 1rem;
+  height: 1rem;
+  border-radius: var(--amb-raio-full);
+  background: var(--amb-color-brand-solid);
+  border: 2px solid var(--amb-color-surface);
+  box-shadow: var(--amb-shadow-sm);
+  cursor: grab;
+}
+
+.amb-deslizador__nativo::-moz-range-thumb {
+  width: 1rem;
+  height: 1rem;
+  border-radius: var(--amb-raio-full);
+  background: var(--amb-color-brand-solid);
+  border: 2px solid var(--amb-color-surface);
+  box-shadow: var(--amb-shadow-sm);
+  cursor: grab;
+}
+
+/* O Firefox pinta uma trilha própria por baixo da nossa. Transparente para não somar duas. */
+.amb-deslizador__nativo::-moz-range-track {
+  background: transparent;
+}
+
+/* ── Marcas ─────────────────────────────────────────────────────────────────
+ * `aria-hidden` no TSX: o valor já é anunciado pelo controle, e um leitor de tela lendo
+ * "0 50 100" solto entre os campos é ruído.
+ */
+.amb-deslizador__marcas {
+  position: relative;
+  height: 1.25rem;
+}
+
+.amb-deslizador__marca {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--amb-espaco-1);
+  /* Centrada no valor, igual à ponta. */
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.amb-deslizador__marca-risco {
+  width: 1px;
+  height: 0.25rem;
+  background: var(--amb-color-border-strong);
+}
+
+.amb-deslizador__marca-rotulo {
+  font-size: var(--amb-texto-xs);
+  color: var(--amb-color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Desabilitado ───────────────────────────────────────────────────────────
+ * Sem `pointer-events: none` (que o .amb-disabled usa): o `aria-disabled` das pontas já
+ * barra a ação no teclado e o `disabled` barra o input nativo. Matar o ponteiro aqui
+ * também mataria o cursor `not-allowed`, que é o que explica à pessoa POR QUE nada
+ * acontece quando ela tenta arrastar.
+ */
+.amb-deslizador--desabilitado {
+  opacity: 0.5;
+}
+.amb-deslizador--desabilitado .amb-deslizador__ponta {
+  cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .amb-deslizador__ponta::after {
+    transition: none;
+  }
+  /* O crescer no hover vira nada: quem pediu menos movimento não quer o controle "pulsando"
+     enquanto o ponteiro passa. O foco e a cor continuam dizendo onde a ponta está. */
+  .amb-deslizador__ponta:hover::after {
+    transform: none;
+  }
+}

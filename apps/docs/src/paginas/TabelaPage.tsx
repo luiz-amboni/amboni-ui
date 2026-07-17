@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from 'react'
 import { Tabela, EstadoVazio, Selo, Button, Card, CardHeader, CardBody, type Coluna, type Ordem } from '@amboni/ui'
-import { Secao, P, Demo, Titulo, H3, Aviso, TabelaProps, FacaNaoFaca, Bloco } from '../lib/blocos'
+import { Secao, P, Demo, Titulo, H3, Aviso, TabelaProps, FacaNaoFaca, Bloco, Teclado } from '../lib/blocos'
 
 interface Cliente {
   id: number
@@ -484,6 +484,29 @@ expect(screen.getByLabelText('Nota de Carla Dias')).toHaveValue('')`}</Bloco>
           alinhamento. A tabela também não tem zebra de propósito: com 10 colunas a cor alternada
           vira listra e cansa. Uma borda de 1px já guia o olho.
         </P>
+      </Secao>
+
+      <Secao titulo="Teclado">
+        <P>
+          A Tabela <strong>não implementa navegação célula a célula</strong>, e não deveria: quem
+          faz isso é o leitor de tela (Ctrl+Alt+setas no VoiceOver), de graça, porque isto é um{' '}
+          <code>&lt;table&gt;</code> de verdade. O que a tabela acrescenta é o teclado dos
+          controles que ela desenha — e uma parada que quase todo mundo esquece: a área de rolagem.
+        </P>
+        <Teclado
+          apg="https://www.w3.org/WAI/ARIA/apg/patterns/table/"
+          atalhos={[
+            { tecla: 'Tab', faz: <>Passa pelo <strong>container de rolagem</strong> (uma região com nome, <code>tabIndex=0</code>) e depois pelos controles: caixas, botões de ordenar, linhas clicáveis.</> },
+            { tecla: '↑ ↓ ← →', faz: <>Com o container de rolagem focado, <strong>rolam a tabela</strong>. É por isso que ele é focável: um bloco que rola e não recebe foco esconde as colunas da direita de quem não usa mouse.</> },
+            { tecla: 'Enter Espaço', faz: <>Acionam o que está focado: o botão do cabeçalho <strong>ordena</strong> (e alterna asc/desc), a caixa <strong>marca a linha</strong>, a linha clicável <strong>abre</strong>. O Espaço na caixa <em>não</em> abre a linha — há um guarda para o evento que borbulha até a <code>&lt;tr&gt;</code>.</> },
+          ]}
+        />
+        <Aviso>
+          A linha só vira parada de Tab quando existe <code>onLinhaClick</code>. Sem ele, 50 linhas
+          focáveis seriam 50 paradas no caminho de quem só queria chegar na paginação. E quando o
+          destino é uma tela, o melhor continua sendo um <code>&lt;a&gt;</code> na primeira célula:
+          ele dá "abrir em nova aba" e Ctrl+clique, que <code>onLinhaClick</code> não tem como dar.
+        </Aviso>
       </Secao>
 
       <Secao titulo="Props">

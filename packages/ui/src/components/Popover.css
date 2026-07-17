@@ -1,0 +1,74 @@
+/**
+ * Popover
+ * ═════════════════════════════════════════════════════════════════════════════
+ * O painel é uma SUPERFÍCIE que flutua (raio-lg + sombra), igual ao do Menu — os dois
+ * saem do mesmo gesto, e um painel de filtro com canto diferente do painel de ações
+ * pareceria outro sistema.
+ *
+ * A diferença de desenho para o Menu é uma só, e é consequência do conteúdo: aqui há
+ * padding de verdade, porque dentro moram campos e botões, não itens de lista coladinhos.
+ */
+
+.amb-popover {
+  /* O invólucro precisa de uma CAIXA que o getBoundingClientRect consiga medir. Sem
+     `position: relative` de propósito: o painel é `fixed` e se posiciona pela janela —
+     `relative` aqui não ajudaria e ainda criaria um contêiner de empilhamento a mais
+     para depurar. */
+  display: inline-flex;
+}
+
+.amb-popover__painel {
+  position: fixed;
+  z-index: var(--amb-camada-popover);
+
+  /* Teto e piso: um painel de 40px encolhido num gatilho pequeno não caberia um campo, e
+     um sem teto viraria uma coluna infinita que tapa a tela que a pessoa está filtrando. */
+  min-width: 12rem;
+  max-width: min(22rem, calc(100vw - var(--amb-espaco-8)));
+  max-height: calc(100vh - var(--amb-espaco-8));
+  overflow-y: auto;
+
+  padding: var(--amb-espaco-4);
+  background: var(--amb-color-surface);
+  border: 1px solid var(--amb-color-border-default);
+  border-radius: var(--amb-raio-lg);
+  box-shadow: var(--amb-shadow-lg);
+
+  font-family: var(--amb-fonte-sans);
+  font-size: var(--amb-texto-base);
+  color: var(--amb-color-text-primary);
+}
+
+/* O painel recebe foco quando não há controle dentro (ver o JSDoc). Sem anel, esse foco
+   seria invisível e a pessoa não saberia que "entrou" em lugar nenhum.
+   Para dentro: no offset normal o anel seria cortado pela borda do próprio painel. */
+.amb-popover__painel:focus-visible {
+  outline: 2px solid var(--amb-color-border-focus);
+  outline-offset: -2px;
+}
+
+/* ── Entrada ────────────────────────────────────────────────────────────────
+ * Um deslize de 4px vindo do lado do gatilho — é o que liga o painel ao que o abriu, já
+ * que não desenhamos setinha (num painel empurrado para o canto, a seta apontaria para o
+ * nada — pior do que não ter).
+ */
+@keyframes amb-popover-de-baixo { from { opacity: 0; transform: translateY(4px); } }
+@keyframes amb-popover-de-cima { from { opacity: 0; transform: translateY(-4px); } }
+@keyframes amb-popover-da-direita { from { opacity: 0; transform: translateX(4px); } }
+@keyframes amb-popover-da-esquerda { from { opacity: 0; transform: translateX(-4px); } }
+
+.amb-popover__painel--cima { animation: amb-popover-de-baixo var(--amb-duracao-fast) var(--amb-easing-entrada); }
+.amb-popover__painel--baixo { animation: amb-popover-de-cima var(--amb-duracao-fast) var(--amb-easing-entrada); }
+.amb-popover__painel--esq { animation: amb-popover-da-direita var(--amb-duracao-fast) var(--amb-easing-entrada); }
+.amb-popover__painel--dir { animation: amb-popover-da-esquerda var(--amb-duracao-fast) var(--amb-easing-entrada); }
+
+/* Quem pediu menos movimento no sistema: o painel aparece direto. Para parte das pessoas
+   animação causa enjoo — não é preferência estética. */
+@media (prefers-reduced-motion: reduce) {
+  .amb-popover__painel--cima,
+  .amb-popover__painel--baixo,
+  .amb-popover__painel--esq,
+  .amb-popover__painel--dir {
+    animation: none;
+  }
+}

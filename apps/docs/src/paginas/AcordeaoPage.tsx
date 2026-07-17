@@ -1,5 +1,5 @@
 import { Acordeao, ItemAcordeao } from '@amboni/ui'
-import { Secao, P, Demo, Titulo, H3, Aviso, TabelaProps, FacaNaoFaca, Bloco } from '../lib/blocos'
+import { Secao, P, Demo, Titulo, H3, Aviso, TabelaProps, FacaNaoFaca, Bloco, Teclado } from '../lib/blocos'
 
 export default function AcordeaoPage() {
   return (
@@ -178,11 +178,26 @@ expandido  → manda no \`grid-template-rows: 0fr → 1fr\`. É a animação.`}<
         </P>
       </Secao>
 
-      <Secao titulo="Setas do teclado: não implementadas, de propósito">
+      <Secao titulo="Teclado">
         <P>
-          A APG trata setas em acordeão como <strong>opcional</strong>, e o Tab já alcança todos os
-          gatilhos. Uma meia implementação seria pior que nenhuma: ela roubaria as setas de dentro
-          do painel, onde pode haver um campo de texto, uma lista ou uma tabela que precisa delas.
+          O acordeão é uma pilha de <code>&lt;button&gt;</code> dentro de headings, e o teclado é o
+          deles — não há <code>onKeyDown</code> no componente. A tabela é curta de propósito, e a
+          linha mais informativa dela é a última: <strong>a ausência das setas é uma decisão</strong>,
+          não um esquecimento.
+        </P>
+        <Teclado
+          apg="https://www.w3.org/WAI/ARIA/apg/patterns/accordion/"
+          atalhos={[
+            { tecla: 'Tab', faz: <>Anda de gatilho em gatilho e, com a seção aberta, entra no painel. Painel fechado usa <code>hidden</code> de verdade, então o Tab <strong>pula o conteúdo escondido</strong> em vez de mandar o foco para um lugar invisível.</> },
+            { tecla: 'Enter Espaço', faz: <>Abrem e fecham a seção focada. No modo <code>unico</code>, apertar na seção já aberta <strong>fecha</strong> — um acordeão que só deixa trocar prende a pessoa com um painel sempre na cara.</> },
+            { tecla: '↑ ↓', faz: <><strong>Não fazem nada — de propósito.</strong> A APG trata setas em acordeão como <em>opcional</em>, e o Tab já alcança todos os gatilhos. Roubá-las quebraria as setas de dentro do painel, onde pode haver um campo, uma lista ou uma tabela que precisa delas. Meia implementação é pior que nenhuma.</> },
+          ]}
+        />
+        <P>
+          <code>ItemAcordeao disabled</code> usa o <code>disabled</code> de verdade do HTML (ao
+          contrário da <code>Aba</code>): o gatilho <strong>sai da ordem de foco</strong>. Aqui isso
+          não prende ninguém — cada seção é independente, então um gatilho fora do Tab não deixa o
+          componente inalcançável. A seção continua na tela, visivelmente indisponível.
         </P>
       </Secao>
 

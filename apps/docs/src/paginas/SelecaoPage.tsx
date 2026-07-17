@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Selecao, type OpcaoSelecao, type SelecaoSize } from '@amboni/ui'
-import { Secao, P, Demo, Titulo, H3, Aviso, TabelaProps, FacaNaoFaca, Bloco } from '../lib/blocos'
+import { Secao, P, Demo, Titulo, H3, Aviso, TabelaProps, FacaNaoFaca, Bloco, Teclado } from '../lib/blocos'
 
 const integracoes: OpcaoSelecao[] = [
   { valor: 'bling', rotulo: 'Bling' },
@@ -251,6 +251,61 @@ export default function SelecaoPage() {
           <code> Campo</code>. É o que mantém os três alinhados numa barra de filtros. Cravar px
           aqui quebraria essa linha.
         </P>
+      </Secao>
+
+      <Secao titulo="Teclado">
+        <P>
+          <strong>Os dois modos têm teclados diferentes, e não tem como ser igual:</strong> um é o{' '}
+          <code>&lt;select&gt;</code> do sistema operacional, o outro é um combobox que escrevemos.
+          Ligar <code>buscavel</code> não acrescenta busca a um select — <strong>troca o
+          componente por outro</strong>, com outras teclas. É o principal efeito colateral da prop,
+          e o que você deve pesar antes de ligá-la.
+        </P>
+
+        <H3>Nativo — o padrão</H3>
+        <P>
+          Aqui a biblioteca não escreve uma linha de teclado: quem responde é o navegador. O
+          comportamento exato <strong>varia por sistema</strong> (o Espaço abre a lista no Windows;
+          no macOS as setas já trocam o valor com a lista fechada), e essa variação é a favor —
+          é o que a pessoa já conhece do resto do computador dela, incluindo a roda nativa do
+          celular.
+        </P>
+        <Teclado
+          atalhos={[
+            { tecla: 'Tab', faz: <>Move o foco para o select. Com <code>limpavel</code>, o X é a parada seguinte.</> },
+            { tecla: 'Espaço', faz: 'Abre a lista do sistema.' },
+            { tecla: '↑ ↓', faz: 'Andam pelas opções. Pulam as desabilitadas — o navegador cuida disso.' },
+            { tecla: 'Enter', faz: 'Confirma a opção e fecha a lista.' },
+            { tecla: 'Esc', faz: 'Fecha a lista sem trocar o valor.' },
+            { tecla: 'A-Z', faz: <>Digitar letras <strong>salta para a opção</strong> que começa com elas. É a busca por digitação nativa — de graça, sem <code>buscavel</code>, e a maior parte das listas não precisa de mais que isso.</> },
+          ]}
+        />
+
+        <H3>Buscável — o combobox da APG</H3>
+        <P>
+          Aqui o teclado é nosso, e segue o padrão: <strong>o foco nunca sai do campo</strong>. Quem
+          anda pela lista é uma marca virtual (<code>aria-activedescendant</code>), porque tirar o
+          foco do input mataria a digitação — é o oposto do <code>Menu</code>, onde o foco real vai
+          para os itens.
+        </P>
+        <Teclado
+          apg="https://www.w3.org/WAI/ARIA/apg/patterns/combobox/"
+          atalhos={[
+            { tecla: '↓', faz: <>Com a lista fechada, <strong>abre</strong> (marcando a opção que já está valendo). Aberta, desce para a próxima opção válida, circulando no fim.</> },
+            { tecla: '↑', faz: 'Abre a lista, ou sobe para a opção válida anterior, circulando no começo.' },
+            { tecla: 'Home', faz: <>Primeira opção válida. Só com a lista <strong>aberta</strong> — fechada, o Home volta a ser o do cursor de texto.</> },
+            { tecla: 'End', faz: 'Última opção válida, com a lista aberta.' },
+            { tecla: 'Enter', faz: <>Escolhe a opção marcada e fecha. Com a lista fechada <strong>não é interceptado</strong>: continua enviando o formulário, como em qualquer campo.</> },
+            { tecla: 'Esc', faz: <>Fecha a lista e limpa o filtro. Chama <code>stopPropagation</code>: dentro de um <code>Dialogo</code>, fecha só a lista — um Esc, um nível.</> },
+            { tecla: 'Tab', faz: 'Fecha a lista e segue para o próximo campo. A lista nunca fica órfã sobre a tela.' },
+            { tecla: 'A-Z', faz: <>Digitar <strong>filtra</strong> (sem acento e sem caixa: "sao" acha "São Paulo") e reancora a marca na primeira opção — senão o Enter escolheria algo que a pessoa nem viu.</> },
+          ]}
+        />
+        <Aviso tipo="warn">
+          As setas <strong>pulam as opções desabilitadas</strong> nos dois modos. No buscável isso é
+          nosso (<code>proximoIndiceValido</code>); no nativo é do navegador. A opção continua
+          anunciada pelo leitor de tela — <code>aria-disabled</code>, não sumir da lista.
+        </Aviso>
       </Secao>
 
       <Secao titulo="Props">

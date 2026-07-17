@@ -1,32 +1,21 @@
 import {
   forwardRef,
-  useCallback,
-  useEffect,
   useId,
   useImperativeHandle,
   useMemo,
   useRef,
   useState,
   type HTMLAttributes,
-  type KeyboardEvent,
   type Ref,
 } from 'react'
 import { cx } from '../utils/cx'
+import { normalizar, useCombobox, type OpcaoBase } from '../utils/combobox'
 import './Selecao.css'
 
 export type SelecaoSize = 'sm' | 'md' | 'lg'
 
-export interface OpcaoSelecao {
-  /** O que vai para o `onChange` e para o banco. */
-  valor: string
-  /** O que a pessoa lê. */
-  rotulo: string
-  /**
-   * Existe, mas não pode ser escolhida agora. **Não é o mesmo que sumir da lista**:
-   * some quando não faz sentido; desabilita quando faz sentido mas está bloqueada
-   * (e aí a pessoa entende que a opção existe).
-   */
-  desabilitada?: boolean
+/** `valor`, `rotulo` e `desabilitada` vêm do miolo compartilhado do combobox. */
+export interface OpcaoSelecao extends OpcaoBase {
   /** Agrupa visualmente. Vira `<optgroup>` no nativo e `role="group"` no buscável. */
   grupo?: string
 }
@@ -84,17 +73,6 @@ function Xis() {
       <path d="M3 3 L9 9 M9 3 L3 9" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
     </svg>
   )
-}
-
-/**
- * Tira acento e caixa para comparar. Quem digita "sao" tem que achar "São Paulo":
- * ninguém acentua enquanto filtra, e uma busca que exige acento parece quebrada.
- */
-function normalizar(texto: string): string {
-  // ̀-ͯ = os acentos que o NFD separa da letra. Escrito por código, e não com os
-  // caracteres literais, porque combinantes soltos num arquivo-fonte somem em qualquer
-  // ferramenta que reindente ou normalize o texto.
-  return texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim()
 }
 
 /** Agrupa preservando o índice na lista plana — é ele que as setas e o `aria-activedescendant` usam. */
@@ -258,16 +236,10 @@ const SelecaoBuscavel = forwardRef<SelecaoRef, SelecaoProps>(function SelecaoBus
   // O <CampoForm> declara o erro UMA vez e injeta `aria-invalid` pelo clone. Ler o que
   // chega é o que faz este controle obedecer ao wrapper, igual a Campo e AreaTexto.
   const ariaInvalidDeFora = rest['aria-invalid'] === true || rest['aria-invalid'] === 'true'
-  const idBase = useId()
-  const idLista = `${idBase}-lista`
-  const idErro = `${idBase}-erro`
-  const idOpcao = (i: number) => `${idBase}-opcao-${i}`
+  const idErro = `${useId()}-erro`
 
-  const [aberto, setAberto] = useState(false)
   const [busca, setBusca] = useState('')
-  const [indiceAtivo, setIndiceAtivo] = useState(-1)
 
-  const raizRef = useRef<HTMLDivElement>(null)
   const campoRef = useRef<HTMLInputElement>(null)
   // O ref público aponta para o input — é o elemento que existe neste modo.
   useImperativeHandle(ref, () => campoRef.current as HTMLInputElement, [])
@@ -282,113 +254,30 @@ const SelecaoBuscavel = forwardRef<SelecaoRef, SelecaoProps>(function SelecaoBus
 
   const blocos = useMemo(() => agrupar(filtradas), [filtradas])
 
-  /** Anda pela lista pulando as desabilitadas, circulando nas pontas. -1 = não há nenhuma válida. */
-  const proximoValido = useCallback(
-    (de: number, passo: number): number => {
-      const total = filtradas.length
-      if (total === 0) return -1
-      let i = de
-      for (let volta = 0; volta < total; volta++) {
-        i = (i + passo + total) % total
-        if (!filtradas[i].desabilitada) return i
-      }
-      return -1
+  // Toda a máquina do combobox (marca ativa, setas, Enter, Esc, clique de fora, ids do
+  // ARIA) vem do miolo compartilhado com o Autocomplete — ver `utils/combobox.ts`. Aqui
+  // fica só o que é da Selecao: o filtro local e o valor único.
+  const cb = useCombobox<OpcaoSelecao, HTMLInputElement>({
+    itens: filtradas,
+    disabled,
+    reancorarQuando: busca,
+    aoEscolher: indice => {
+      onChange(filtradas[indice].valor)
+      cb.fechar()
     },
-    [filtradas],
-  )
-
-  const fechar = useCallback(() => {
-    setAberto(false)
-    setIndiceAtivo(-1)
+    // A lista é curta: reabrir marcando o que já está valendo é o que a pessoa espera.
+    indiceInicialAoAbrir: () => opcoes.findIndex(o => o.valor === valor && !o.desabilitada),
     // Limpa o filtro ao fechar: senão, ao reabrir, a lista aparece cortada por uma busca
     // antiga que a pessoa não lembra ter feito.
-    setBusca('')
-  }, [])
-
-  const abrirNaSelecionada = () => {
-    const i = opcoes.findIndex(o => o.valor === valor && !o.desabilitada)
-    setAberto(true)
-    setIndiceAtivo(i >= 0 ? i : proximoValido(-1, 1))
-  }
-
-  const escolher = (indice: number) => {
-    const opcao = filtradas[indice]
-    if (!opcao || opcao.desabilitada) return
-    onChange(opcao.valor)
-    fechar()
-  }
-
-  // Digitou → a lista mudou de tamanho e o índice antigo aponta para outra opção. Reancorar na
-  // primeira válida é o que impede o Enter de escolher algo que a pessoa nem viu.
-  useEffect(() => {
-    if (aberto) setIndiceAtivo(proximoValido(-1, 1))
-    // Só quando a BUSCA muda. `aberto` aqui é leitura, não gatilho: incluí-lo faria o efeito
-    // reancorar na abertura e perder a opção já selecionada.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [busca])
-
-  // Fecha ao apontar para fora. `pointerdown` e não `click`: o fechamento tem que acompanhar o
-  // gesto, não esperar o dedo levantar. E o `contains` não é detalhe — sem ele, o toque na
-  // PRÓPRIA opção desmontaria a lista antes do `click` chegar nela, e o onChange nunca rodaria.
-  useEffect(() => {
-    if (!aberto) return
-    function aoApontar(e: PointerEvent) {
-      if (!raizRef.current?.contains(e.target as Node)) fechar()
-    }
-    document.addEventListener('pointerdown', aoApontar)
-    return () => document.removeEventListener('pointerdown', aoApontar)
-  }, [aberto, fechar])
-
-  // A opção ativa tem que estar visível — navegar por seta até um item fora da área rolável
-  // deixa a pessoa às cegas.
-  useEffect(() => {
-    if (!aberto || indiceAtivo < 0) return
-    const el = document.getElementById(idOpcao(indiceAtivo))
-    // jsdom não implementa scrollIntoView. Sem a checagem, o teste explode num detalhe visual.
-    if (el && typeof el.scrollIntoView === 'function') el.scrollIntoView({ block: 'nearest' })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [aberto, indiceAtivo])
-
-  function aoTeclar(e: KeyboardEvent<HTMLInputElement>) {
-    switch (e.key) {
-      case 'ArrowDown':
-        // preventDefault senão o cursor de texto pula para o fim do campo junto.
-        e.preventDefault()
-        if (!aberto) abrirNaSelecionada()
-        else setIndiceAtivo(proximoValido(indiceAtivo, 1))
-        break
-      case 'ArrowUp':
-        e.preventDefault()
-        if (!aberto) abrirNaSelecionada()
-        else setIndiceAtivo(proximoValido(indiceAtivo, -1))
-        break
-      case 'Home':
-        if (aberto) { e.preventDefault(); setIndiceAtivo(proximoValido(-1, 1)) }
-        break
-      case 'End':
-        if (aberto) { e.preventDefault(); setIndiceAtivo(proximoValido(0, -1)) }
-        break
-      case 'Enter':
-        // preventDefault só quando há o que escolher: com a lista fechada, o Enter tem que
-        // continuar enviando o formulário como em qualquer campo.
-        if (aberto && indiceAtivo >= 0) { e.preventDefault(); escolher(indiceAtivo) }
-        break
-      case 'Escape':
-        if (aberto) { e.preventDefault(); fechar() }
-        break
-      case 'Tab':
-        // Sem preventDefault: o Tab tem que sair do campo. Só garantimos que a lista não
-        // fique órfã, aberta, sobre o resto da tela.
-        if (aberto) fechar()
-        break
-    }
-  }
+    aoFechar: () => setBusca(''),
+  })
+  const { aberto, idLista, idOpcao, indiceAtivo } = cb
 
   const mostrarLimpar = Boolean(limpavel && valor && !disabled)
 
   return (
     <div
-      ref={raizRef}
+      ref={cb.raizRef}
       className={cx(
         'amb-selecao',
         `amb-selecao--${size}`,
@@ -413,7 +302,7 @@ const SelecaoBuscavel = forwardRef<SelecaoRef, SelecaoProps>(function SelecaoBus
           aria-controls={idLista}
           aria-autocomplete="list"
           // É isto que faz o leitor de tela narrar a opção ativa SEM tirar o foco do campo.
-          aria-activedescendant={aberto && indiceAtivo >= 0 ? idOpcao(indiceAtivo) : undefined}
+          aria-activedescendant={cb.idAtivo}
           // `|| ariaInvalidDeFora`: sem isso, um `aria-invalid` vindo do <CampoForm> era
           // sobrescrito para `undefined` e o estado de erro do wrapper sumia em silêncio —
           // enquanto Campo e AreaTexto o respeitam. Uma família de formulário onde um
@@ -426,10 +315,13 @@ const SelecaoBuscavel = forwardRef<SelecaoRef, SelecaoProps>(function SelecaoBus
           disabled={disabled}
           onChange={e => {
             setBusca(e.target.value)
-            setAberto(true)
+            // Digitar com a lista fechada abre. Já aberta, quem reancora a marca ativa na
+            // primeira opção é o efeito do `reancorarQuando` — chamar `abrir()` aqui de novo
+            // faria o mesmo trabalho duas vezes.
+            if (!aberto) cb.abrir()
           }}
-          onClick={() => { if (!aberto && !disabled) abrirNaSelecionada() }}
-          onKeyDown={aoTeclar}
+          onClick={() => { if (!aberto) cb.abrir() }}
+          onKeyDown={cb.aoTeclar}
         />
 
         {mostrarLimpar && (
@@ -453,14 +345,14 @@ const SelecaoBuscavel = forwardRef<SelecaoRef, SelecaoProps>(function SelecaoBus
           <ul
             id={idLista}
             role="listbox"
-            className="amb-selecao__lista"
+            className="amb-combobox__lista"
             // O clique numa opção tiraria o foco do input (indo para o body, já que <li> não
             // é focável) e o combobox ficaria sem dono. O padrão APG exige o foco no campo.
             onMouseDown={e => e.preventDefault()}
           >
             {filtradas.length === 0 && (
               // Lista vazia sem explicação parece bug. O texto diz que a busca é que não achou.
-              <li className="amb-selecao__vazio" role="presentation">
+              <li className="amb-combobox__vazio" role="presentation">
                 Nada encontrado para “{busca}”
               </li>
             )}
@@ -468,8 +360,8 @@ const SelecaoBuscavel = forwardRef<SelecaoRef, SelecaoProps>(function SelecaoBus
             {blocos.map((bloco, i) =>
               bloco.grupo ? (
                 <li key={`${bloco.grupo}-${i}`} role="presentation">
-                  <ul role="group" aria-label={bloco.grupo} className="amb-selecao__grupo">
-                    <li className="amb-selecao__grupo-rotulo" role="presentation" aria-hidden="true">
+                  <ul role="group" aria-label={bloco.grupo} className="amb-combobox__grupo">
+                    <li className="amb-combobox__grupo-rotulo" role="presentation" aria-hidden="true">
                       {bloco.grupo}
                     </li>
                     {bloco.itens.map(({ opcao, indice }) => (
@@ -479,7 +371,7 @@ const SelecaoBuscavel = forwardRef<SelecaoRef, SelecaoProps>(function SelecaoBus
                         opcao={opcao}
                         ativa={indice === indiceAtivo}
                         escolhida={opcao.valor === valor}
-                        aoEscolher={() => escolher(indice)}
+                        aoEscolher={() => cb.escolher(indice)}
                       />
                     ))}
                   </ul>
@@ -492,7 +384,7 @@ const SelecaoBuscavel = forwardRef<SelecaoRef, SelecaoProps>(function SelecaoBus
                     opcao={opcao}
                     ativa={indice === indiceAtivo}
                     escolhida={opcao.valor === valor}
-                    aoEscolher={() => escolher(indice)}
+                    aoEscolher={() => cb.escolher(indice)}
                   />
                 ))
               ),
@@ -523,9 +415,9 @@ function Opcao({
       // aria-disabled e não `hidden`: a opção continua anunciada, só não é escolhível.
       aria-disabled={opcao.desabilitada || undefined}
       className={cx(
-        'amb-selecao__opcao',
-        ativa && 'amb-selecao__opcao--ativa',
-        opcao.desabilitada && 'amb-selecao__opcao--desabilitada',
+        'amb-combobox__opcao',
+        ativa && 'amb-combobox__opcao--ativa',
+        opcao.desabilitada && 'amb-combobox__opcao--desabilitada',
       )}
       onClick={() => { if (!opcao.desabilitada) aoEscolher() }}
     >

@@ -1,0 +1,176 @@
+/**
+ * CampoPeriodo
+ * ═════════════════════════════════════════════════════════════════════════════
+ * O gatilho imita a moldura do <Campo> em vez de reusá-la: aqui não há input nenhum — é um
+ * <button> que abre um diálogo, e enfiar um botão dentro do Campo daria um campo de texto
+ * que não aceita texto. O que é obrigatório é a ALTURA vir dos mesmos tokens, senão o
+ * período fica desalinhado do resto da barra de filtros.
+ */
+
+.amb-campo-periodo {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  font-family: var(--amb-fonte-sans);
+  min-width: 0;
+}
+
+.amb-campo-periodo__gatilho {
+  display: flex;
+  align-items: center;
+  gap: var(--amb-espaco-2);
+  width: 100%;
+  min-width: 0;
+  appearance: none;
+  font-family: inherit;
+  font-size: var(--amb-texto-base);
+  line-height: 1;
+  text-align: left;
+  color: var(--amb-color-text-primary);
+  background: var(--amb-color-surface);
+  border: 1px solid var(--amb-color-border-strong);
+  border-radius: var(--amb-raio-md);
+  cursor: pointer;
+  transition: border-color var(--amb-duracao-fast) var(--amb-easing-standard);
+}
+
+.amb-campo-periodo__gatilho:hover:not(:disabled) {
+  border-color: var(--amb-color-brand-solid);
+}
+
+.amb-campo-periodo__gatilho:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--amb-color-surfaceSunken);
+}
+
+/* Altura só pelos tokens: é o que mantém o período alinhado com Button, Campo e Selecao
+   quando ficam lado a lado numa barra de filtros. Cravar px aqui quebra essa linha. */
+.amb-campo-periodo--sm .amb-campo-periodo__gatilho {
+  height: var(--amb-altura-sm);
+  font-size: var(--amb-texto-sm);
+  padding: 0 var(--amb-espaco-3);
+}
+.amb-campo-periodo--md .amb-campo-periodo__gatilho {
+  height: var(--amb-altura-md);
+  padding: 0 var(--amb-espaco-4);
+}
+.amb-campo-periodo--lg .amb-campo-periodo__gatilho {
+  height: var(--amb-altura-lg);
+  font-size: var(--amb-texto-md);
+  padding: 0 var(--amb-espaco-5);
+}
+
+.amb-campo-periodo__icone {
+  display: flex;
+  flex-shrink: 0;
+  color: var(--amb-color-text-muted);
+}
+
+.amb-campo-periodo__texto {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Vazio é texto de instrução, não valor: mais apagado, como o placeholder do Campo. */
+.amb-campo-periodo__texto--vazio {
+  color: var(--amb-color-text-muted);
+}
+
+/* ── Painel ─────────────────────────────────────────────────────────────────
+ * Mesma limitação da Selecao e do CampoData: `absolute`, então um ancestral com
+ * `overflow: hidden` corta.
+ */
+.amb-campo-periodo__painel {
+  position: absolute;
+  top: calc(100% + var(--amb-espaco-1));
+  left: 0;
+  z-index: var(--amb-camada-popover);
+  display: flex;
+  background: var(--amb-color-surface);
+  border: 1px solid var(--amb-color-border-default);
+  border-radius: var(--amb-raio-lg);
+  box-shadow: var(--amb-shadow-lg);
+  animation: amb-campo-periodo-entrada var(--amb-duracao-fast) var(--amb-easing-entrada);
+}
+
+/* Os atalhos ficam à ESQUERDA, antes da grade: são o caminho principal, e caminho principal
+   se lê primeiro — tanto no olho (que varre da esquerda) quanto no Tab. */
+.amb-campo-periodo__atalhos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--amb-espaco-1);
+  padding: var(--amb-espaco-3);
+  border-right: 1px solid var(--amb-color-border-default);
+  background: var(--amb-color-surfaceSunken);
+  border-top-left-radius: var(--amb-raio-lg);
+  border-bottom-left-radius: var(--amb-raio-lg);
+}
+
+.amb-campo-periodo__atalho {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  /* Alvo de toque: um item de 20px é impossível de acertar com o dedo. */
+  min-height: var(--amb-altura-sm);
+  padding: 0 var(--amb-espaco-3);
+  border-radius: var(--amb-raio-sm);
+  font-family: inherit;
+  font-size: var(--amb-texto-sm);
+  color: var(--amb-color-text-primary);
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color var(--amb-duracao-fast) var(--amb-easing-standard);
+}
+
+.amb-campo-periodo__atalho:hover {
+  background: var(--amb-color-brand-subtle);
+  color: var(--amb-color-brand-text);
+}
+
+.amb-campo-periodo__calendarios {
+  display: flex;
+  gap: var(--amb-espaco-5);
+  padding: var(--amb-espaco-3);
+}
+
+/* Abaixo de 640px o segundo mês nem é renderizado (decisão em JS, no matchMedia) — aqui só
+   empilhamos os atalhos sobre a grade, que lado a lado não caberia. */
+@media (max-width: 640px) {
+  .amb-campo-periodo__painel {
+    flex-direction: column;
+  }
+  .amb-campo-periodo__atalhos {
+    flex-direction: row;
+    flex-wrap: wrap;
+    border-right: 0;
+    border-bottom: 1px solid var(--amb-color-border-default);
+    border-radius: var(--amb-raio-lg) var(--amb-raio-lg) 0 0;
+  }
+}
+
+@keyframes amb-campo-periodo-entrada {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Quem pediu menos movimento no sistema: o painel aparece direto. Para parte das pessoas
+   animação causa enjoo — não é preferência estética. */
+@media (prefers-reduced-motion: reduce) {
+  .amb-campo-periodo__painel {
+    animation: none;
+  }
+  .amb-campo-periodo__gatilho,
+  .amb-campo-periodo__atalho {
+    transition: none;
+  }
+}

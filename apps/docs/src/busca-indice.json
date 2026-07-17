@@ -70,6 +70,53 @@
   ]
  },
  {
+  "slug": "limitacoes",
+  "titulo": "Limitações",
+  "grupo": "Começar",
+  "secoes": [
+   {
+    "texto": "Por que esta página existe",
+    "nivel": 2
+   },
+   {
+    "texto": "O que não existe",
+    "nivel": 2
+   },
+   {
+    "texto": "O que existe e tem defeito conhecido",
+    "nivel": 2
+   },
+   {
+    "texto": "O que a gente testa — e o que não",
+    "nivel": 2
+   },
+   {
+    "texto": "Onde as grandes ganham de nós, sem discussão",
+    "nivel": 2
+   },
+   {
+    "texto": "Menu e Dica não medem a janela",
+    "nivel": 3
+   },
+   {
+    "texto": "A Dica é inacessível no celular, por natureza",
+    "nivel": 3
+   },
+   {
+    "texto": "O fundo escuro do modal não funciona em navegador antigo",
+    "nivel": 3
+   },
+   {
+    "texto": "A Seleção buscável esbarra num bug do VoiceOver",
+    "nivel": 3
+   },
+   {
+    "texto": "O Provedor de Avisos não convive com o useAviso no mesmo componente",
+    "nivel": 3
+   }
+  ]
+ },
+ {
   "slug": "cores",
   "titulo": "Cores",
   "grupo": "Fundamentos",
@@ -786,6 +833,10 @@
     "nivel": 2
    },
    {
+    "texto": "Teclado",
+    "nivel": 2
+   },
+   {
     "texto": "Props",
     "nivel": 2
    },
@@ -826,6 +877,10 @@
    },
    {
     "texto": "perigo e atalho",
+    "nivel": 2
+   },
+   {
+    "texto": "Teclado",
     "nivel": 2
    },
    {
@@ -880,6 +935,10 @@
     "nivel": 2
    },
    {
+    "texto": "Teclado",
+    "nivel": 2
+   },
+   {
     "texto": "Props",
     "nivel": 2
    },
@@ -931,6 +990,10 @@
     "nivel": 2
    },
    {
+    "texto": "Teclado",
+    "nivel": 2
+   },
+   {
     "texto": "Props",
     "nivel": 2
    },
@@ -963,6 +1026,10 @@
    },
    {
     "texto": "Erro",
+    "nivel": 2
+   },
+   {
+    "texto": "Teclado",
     "nivel": 2
    },
    {
@@ -1009,6 +1076,10 @@
     "nivel": 2
    },
    {
+    "texto": "Teclado",
+    "nivel": 2
+   },
+   {
     "texto": "Props",
     "nivel": 2
    },
@@ -1018,6 +1089,14 @@
    },
    {
     "texto": "Três limitações que vêm junto",
+    "nivel": 3
+   },
+   {
+    "texto": "Nativo — o padrão",
+    "nivel": 3
+   },
+   {
+    "texto": "Buscável — o combobox da APG",
     "nivel": 3
    },
    {
@@ -1052,6 +1131,10 @@
     "nivel": 2
    },
    {
+    "texto": "Teclado",
+    "nivel": 2
+   },
+   {
     "texto": "Props — Caixa",
     "nivel": 2
    },
@@ -1073,6 +1156,18 @@
    },
    {
     "texto": "Interruptor ou Caixa? A pergunta é \"quando vale?\"",
+    "nivel": 3
+   },
+   {
+    "texto": "Caixa",
+    "nivel": 3
+   },
+   {
+    "texto": "GrupoRadio",
+    "nivel": 3
+   },
+   {
+    "texto": "Interruptor",
     "nivel": 3
    },
    {
@@ -1226,6 +1321,10 @@
    },
    {
     "texto": "Dentro de um Card",
+    "nivel": 2
+   },
+   {
+    "texto": "Teclado",
     "nivel": 2
    },
    {
@@ -1606,6 +1705,10 @@
     "nivel": 2
    },
    {
+    "texto": "Teclado",
+    "nivel": 2
+   },
+   {
     "texto": "Props — Dialogo",
     "nivel": 2
    },
@@ -1646,6 +1749,10 @@
    },
    {
     "texto": "Limitações conhecidas",
+    "nivel": 2
+   },
+   {
+    "texto": "Teclado",
     "nivel": 2
    },
    {
@@ -1697,6 +1804,10 @@
    },
    {
     "texto": "O valor vira id — e por isso é higienizado",
+    "nivel": 2
+   },
+   {
+    "texto": "Teclado",
     "nivel": 2
    },
    {
@@ -1755,7 +1866,7 @@
     "nivel": 2
    },
    {
-    "texto": "Setas do teclado: não implementadas, de propósito",
+    "texto": "Teclado",
     "nivel": 2
    },
    {
@@ -1803,6 +1914,10 @@
    },
    {
     "texto": "As três formas de um item",
+    "nivel": 2
+   },
+   {
+    "texto": "Teclado",
     "nivel": 2
    },
    {
@@ -1858,6 +1973,10 @@
    },
    {
     "texto": "O que o leitor de tela ouve",
+    "nivel": 2
+   },
+   {
+    "texto": "Teclado",
     "nivel": 2
    },
    {

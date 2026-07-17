@@ -1,0 +1,38 @@
+/* ── Tecla ──────────────────────────────────────────────────────────────────
+ * O `<kbd>` do navegador vem em monoespaçada e no tamanho do texto em volta — o que
+ * numa frase ("aperte Ctrl K para buscar") deixa a tecla maior que a frase, porque a
+ * monoespaçada padrão desenha grande. Daí o reset completo.
+ */
+.amb-tecla {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  font-family: var(--amb-fonte-mono);
+  /* `em` e não token fixo: a tecla acompanha o texto onde está inserida. Cravar
+     `--amb-texto-xs` faria a tecla ficar do mesmo tamanho num parágrafo e num título —
+     e num título ela sumiria. */
+  font-size: 0.85em;
+  font-weight: var(--amb-peso-medium);
+  line-height: 1;
+
+  /* min-width igual à altura: "K" e "Esc" ficam na mesma família de caixinha, e uma
+     tecla de letra única não vira um retângulo estreito e torto no meio da frase. */
+  min-width: 1.75em;
+  height: 1.75em;
+  padding: 0 0.4em;
+
+  color: var(--amb-color-text-secondary);
+  background: var(--amb-color-surfaceRaised);
+  border: 1px solid var(--amb-color-border-strong);
+  /* A sombra de 1px é a "espessura" da tecla — é o que faz ler como algo que afunda.
+     Vem da borda (token), não de um preto inventado: assim o relevo continua existindo
+     no tema escuro em vez de virar um borrão. */
+  box-shadow: 0 1px 0 var(--amb-color-border-strong);
+  border-radius: var(--amb-raio-sm);
+
+  vertical-align: middle;
+  white-space: nowrap;
+  /* A tecla é uma etiqueta, não texto para copiar junto com a frase. */
+  user-select: none;
+}

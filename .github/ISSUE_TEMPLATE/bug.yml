@@ -1,0 +1,47 @@
+name: Bug
+description: Algo não funciona como a documentação diz
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Falha de segurança não vem por aqui** — use [Security → Report a vulnerability](https://github.com/luiz-amboni/amboni-ui/security/advisories/new). Issue é pública e avisaria o mundo antes de existir correção.
+
+  - type: textarea
+    id: oque
+    attributes:
+      label: O que acontece
+      description: E o que você esperava que acontecesse.
+    validations: { required: true }
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Como reproduzir
+      description: |
+        O menor trecho que mostra o problema. Um link de StackBlitz/CodeSandbox vale mais que qualquer descrição.
+      render: tsx
+    validations: { required: true }
+
+  - type: input
+    id: versao
+    attributes:
+      label: Versão do @amboni/ui
+      placeholder: 0.1.0
+    validations: { required: true }
+
+  - type: dropdown
+    id: onde
+    attributes:
+      label: Onde
+      multiple: true
+      options: [Chrome, Firefox, Safari, Edge, celular, Next.js / SSR, Vite, teste (jsdom)]
+
+  - type: checkboxes
+    id: teclado
+    attributes:
+      label: Acessibilidade
+      description: Se o bug for de comportamento, isto costuma ser a pista.
+      options:
+        - label: Reproduz também navegando por teclado (Tab, setas, Enter, Esc)
+        - label: Reproduz com leitor de tela

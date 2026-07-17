@@ -1,0 +1,162 @@
+/* ── LinhaDoTempo ───────────────────────────────────────────────────────────
+ * `list-style: none` tira a bolinha — e no Safari tira TAMBÉM a semântica de lista
+ * (ele deixa de anunciar "lista de 8 itens", que é metade do motivo de usar <ol>).
+ * É por isso que o componente escreve `role="list"` de propósito num elemento que já
+ * tem esse papel: não é redundância, é o contra-veneno de um bug conhecido do WebKit.
+ */
+.amb-linha-tempo {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-family: var(--amb-fonte-sans);
+  display: flex;
+}
+
+.amb-linha-tempo--vertical { flex-direction: column; }
+.amb-linha-tempo--horizontal {
+  flex-direction: row;
+  /* Histórico comprido não empurra a página: rola dentro de si mesmo. */
+  overflow-x: auto;
+}
+
+.amb-linha-tempo__item {
+  display: flex;
+  gap: var(--amb-espaco-3);
+}
+
+.amb-linha-tempo--horizontal .amb-linha-tempo__item {
+  flex-direction: column;
+  flex: 1;
+  min-width: 8rem;
+}
+
+/* ── O eixo (pontinho + linha) ──────────────────────────────────────────────
+ * Uma coluna estreita à esquerda. A linha cresce com `flex: 1` para acompanhar a
+ * altura do conteúdo ao lado: uma descrição de 4 linhas estica o traço sozinha, sem
+ * ninguém medir nada em JS.
+ */
+.amb-linha-tempo__eixo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.amb-linha-tempo--horizontal .amb-linha-tempo__eixo {
+  flex-direction: row;
+  align-items: center;
+}
+
+.amb-linha-tempo__ponto {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--amb-raio-full);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 2px solid var(--amb-linha-tempo-cor);
+  background: var(--amb-color-surface);
+  color: var(--amb-linha-tempo-cor);
+  /* Alinha o centro do pontinho com a primeira linha do título ao lado. Sem isto ele
+     flutua colado no topo e a linha do tempo parece torta. */
+  margin-top: 1px;
+}
+
+.amb-linha-tempo--horizontal .amb-linha-tempo__ponto { margin-top: 0; }
+
+/* O glifo "!" e o "i": pequenos e em negrito para caberem em 20px e ainda serem
+   reconhecíveis. `line-height: 1` porque o padrão do texto empurraria para baixo. */
+.amb-linha-tempo__glifo {
+  font-size: 11px;
+  font-weight: var(--amb-peso-bold);
+  line-height: 1;
+  font-family: var(--amb-fonte-sans);
+}
+
+/* ── Tons ───────────────────────────────────────────────────────────────────
+ * Cada tom só declara a variável de cor; as regras acima montam o desenho. Combinação
+ * fora das testadas em @amboni/tokens não existe aqui.
+ *
+ * O ponto CHEIO (tom marca) é a única exceção de fundo: ele é o evento em destaque, e
+ * um círculo sólido é a forma que diz isso sem depender da cor.
+ */
+.amb-linha-tempo__ponto--neutro { --amb-linha-tempo-cor: var(--amb-color-border-strong); }
+.amb-linha-tempo__ponto--marca {
+  --amb-linha-tempo-cor: var(--amb-color-brand-solid);
+  background: var(--amb-color-brand-solid);
+  color: var(--amb-color-text-onBrand);
+}
+.amb-linha-tempo__ponto--sucesso { --amb-linha-tempo-cor: var(--amb-color-success-text); }
+.amb-linha-tempo__ponto--aviso { --amb-linha-tempo-cor: var(--amb-color-warning-text); }
+.amb-linha-tempo__ponto--perigo { --amb-linha-tempo-cor: var(--amb-color-danger-text); }
+.amb-linha-tempo__ponto--info { --amb-linha-tempo-cor: var(--amb-color-info-text); }
+
+/* ── A linha ────────────────────────────────────────────────────────────────
+ * Sempre neutra, mesmo entre dois eventos coloridos: ela liga os eventos, não classifica
+ * nenhum. Linha vermelha entre dois pontos vermelhos vira um borrão e faz o histórico
+ * parecer um alerta gigante.
+ */
+.amb-linha-tempo__linha {
+  flex: 1;
+  background: var(--amb-color-border-default);
+}
+
+.amb-linha-tempo--vertical .amb-linha-tempo__linha {
+  width: 2px;
+  min-height: var(--amb-espaco-4);
+  margin: var(--amb-espaco-1) 0;
+}
+
+.amb-linha-tempo--horizontal .amb-linha-tempo__linha {
+  height: 2px;
+  min-width: var(--amb-espaco-4);
+  margin: 0 var(--amb-espaco-1);
+}
+
+/* ── O conteúdo ─────────────────────────────────────────────────────────────
+ * `padding-bottom` no item, e não `gap` na lista: o espaço entre eventos precisa ficar
+ * DENTRO do item para a linha do eixo cobrir esse vão. Com `gap`, o traço quebra a cada
+ * evento e vira um tracejado que ninguém pediu.
+ */
+.amb-linha-tempo__conteudo {
+  min-width: 0;
+  padding-bottom: var(--amb-espaco-5);
+}
+
+.amb-linha-tempo--compacta .amb-linha-tempo__conteudo { padding-bottom: var(--amb-espaco-3); }
+
+/* O último item não tem linha embaixo, logo não precisa do vão que ela ocuparia. */
+.amb-linha-tempo__item:last-child .amb-linha-tempo__conteudo { padding-bottom: 0; }
+
+.amb-linha-tempo--horizontal .amb-linha-tempo__conteudo {
+  padding-bottom: 0;
+  padding-right: var(--amb-espaco-4);
+}
+
+.amb-linha-tempo__titulo {
+  margin: 0;
+  font-size: var(--amb-texto-base);
+  font-weight: var(--amb-peso-semibold);
+  line-height: var(--amb-leading-snug);
+  color: var(--amb-color-text-primary);
+}
+
+.amb-linha-tempo--compacta .amb-linha-tempo__titulo { font-size: var(--amb-texto-sm); }
+
+/* A data é apoio, não manchete: quem lê varre os títulos e só desce ao horário quando
+   precisa. Por isso `muted` e o menor tamanho da escala. */
+.amb-linha-tempo__data {
+  display: block;
+  margin-top: 2px;
+  font-size: var(--amb-texto-xs);
+  color: var(--amb-color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.amb-linha-tempo__descricao {
+  margin: var(--amb-espaco-1) 0 0;
+  font-size: var(--amb-texto-sm);
+  line-height: var(--amb-leading-normal);
+  color: var(--amb-color-text-secondary);
+}

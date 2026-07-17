@@ -1,0 +1,45 @@
+/**
+ * As fontes, servidas do DISCO — e é aqui que mora metade da estabilidade do teste visual.
+ * ═════════════════════════════════════════════════════════════════════════════
+ *
+ * DECISÃO: empacotar Manrope e JetBrains Mono localmente, em vez de puxar do Google Fonts
+ * como o site da documentação faz.
+ *
+ * PORQUÊ: fonte que baixa da rede transforma o teste num sorteio. O `font-display: swap`
+ * do Google desenha primeiro na fonte de sistema e troca quando o arquivo chega — então o
+ * print sai em Manrope, ou em system-ui, dependendo de a rede do CI estar boa naquele
+ * minuto. Quando o runner tem um soluço de DNS, o teste reprova sem ninguém ter mexido em
+ * uma linha de código; alguém olha o diff, vê "a fonte mudou", não entende, roda de novo,
+ * passa. É exatamente assim que uma suíte visual perde a confiança do time e vira `--
+ * --update-snapshots` automático. Um teste que reprova por motivo aleatório é pior que
+ * nenhum teste: ele treina as pessoas a ignorar a reprovação.
+ *
+ * Do disco, o arquivo está lá antes do primeiro pixel. Não há rede envolvida, nem no seu
+ * Mac nem no CI. `font-display: block` reforça: sem texto até a fonte estar pronta —
+ * nunca um print no meio da troca. (O spec ainda espera `document.fonts.ready`; cinto e
+ * suspensório, porque o custo é milissegundos.)
+ *
+ * Só o subconjunto `latin`, que é o que a galeria escreve — 24 kB + 31 kB. Os subsets
+ * cirílico, grego e vietnamita do Google somariam ~200 kB para caracteres que nenhum print
+ * contém.
+ *
+ * LICENÇA: as duas são SIL Open Font License 1.1 — redistribuir é permitido, inclusive
+ * embutido. Manrope © Mikhail Sharanda; JetBrains Mono © JetBrains. Nenhuma sai no pacote
+ * publicado: `files` no package.json lista só `dist`, e esta pasta é ferramenta de teste.
+ */
+
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 400 800; /* variável: um arquivo cobre do normal ao extrabold */
+  font-display: block;
+  src: url('./manrope-latin.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400 500;
+  font-display: block;
+  src: url('./jetbrains-mono-latin.woff2') format('woff2');
+}

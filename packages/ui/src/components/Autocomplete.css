@@ -1,0 +1,164 @@
+/**
+ * Autocomplete
+ * ═════════════════════════════════════════════════════════════════════════════
+ * A LISTA não está aqui: mora em `utils/combobox.css`, compartilhada com a Selecao
+ * buscável. Aqui fica só o campo — que é onde os dois realmente diferem, porque neste as
+ * etiquetas moram DENTRO da moldura.
+ *
+ * A moldura é o `__controle`, não o `<input>`. É essa inversão que permite as etiquetas e o
+ * cursor dividirem a mesma caixa: o input vira um campo transparente que só cresce até o
+ * fim da linha.
+ */
+
+.amb-autocomplete {
+  display: inline-flex;
+  flex-direction: column;
+  gap: var(--amb-espaco-1);
+  font-family: var(--amb-fonte-sans);
+  /* min-width:0 para o campo poder encolher dentro de um grid/flex sem estourar a coluna. */
+  min-width: 0;
+}
+
+.amb-autocomplete__controle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  /* As etiquetas passam para a linha de baixo em vez de espremerem o campo até sumir. */
+  flex-wrap: wrap;
+  gap: var(--amb-espaco-1);
+
+  width: 100%;
+  min-width: 0;
+  background: var(--amb-color-surface);
+  border: 1px solid var(--amb-color-border-strong);
+  border-radius: var(--amb-raio-md);
+  /* text: a moldura inteira é área de digitação (o onClick foca o campo). O cursor precisa
+     prometer isso, senão a pessoa não percebe que dá para clicar na sobra. */
+  cursor: text;
+  transition: border-color var(--amb-duracao-fast) var(--amb-easing-standard);
+}
+
+.amb-autocomplete__controle:hover { border-color: var(--amb-color-brand-solid); }
+
+/**
+ * O anel de foco vai na MOLDURA, não no <input>.
+ *
+ * `:focus-within` porque o input de dentro é transparente e sem borda: um anel nele
+ * apareceria no meio da moldura, do lado das etiquetas, e não em volta do campo. É o
+ * mesmo motivo de o `.amb-focus-ring` não ser usado aqui — ele mira `:focus-visible` do
+ * próprio elemento.
+ *
+ * O preço assumido: o anel também acende no clique de mouse (`:focus-within` não tem a
+ * inteligência do `:focus-visible`). Num campo de texto isso é aceitável — o cursor já
+ * está piscando ali de qualquer jeito.
+ */
+.amb-autocomplete__controle:focus-within {
+  outline: 2px solid var(--amb-color-border-focus);
+  outline-offset: 2px;
+  border-color: var(--amb-color-brand-solid);
+}
+
+/* ── Tamanhos ───────────────────────────────────────────────────────────────
+ * Altura só pelos tokens: é o que mantém o Autocomplete alinhado com o Button, o Campo e
+ * a Selecao quando ficam lado a lado numa barra de filtros. Cravar px aqui quebra a linha.
+ *
+ * `min-height` e não `height`: com etiquetas em duas linhas o campo PRECISA crescer. Um
+ * height fixo cortaria a segunda linha e as etiquetas vazariam para fora da moldura.
+ */
+.amb-autocomplete--sm .amb-autocomplete__controle {
+  min-height: var(--amb-altura-sm);
+  padding: var(--amb-espaco-1) var(--amb-espaco-3) var(--amb-espaco-1) var(--amb-espaco-8);
+  font-size: var(--amb-texto-sm);
+}
+.amb-autocomplete--md .amb-autocomplete__controle {
+  min-height: var(--amb-altura-md);
+  padding: var(--amb-espaco-1) var(--amb-espaco-3) var(--amb-espaco-1) var(--amb-espaco-8);
+}
+.amb-autocomplete--lg .amb-autocomplete__controle {
+  min-height: var(--amb-altura-lg);
+  padding: var(--amb-espaco-2) var(--amb-espaco-4) var(--amb-espaco-2) var(--amb-espaco-10);
+  font-size: var(--amb-texto-md);
+}
+
+.amb-autocomplete__campo {
+  /* reset: input traz estilo do navegador que muda entre Chrome/Safari/Firefox */
+  appearance: none;
+  border: 0;
+  outline: none;
+  background: transparent;
+  /* Cresce até o fim da linha, mas aceita encolher: `min-width` num input é `size`
+     (≈20 caracteres) por padrão, e sem o 0 aqui a moldura estoura a coluna assim que
+     entra a primeira etiqueta. O 6rem é o piso para o campo continuar utilizável. */
+  flex: 1 1 6rem;
+  min-width: 0;
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: 1;
+  color: var(--amb-color-text-primary);
+}
+
+.amb-autocomplete__campo::placeholder { color: var(--amb-color-text-muted); }
+
+.amb-autocomplete__lupa {
+  position: absolute;
+  left: var(--amb-espaco-3);
+  /* Alinha com a PRIMEIRA linha do campo, não com o centro: com etiquetas em duas linhas,
+     um ícone centralizado flutuaria no meio do nada. */
+  top: var(--amb-espaco-3);
+  display: flex;
+  /* O clique atravessa e chega na moldura, que foca o campo. Sem isto, clicar exatamente
+     na lupa — que é onde a pessoa mira — não faz nada. */
+  pointer-events: none;
+  color: var(--amb-color-text-muted);
+}
+
+.amb-autocomplete--desabilitado .amb-autocomplete__controle {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--amb-color-surfaceSunken);
+}
+.amb-autocomplete--desabilitado .amb-autocomplete__controle:hover {
+  border-color: var(--amb-color-border-strong);
+}
+
+/* ── Erro ───────────────────────────────────────────────────────────────────
+ * Borda + MENSAGEM. A borda vermelha sozinha não diz o que está errado, e quem não
+ * distingue vermelho não vê aviso nenhum — o texto é que carrega o recado.
+ */
+.amb-autocomplete--erro .amb-autocomplete__controle,
+.amb-autocomplete--erro .amb-autocomplete__controle:hover {
+  border-color: var(--amb-color-danger-solid);
+}
+
+.amb-autocomplete__erro {
+  margin: 0;
+  font-size: var(--amb-texto-sm);
+  line-height: var(--amb-leading-snug);
+  color: var(--amb-color-danger-text);
+}
+
+/* ── "Buscando…" ────────────────────────────────────────────────────────────
+ * Um ponto que pulsa, não um giro: o <Giro> é uma região viva e anunciaria por conta
+ * própria dentro do listbox (ver o comentário no TSX). Aqui a animação é só para o olho —
+ * quem avisa o leitor de tela é o role="status" do rodapé.
+ */
+.amb-autocomplete__pulso {
+  width: 0.5rem;
+  height: 0.5rem;
+  flex-shrink: 0;
+  border-radius: var(--amb-raio-full);
+  background: var(--amb-color-brand-solid);
+  animation: amb-autocomplete-pulso var(--amb-duracao-slow) var(--amb-easing-standard) infinite;
+}
+
+@keyframes amb-autocomplete-pulso {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+/* Menos movimento: o ponto fica aceso e parado. A informação ("está buscando") está no
+   texto ao lado — a animação nunca foi ela. */
+@media (prefers-reduced-motion: reduce) {
+  .amb-autocomplete__pulso { animation: none; opacity: 1; }
+}

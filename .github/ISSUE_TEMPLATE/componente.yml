@@ -1,0 +1,31 @@
+name: Componente ou recurso novo
+description: Falta alguma coisa
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problema
+    attributes:
+      label: Que problema real você está tentando resolver
+      description: |
+        Descreva a **tela**, não o componente. "Preciso de um Carousel" é uma solução; "preciso mostrar 8 fotos de produto num card estreito" é o problema — e às vezes a resposta é outra.
+    validations: { required: true }
+
+  - type: textarea
+    id: hoje
+    attributes:
+      label: Como você resolve hoje
+      description: Contornou com o quê? Isso mostra o custo real de não ter.
+
+  - type: textarea
+    id: referencia
+    attributes:
+      label: Referência
+      description: Alguma biblioteca faz isso bem? Qual, e o que ela acerta?
+
+  - type: checkboxes
+    id: ciente
+    attributes:
+      label: Antes de abrir
+      options:
+        - label: Conferi que não existe equivalente em https://luiz-amboni.github.io/amboni-ui/
+          required: true

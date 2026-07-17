@@ -1,5 +1,5 @@
 import { Trilha, ItemTrilha } from '@amboni/ui'
-import { Secao, P, Demo, Titulo, H3, Aviso, TabelaProps, FacaNaoFaca, Bloco } from '../lib/blocos'
+import { Secao, P, Demo, Titulo, H3, Aviso, TabelaProps, FacaNaoFaca, Bloco, Teclado } from '../lib/blocos'
 
 export default function TrilhaPage() {
   return (
@@ -142,6 +142,29 @@ export default function TrilhaPage() {
           <code>href</code> mantém o link real para quem abre em nova aba, e o <code>onClick</code>{' '}
           deixa o router interceptar o clique normal.
         </P>
+      </Secao>
+
+      <Secao titulo="Teclado">
+        <P>
+          A Trilha não tem teclado próprio — são links e botões de verdade, e o navegador cuida de
+          todos eles. O que ela faz é garantir que <strong>nada no caminho seja uma parada
+          inútil</strong>: o item atual não é link (não se navega para onde já se está) e o{' '}
+          <code>"…"</code> é botão de verdade, não um texto morto.
+        </P>
+        <Teclado
+          apg="https://www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/"
+          atalhos={[
+            { tecla: 'Tab', faz: <>Anda pelos itens navegáveis. <strong>O item atual não é parada</strong> — ele é um <code>&lt;span aria-current="page"&gt;</code>, não um link.</> },
+            { tecla: 'Enter', faz: <>Segue o link focado. Nativo do <code>&lt;a&gt;</code> — junto com Ctrl+clique, "abrir em nova aba" e o botão direito, que um <code>&lt;div onClick&gt;</code> não teria.</> },
+            { tecla: 'Enter Espaço', faz: <>No <code>"…"</code> (que expande o caminho colapsado) e no item que só tem <code>onClick</code>: os dois são <code>&lt;button&gt;</code>. O Espaço aciona botão, mas <strong>não aciona link</strong> — num <code>&lt;a&gt;</code> ele rola a página.</> },
+          ]}
+        />
+        <Aviso>
+          O <code>"…"</code> ser botão é a decisão de acessibilidade da Trilha. Um <code>"…"</code>{' '}
+          morto anuncia que existe caminho escondido e não deixa chegar nele — beco sem saída. Um
+          menu suspenso resolveria também, e exigiria camada, foco preso e fechar-no-Esc: a Trilha
+          não é lugar de estrear isso.
+        </Aviso>
       </Secao>
 
       <Secao titulo="Props">

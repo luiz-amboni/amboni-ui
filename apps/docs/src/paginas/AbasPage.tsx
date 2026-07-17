@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Abas, ListaAbas, Aba, PainelAba } from '@amboni/ui'
-import { Secao, P, Demo, Titulo, H3, Aviso, TabelaProps, FacaNaoFaca, Bloco } from '../lib/blocos'
+import { Secao, P, Demo, Titulo, H3, Aviso, TabelaProps, FacaNaoFaca, Bloco, Teclado } from '../lib/blocos'
 
 function DemoLinha() {
   const [aba, setAba] = useState('pedidos')
@@ -91,10 +91,6 @@ export default function AbasPage() {
           pula a régua inteira e cai direto no painel. <strong>A navegação entre abas é das
           setas</strong>, não do Tab.
         </P>
-        <Bloco lang="jsx">{`←  →     andam entre as abas, e CIRCULAM (da última volta para a primeira)
-Home     primeira aba
-End      última aba
-Tab      sai da régua e cai no painel`}</Bloco>
         <P>
           As setas <strong>pulam as abas desabilitadas</strong>. Parar numa aba morta é um beco
           sem saída: a pessoa aperta Enter e nada acontece. E circular importa — travar na ponta
@@ -196,6 +192,25 @@ Tab      sai da régua e cai no painel`}</Bloco>
           Você não precisa fazer nada com isso. Está aqui porque é o tipo de bug que consome uma
           tarde: funciona no mouse, funciona no olho, e só o leitor de tela sabe que está quebrado.
         </P>
+      </Secao>
+
+      <Secao titulo="Teclado">
+        <P>
+          Roving tabindex: <strong>só a aba ativa é uma parada do Tab</strong>. Quem anda pela
+          régua são as setas — o Tab pula os oito botões e cai no painel, que é onde a pessoa quer
+          chegar. Andar de seta já ativa a aba, como recomenda a APG.
+        </P>
+        <Teclado
+          apg="https://www.w3.org/WAI/ARIA/apg/patterns/tabs/"
+          atalhos={[
+            { tecla: '← →', faz: <>Andam entre as abas e <strong>circulam</strong> (da última volta para a primeira). Pulam as desabilitadas e já <strong>ativam</strong> a aba em que param.</> },
+            { tecla: 'Home', faz: 'Primeira aba habilitada.' },
+            { tecla: 'End', faz: <>Última aba habilitada. Se a última estiver desabilitada, cai na última que <em>funciona</em> — não num beco sem saída.</> },
+            { tecla: 'Tab', faz: <>Sai da régua inteira e cai no painel (que tem <code>tabIndex=0</code> para receber esse foco e poder ser rolado pelo teclado).</> },
+            { tecla: 'Enter Espaço', faz: <>Ativam a aba focada. Vêm do <code>&lt;button&gt;</code> — na prática, a seta já ativou.</> },
+            { tecla: '↑ ↓', faz: <><strong>Não são sequestradas</strong>: rolam a página, como em qualquer lugar. A régua é horizontal, então só ← → andam entre abas.</> },
+          ]}
+        />
       </Secao>
 
       <Secao titulo="Props">

@@ -23,13 +23,27 @@ jobs:
       - run: npm ci
       - run: npm run build
 
-      # Nunca publica quebrado: o contraste WCAG é conferido antes.
+      # Nunca publica quebrado: contraste WCAG, axe e comportamento passam antes.
       - run: npm test
 
-      - name: Publicar @amboni/tokens
-        run: npm publish -w @amboni/tokens --provenance --access public
-        env: { NODE_AUTH_TOKEN: '${{ secrets.NPM_TOKEN }}' }
+      # E nunca publica gordo: o orçamento de tamanho é contrato, não sugestão.
+      - run: npm run size -w @amboni/ui
 
-      - name: Publicar @amboni/ui
-        run: npm publish -w @amboni/ui --provenance --access public
-        env: { NODE_AUTH_TOKEN: '${{ secrets.NPM_TOKEN }}' }
+      # `changeset publish` no lugar de um `npm publish` por pacote.
+      #
+      # A diferença que importa: ele publica só o que MUDOU de versão e pula o que já está
+      # no registro. O `npm publish` direto responde 403 ao reencontrar uma versão que já
+      # existe — então um disparo repetido derrubava o workflow no primeiro pacote e o
+      # segundo nunca subia. Com dois pacotes de versão casada, isso deixa a biblioteca
+      # publicada pela METADE: a UI lendo variáveis de um `tokens` que não chegou, e a tela
+      # de quem instalou fica sem cor nenhuma.
+      #
+      # Ele também cria as tags de git de cada pacote.
+      - name: Publicar
+        run: npx changeset publish
+        env:
+          NODE_AUTH_TOKEN: '${{ secrets.NPM_TOKEN }}'
+          # A procedência vem por env porque quem chama o `npm publish` aqui é o
+          # changesets, e não dá para passar `--provenance` na linha de comando dele.
+          NPM_CONFIG_PROVENANCE: 'true'
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'

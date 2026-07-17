@@ -1,6 +1,7 @@
 import type { ComponentType } from 'react'
 import Inicio from './paginas/Inicio'
 import Instalacao from './paginas/Instalacao'
+import Limitacoes from './paginas/Limitacoes'
 import Cores from './paginas/Cores'
 import Tipografia from './paginas/Tipografia'
 import Espacamento from './paginas/Espacamento'
@@ -69,6 +70,10 @@ export interface Pagina {
 export const PAGINAS: Pagina[] = [
   { slug: 'inicio', titulo: 'Visão geral', grupo: 'Começar', componente: Inicio },
   { slug: 'instalacao', titulo: 'Instalação', grupo: 'Começar', componente: Instalacao },
+  // Limitações vem em "Começar", e cedo: quem decide se adota merece a má notícia antes
+  // de investir uma semana, não depois. Escondê-la no rodapé seria a mesma desonestidade
+  // de não tê-la.
+  { slug: 'limitacoes', titulo: 'Limitações', grupo: 'Começar', selo: 'leia antes', componente: Limitacoes },
 
   { slug: 'cores', titulo: 'Cores', grupo: 'Fundamentos', componente: Cores },
   { slug: 'tipografia', titulo: 'Tipografia', grupo: 'Fundamentos', componente: Tipografia },

@@ -494,3 +494,29 @@ body {
 }
 .doc-foot a { color: var(--amb-color-brand-text); text-decoration: none; }
 .doc-foot a:hover { text-decoration: underline; }
+
+/* ── Tabela de teclado ──────────────────────────────────────────────────────
+ * O <kbd> aqui é maior que o do rodapé da busca: nesta tabela ele é o CONTEÚDO
+ * da coluna, não uma dica de canto. Mesmo elemento, peso diferente conforme o papel.
+ */
+.doc-kbd {
+  font-family: var(--amb-fonte-mono);
+  font-size: var(--amb-texto-xs);
+  font-weight: var(--amb-peso-semibold);
+  padding: 3px 7px;
+  border-radius: var(--amb-raio-sm);
+  background: var(--amb-color-surfaceSunken);
+  border: 1px solid var(--amb-color-border-default);
+  /* A borda de baixo mais grossa dá o volume de tecla física sem sombra nem gradiente. */
+  border-bottom-width: 2px;
+  color: var(--amb-color-text-primary);
+  white-space: nowrap;
+}
+.doc-kbd + .doc-kbd { margin-left: var(--amb-espaco-1); }
+
+.doc-apg {
+  margin-top: var(--amb-espaco-2);
+  font-size: var(--amb-texto-sm);
+  color: var(--amb-color-text-muted);
+}
+.doc-apg a { color: var(--amb-color-brand-text); }

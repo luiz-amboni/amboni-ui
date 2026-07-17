@@ -4,3 +4,16 @@ dist/
 *.log
 .turbo/
 coverage/
+
+# ── Regressão visual ─────────────────────────────────────────────────────────
+# A baseline de verdade (packages/ui/visual/__baseline__/) VAI para o git — é ela que o CI
+# compara, e é ela que alguém precisa revisar quando muda. O que fica de fora é o resto:
+#
+#  · __baseline-local__/ — as imagens geradas com AMB_VISUAL_LOCAL=1 no Mac. São de outro
+#    sistema operacional (outro antialiasing) e serviriam só para reprovar o CI inteiro se
+#    fossem commitadas por engano. Ver o comentário longo em playwright.config.ts.
+#  · playwright-report/ e test-results/ — saída de uma rodada, não código. No CI elas
+#    viram artefato do job, que é onde se olha um diff.
+packages/ui/visual/__baseline-local__/
+packages/ui/playwright-report/
+packages/ui/test-results/

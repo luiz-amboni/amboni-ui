@@ -1,6 +1,6 @@
 import { Dica, Button } from '@amboni/ui'
 // `Aviso` da biblioteca é o toast; `Aviso` dos blocos é a caixa de destaque do site.
-import { Secao, P, Demo, Titulo, H3, Aviso as Destaque, TabelaProps, FacaNaoFaca, Bloco } from '../lib/blocos'
+import { Secao, P, Demo, Titulo, H3, Aviso as Destaque, TabelaProps, FacaNaoFaca, Bloco, Teclado } from '../lib/blocos'
 
 export default function DicaPage() {
   return (
@@ -154,6 +154,29 @@ export default function DicaPage() {
           <code> &lt;dialog&gt;</code> (top layer), a Dica portalada renderiza <strong>atrás</strong>
           do modal e some. Como esta biblioteca tem <code>Dialogo</code> e <code>Gaveta</code>
           cheios de controles com dica, escolhemos o bug raro em vez do certo.
+        </Destaque>
+      </Secao>
+
+      <Secao titulo="Teclado">
+        <P>
+          A Dica não tem tecla de abrir: <strong>ela abre no foco</strong>. É esse detalhe que
+          decide se ela existe ou não para quem usa teclado — uma dica só de hover é invisível para
+          essa pessoa, exatamente como é para quem está no celular. O balão nunca recebe foco: ele
+          é a <em>descrição</em> do gatilho (<code>aria-describedby</code>), então o leitor de tela
+          anuncia o texto junto com o elemento, sem hover nenhum.
+        </P>
+        <Teclado
+          apg="https://www.w3.org/WAI/ARIA/apg/patterns/tooltip/"
+          atalhos={[
+            { tecla: 'Tab', faz: <>Chegar no gatilho <strong>abre a Dica, sem atraso</strong>. Os 500ms do <code>atraso</code> são só do mouse, para ele poder atravessar a tela sem acender uma dica atrás da outra; quem chegou de Tab pediu para estar ali. Sair do gatilho fecha.</> },
+            { tecla: 'Esc', faz: <>Fecha — <strong>inclusive a dica aberta por hover</strong>, que não tem foco nenhum. Por isso o listener fica no <code>document</code> e não no gatilho: no gatilho, ele nunca veria a tecla. WCAG 1.4.13 pede que dê para dispensar sem tirar o ponteiro do lugar.</> },
+          ]}
+        />
+        <Destaque tipo="warn">
+          O <code>children</code> <strong>precisa receber foco</strong> — um{' '}
+          <code>&lt;button&gt;</code>, um <code>&lt;a&gt;</code>, um campo. Uma Dica pendurada num{' '}
+          <code>&lt;span&gt;</code> não tem como abrir pelo teclado: a tabela acima inteira deixa de
+          valer, e a dica passa a existir só para quem tem mouse.
         </Destaque>
       </Secao>
 

@@ -28,6 +28,33 @@ export default defineConfig({
          * Nenhum teste daqui pegaria isso: só aparece num build de Next de verdade.
          */
         banner: "'use client';",
+        /**
+         * Um arquivo por componente, em vez de um bundle só.
+         *
+         * A versão anterior publicava tudo num `index.js`, e a decisão estava ESCRITA
+         * aqui como deliberada: "iSafe e VEAR usam a biblioteca quase toda, então
+         * otimizar 'importar só o Button' seria otimizar um caso que não existe". Era
+         * razoável — com 28 componentes, importar só o Button custava 42% do pacote.
+         *
+         * Então a biblioteca foi para 39 componentes e o número virou **64%**. O
+         * tree-shaking degrada conforme o bundle cresce: num arquivo único o esbuild
+         * precisa provar que cada trecho é descartável, e a teia de referências entre
+         * componentes vai fechando o cerco.
+         *
+         * Medido depois da troca: importar só o Button caiu de **52.584 para 855 bytes**.
+         * Sessenta e uma vezes. A biblioteca inteira engordou 1 kB (overhead de módulo),
+         * o que é troco.
+         *
+         * A lição não é "preserveModules é melhor" — é que a conta muda quando o projeto
+         * cresce, e uma decisão de arquitetura tomada com 28 componentes não se
+         * autorrenova aos 39. Ela estava certa quando foi tomada e ficou errada sozinha.
+         *
+         * Brinde: o `'use client'` passa a ser emitido POR ARQUIVO, que é a forma
+         * correta da diretiva — em vez de marcar o pacote inteiro como cliente.
+         */
+        preserveModules: true,
+        preserveModulesRoot: 'src',
+        entryFileNames: '[name].js',
         // o nome tem que bater com o "exports" do package.json ('./styles.css')
         assetFileNames: (info) => (info.name?.endsWith('.css') ? 'styles.css' : '[name][extname]'),
       },
@@ -48,5 +75,35 @@ export default defineConfig({
      */
     sourcemap: true,
   },
-  test: { environment: 'jsdom', globals: true, setupFiles: ['./src/test-setup.ts'] },
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: ['./src/test-setup.ts'],
+    /**
+     * `visual/` é do Playwright, não do Vitest.
+     *
+     * Os dois usam `.spec.ts`, e sem esta linha o Vitest coleta os specs de regressão
+     * visual e reprova todos: eles chamam `test()` do `@playwright/test`, que não existe
+     * aqui. O sintoma é péssimo — 2 arquivos vermelhos numa suíte verde, sem relação com
+     * o código, treinando todo mundo a ignorar vermelho.
+     *
+     * Rodam por `npm run visual`, com o runner deles.
+     */
+    exclude: ['node_modules/**', 'dist/**', 'visual/**'],
+    coverage: {
+      provider: 'v8',
+      reporter: ['text-summary', 'html'],
+      include: ['src/components/**/*.tsx', 'src/utils/**/*.ts'],
+      // Teste, tipo e CSS não são código coberto — inflam o número e escondem o buraco.
+      exclude: ['**/*.test.tsx', '**/*.d.ts'],
+      /**
+       * O piso existe para a cobertura não CAIR sem alguém notar; ele não é meta.
+       * Cobertura alta com teste ruim é o pior dos mundos: dá confiança sem dar garantia.
+       * Este repositório já provou isso — trocamos `chaveLinha` por índice numa mutação e
+       * 40 de 40 testes continuaram verdes, com a linha 100% "coberta". O que protege é o
+       * que o teste AFIRMA, não quantas linhas ele visita.
+       */
+      thresholds: { lines: 80, functions: 80, branches: 75, statements: 80 },
+    },
+  },
 })

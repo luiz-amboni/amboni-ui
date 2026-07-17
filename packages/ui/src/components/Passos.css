@@ -1,0 +1,181 @@
+/* ── Passos ─────────────────────────────────────────────────────────────────
+ * Mesma nota da <LinhaDoTempo>: `list-style: none` faz o Safari largar a semântica de
+ * lista, e é por isso que o componente escreve `role="list"` num <ol> que já tem esse
+ * papel. Não é redundância — é o contra-veneno de um bug conhecido do WebKit.
+ */
+.amb-passos {
+  font-family: var(--amb-fonte-sans);
+}
+
+.amb-passos__lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+.amb-passos__lista--horizontal { flex-direction: row; }
+.amb-passos__lista--vertical { flex-direction: column; }
+
+.amb-passos__item {
+  display: flex;
+  align-items: center;
+  gap: var(--amb-espaco-3);
+  min-width: 0;
+}
+
+/* Na horizontal cada passo divide a largura por igual — assim o conector entre eles
+   tem sempre o mesmo tamanho, em vez de encolher junto com o título mais curto. */
+.amb-passos__lista--horizontal > .amb-passos__item { flex: 1; }
+/* O último não divide nada: ele não tem conector, e sem isto sobraria um vão morto
+   à direita empurrando a régua para fora do eixo. */
+.amb-passos__lista--horizontal > .amb-passos__item:last-child { flex: 0 1 auto; }
+
+.amb-passos__lista--vertical > .amb-passos__item {
+  /* Na vertical o conector desce ao lado do texto, então o item vira uma coluna e o
+     alinhamento sai do topo — senão a marca centraliza no meio de uma descrição longa. */
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ── O corpo (marca + texto) ────────────────────────────────────────────────
+ * O `--botao` zera tudo o que o navegador põe num <button>: aqui ele existe só para
+ * dar um alvo de teclado ao passo, não para parecer um botão dentro da régua.
+ */
+.amb-passos__corpo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--amb-espaco-2);
+  min-width: 0;
+  text-align: left;
+}
+
+.amb-passos__corpo--botao {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  border-radius: var(--amb-raio-sm);
+}
+
+/* ── A marca (✓, número, !) ─────────────────────────────────────────────────
+ * 24px: cabe um número de dois dígitos sem apertar, e é o mesmo diâmetro nos quatro
+ * estados — a régua não pode "pular" de tamanho quando um passo vira concluído.
+ */
+.amb-passos__marca {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  border-radius: var(--amb-raio-full);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: var(--amb-texto-xs);
+  font-weight: var(--amb-peso-bold);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+
+  border: 2px solid var(--amb-passo-cor);
+  color: var(--amb-passo-cor);
+  background: var(--amb-color-surface);
+  transition:
+    background-color var(--amb-duracao-fast) var(--amb-easing-standard),
+    border-color var(--amb-duracao-fast) var(--amb-easing-standard),
+    color var(--amb-duracao-fast) var(--amb-easing-standard);
+}
+
+/* Concluído: contorno da marca, sem preenchimento — o ✓ já diz que acabou, e encher
+   de cor todos os passos anteriores faria a régua inteira gritar em vez de indicar
+   onde a pessoa está. */
+.amb-passos__item--concluido .amb-passos__marca {
+  --amb-passo-cor: var(--amb-color-success-text);
+}
+
+/* Atual: o ÚNICO preenchido da régua. É a forma (e não a cor) que responde "onde eu
+   estou?" de relance — inclusive impresso em preto e branco. */
+.amb-passos__item--atual .amb-passos__marca {
+  --amb-passo-cor: var(--amb-color-brand-solid);
+  background: var(--amb-color-brand-solid);
+  color: var(--amb-color-text-onBrand);
+}
+
+/* Futuro: apagado. Borda `default` (a mais fraca) e texto `muted` — ainda legível,
+   mas claramente "ainda não". */
+.amb-passos__item--futuro .amb-passos__marca {
+  --amb-passo-cor: var(--amb-color-border-strong);
+  color: var(--amb-color-text-muted);
+}
+
+.amb-passos__item--erro .amb-passos__marca {
+  --amb-passo-cor: var(--amb-color-danger-text);
+}
+
+/* ── O texto ────────────────────────────────────────────────────────────────── */
+.amb-passos__texto {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.amb-passos__titulo {
+  font-size: var(--amb-texto-sm);
+  font-weight: var(--amb-peso-medium);
+  line-height: var(--amb-leading-snug);
+  color: var(--amb-color-text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* O passo atual é o único em negrito e na cor principal: mais um sinal que não é cor
+   (peso da fonte), somado à marca preenchida. */
+.amb-passos__item--atual .amb-passos__titulo {
+  color: var(--amb-color-text-primary);
+  font-weight: var(--amb-peso-semibold);
+}
+.amb-passos__item--futuro .amb-passos__titulo { color: var(--amb-color-text-muted); }
+.amb-passos__item--erro .amb-passos__titulo { color: var(--amb-color-danger-text); }
+
+.amb-passos__descricao {
+  font-size: var(--amb-texto-xs);
+  color: var(--amb-color-text-muted);
+  line-height: var(--amb-leading-snug);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.amb-passos__corpo--botao:hover .amb-passos__titulo { color: var(--amb-color-brand-text); }
+
+/* ── O conector ─────────────────────────────────────────────────────────────
+ * Sempre neutro, mesmo saindo de um passo verde: ele liga as etapas, não classifica
+ * nenhuma. Conector colorido faria a régua parecer uma barra de progresso — que é
+ * outro componente (<Progresso>), com outra promessa.
+ */
+.amb-passos__conector {
+  background: var(--amb-color-border-default);
+  flex: 1;
+}
+
+.amb-passos__lista--horizontal .amb-passos__conector {
+  height: 2px;
+  min-width: var(--amb-espaco-4);
+  margin: 0 var(--amb-espaco-2);
+}
+
+/* Na vertical o traço desce alinhado ao CENTRO da marca (24px ÷ 2 = 12px, menos 1px
+   da própria espessura). Cravar `margin-left: 11px` amarra o conector ao diâmetro da
+   marca lá de cima: se um dia a marca mudar de tamanho, este número muda junto. */
+.amb-passos__lista--vertical .amb-passos__conector {
+  width: 2px;
+  min-height: var(--amb-espaco-5);
+  margin: var(--amb-espaco-1) 0 var(--amb-espaco-1) 11px;
+  flex: none;
+}

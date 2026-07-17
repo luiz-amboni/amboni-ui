@@ -179,6 +179,68 @@ export function Aviso({ children, tipo = 'info' }: { children: ReactNode; tipo?:
   return <div className={`doc-note${tipo === 'warn' ? ' doc-note--warn' : ''}`}>{children}</div>
 }
 
+/**
+ * A tabela de teclado — copiada descaradamente do Radix, e o motivo vale registrar.
+ *
+ * Nós documentávamos teclado em PROSA, espalhado no meio do texto de cada página ("Esc
+ * fecha e devolve o foco ao gatilho"). Prosa não é verificável: não dava para responder
+ * "quais dos 28 componentes documentam teclado?" sem ler as 41 páginas — e foi
+ * exatamente o que alguém teve que fazer para descobrir que eram uns 19.
+ *
+ * Estrutura resolve isso. Com um componente dedicado, a pergunta vira um grep, e dá para
+ * um teste reprovar um componente interativo que não tenha a tabela. É a diferença entre
+ * "documentamos acessibilidade" e "a acessibilidade é auditável".
+ *
+ * O `apg` é o link para o padrão do WAI-ARIA. Ele existe para o leitor conferir se
+ * seguimos o padrão da indústria ou inventamos o nosso — e para NÓS termos onde olhar
+ * antes de inventar.
+ */
+export interface Atalho {
+  /** A tecla, como a pessoa a conhece: 'Esc', '↑ ↓', 'Enter', 'Espaço', 'Home'. */
+  tecla: string
+  /** O que acontece. E, quando couber, por quê. */
+  faz: ReactNode
+}
+
+export function Teclado({ atalhos, apg }: { atalhos: Atalho[]; apg?: string }) {
+  return (
+    <>
+      <div className="doc-table-wrap">
+        <table className="doc-table doc-table--fit">
+          <thead>
+            <tr>
+              <th style={{ width: 160 }}>Tecla</th>
+              <th>O que faz</th>
+            </tr>
+          </thead>
+          <tbody>
+            {atalhos.map(a => (
+              <tr key={a.tecla}>
+                <td>
+                  {/* <kbd> é o elemento certo para tecla — semântica, não enfeite. */}
+                  {a.tecla.split(' ').map(t => (
+                    <kbd key={t} className="doc-kbd">{t}</kbd>
+                  ))}
+                </td>
+                <td>{a.faz}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {apg && (
+        <p className="doc-apg">
+          Segue o padrão{' '}
+          <a href={apg} target="_blank" rel="noreferrer">
+            WAI-ARIA Authoring Practices ↗
+          </a>
+          {' '}— confira se cumprimos.
+        </p>
+      )}
+    </>
+  )
+}
+
 export function Titulo({ eyebrow, children, lead }: { eyebrow: string; children: string; lead: ReactNode }) {
   return (
     <header>

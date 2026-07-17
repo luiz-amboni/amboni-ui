@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Paginacao } from '@amboni/ui'
-import { Secao, P, Demo, Titulo, H3, Aviso, TabelaProps, FacaNaoFaca, Bloco } from '../lib/blocos'
+import { Secao, P, Demo, Titulo, H3, Aviso, TabelaProps, FacaNaoFaca, Bloco, Teclado } from '../lib/blocos'
 
 function DemoSimples() {
   const [pagina, setPagina] = useState(5)
@@ -199,6 +199,29 @@ janelaPaginas(5, 10)  → [1, 'elipse-inicio', 4, 5, 6, 'elipse-fim', 10]
           "reticências" narrado não informa, e quem usa leitor de tela já tem o "Página 3 de 10",
           que diz muito mais.
         </P>
+      </Secao>
+
+      <Secao titulo="Teclado">
+        <P>
+          Não há teclado próprio aqui, e é consequência direta de "Reusa o Button": os números e as
+          setas são <code>&lt;Button&gt;</code> da casa, o seletor é um <code>&lt;select&gt;</code>{' '}
+          nativo, e cada um traz o seu teclado pronto. Um componente de paginação que inventasse
+          atalhos <em>também</em> teria inventado o próprio botão — e divergiria do sistema no
+          primeiro ajuste.
+        </P>
+        <Teclado
+          atalhos={[
+            { tecla: 'Tab', faz: <>Anda pelos botões (anterior, números, próxima) e chega no seletor "Por página". <strong>Botão desabilitado sai da ordem de foco</strong>: na página 1, o Tab não passa por "Página anterior" — é <code>disabled</code> de verdade.</> },
+            { tecla: 'Enter Espaço', faz: <>Acionam o botão focado. Vêm do <code>&lt;button&gt;</code>. Apertar na página em que já se está não faz nada — sem esse guarda, cada acionamento dispararia outra busca idêntica no servidor.</> },
+            { tecla: '↑ ↓', faz: <>No seletor "Por página": trocam o tamanho da página. Teclado do <code>&lt;select&gt;</code> nativo — o mesmo da <code>Selecao</code> no modo padrão.</> },
+          ]}
+        />
+        <Aviso>
+          A tecla não é o problema desta barra; <strong>saber que algo mudou</strong> é. Trocar de
+          página troca o conteúdo da tabela, longe daqui: quem usa leitor de tela aperta Enter em
+          "Próxima" e não ouviria nada acontecer. Quem resolve isso é o <code>role="status"</code>{' '}
+          da seção acima, não um atalho.
+        </Aviso>
       </Secao>
 
       <Secao titulo="Props">

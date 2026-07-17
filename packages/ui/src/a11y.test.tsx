@@ -1,5 +1,6 @@
 import { describe, test, expect } from 'vitest'
-import { render } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { axe } from 'vitest-axe'
 import * as matchers from 'vitest-axe/matchers'
 
@@ -12,6 +13,20 @@ import {
   Dica,
   Abas, ListaAbas, Aba, PainelAba, Acordeao, ItemAcordeao,
   Trilha, ItemTrilha, Paginacao,
+} from './index'
+// Direto do arquivo, e não do `./index`: estes três ainda não estão exportados na porta de
+// entrada da biblioteca. A auditoria não espera o export — um componente sem `index` já é
+// usado pelas telas e já pode ter rótulo faltando.
+import { Popover } from './components/Popover'
+import { Autocomplete } from './components/Autocomplete'
+import { Deslizador } from './components/Deslizador'
+
+// Do `index`, e não do arquivo: importar por caminho aqui esconderia o dia em que alguém
+// criasse um componente e esquecesse de exportá-lo — o axe passaria, e quem instalasse a
+// biblioteca não teria o componente. A auditoria tem que ver o que o PACOTE entrega.
+import {
+  CampoArquivo, LinhaDoTempo, Passos, Divisor, Tecla,
+  Calendario, CampoData, CampoPeriodo,
 } from './index'
 
 expect.extend(matchers)
@@ -85,6 +100,54 @@ describe('axe — formulário', () => {
     )
   })
 
+  test('Autocomplete: fechado, aberto, múltiplo e com erro', async () => {
+    const opcoes = [{ valor: '1', rotulo: 'Ana Souza' }, { valor: '2', rotulo: 'Bruno Lima' }]
+    await conferir(
+      <>
+        <CampoForm label="Cliente">
+          <Autocomplete opcoes={opcoes} valor={null} onChange={() => {}} />
+        </CampoForm>
+        {/* Múltiplo: é aqui que moram as etiquetas dentro do campo — dois botões "Remover"
+            sem nome próprio passariam batido numa vitrine de um item só. */}
+        <Autocomplete aria-label="Clientes" multiplo opcoes={opcoes} valor={['1', '2']} onChange={() => {}} />
+        <Autocomplete aria-label="Com erro" opcoes={opcoes} valor={null} onChange={() => {}} erro="Escolha um cliente" />
+      </>,
+    )
+  })
+
+  test('Autocomplete com a LISTA ABERTA — é o estado que o axe nunca vê', async () => {
+    // Testar o campo fechado é testar um <input>. O contrato ARIA inteiro (listbox, option,
+    // activedescendant apontando para um id que existe) só existe com a lista aberta.
+    const { container } = render(
+      <Autocomplete
+        aria-label="Cliente"
+        opcoes={[{ valor: '1', rotulo: 'Ana Souza' }, { valor: '2', rotulo: 'Bruno Lima', desabilitada: true }]}
+        valor={null}
+        onChange={() => {}}
+        criarNovo={() => {}}
+      />,
+    )
+    await userEvent.click(screen.getByRole('combobox'))
+    expect(await axe(container)).toHaveNoViolations()
+  })
+
+  test('Deslizador nos dois modos', async () => {
+    await conferir(
+      <>
+        <CampoForm label="Preço máximo">
+          <Deslizador valor={50} onChange={() => {}} formatarRotulo={v => `R$ ${v}`} mostrarValor />
+        </CampoForm>
+        {/* Duas pontas: dois role="slider" irmãos. Nome repetido nos dois é exatamente o que
+            uma vitrine de um slider só nunca pegaria. */}
+        <Deslizador
+          intervalo aria-label="Faixa de preço" valor={[20, 80]} onChange={() => {}}
+          marcas={[{ valor: 0 }, { valor: 50 }, { valor: 100 }]}
+        />
+        <Deslizador aria-label="Indisponível" disabled valor={10} onChange={() => {}} />
+      </>,
+    )
+  })
+
   test('Selecao nos dois modos', async () => {
     const opcoes = [{ valor: 'a', rotulo: 'Bling' }, { valor: 'b', rotulo: 'Omie' }]
     await conferir(
@@ -93,6 +156,25 @@ describe('axe — formulário', () => {
           <Selecao opcoes={opcoes} valor="a" onChange={() => {}} />
         </CampoForm>
         <Selecao aria-label="Integração buscável" buscavel opcoes={opcoes} valor="a" onChange={() => {}} />
+      </>,
+    )
+  })
+
+  test('CampoArquivo: vazio, com anexos e enviando', async () => {
+    const anexo = new File(['x'], 'contrato.pdf', { type: 'application/pdf' })
+    await conferir(
+      <>
+        {/* Vazio. É aqui que a técnica do input escondido aparece: com `display: none` o
+            axe reprovaria o <label> apontando para um elemento fora da árvore. */}
+        <CampoArquivo onArquivos={() => {}} aceita=".pdf" tamanhoMax={5 * 1024 * 1024} ajuda="PDF" />
+        <CampoArquivo
+          onArquivos={() => {}}
+          onRemover={() => {}}
+          arquivos={[anexo]}
+          progresso={42}
+          rotulo="Anexar contrato"
+        />
+        <CampoArquivo onArquivos={() => {}} disabled />
       </>,
     )
   })
@@ -109,6 +191,62 @@ describe('axe — formulário', () => {
         <Interruptor label="Enviar automaticamente" descricao="Vale na hora" />
       </>,
     )
+  })
+
+  test('Calendario: dia escolhido, hoje, min/max e dias bloqueados', async () => {
+    // A grade é uma <table role="grid"> com célula focável, aria-selected e aria-current
+    // convivendo — é o tipo de coisa que o axe reprova na hora se o papel exigir um filho
+    // que não veio, ou se um gridcell aparecer fora de uma linha.
+    await conferir(
+      <Calendario
+        valor={new Date(2026, 5, 15)}
+        onChange={() => {}}
+        min={new Date(2026, 5, 1)}
+        max={new Date(2026, 5, 30)}
+        desabilitar={d => d.getDay() === 0}
+      />,
+    )
+  })
+
+  test('CampoData: com máscara dentro do CampoForm, nativo, e com erro', async () => {
+    await conferir(
+      <>
+        <CampoForm label="Data da venda" ajuda="dd/mm/aaaa">
+          <CampoData valor={new Date(2026, 5, 15)} onChange={() => {}} />
+        </CampoForm>
+        {/* O modo nativo é um <input type="date">: sem rótulo, é um campo mudo. */}
+        <CampoData aria-label="Data de nascimento" nativo valor={null} onChange={() => {}} />
+        <CampoData aria-label="Data com erro" valor={null} onChange={() => {}} erro="Data inválida" />
+      </>,
+    )
+  })
+
+  test('CampoData com o CALENDÁRIO ABERTO — o diálogo só existe aberto', async () => {
+    // Fechado, isto é um <input> com um botão. O contrato inteiro (role=dialog com nome,
+    // a grade, o aria-expanded apontando para algo que existe) só nasce no clique.
+    const { container } = render(
+      <CampoData aria-label="Data da venda" valor={new Date(2026, 5, 15)} onChange={() => {}} />,
+    )
+    await userEvent.click(screen.getByRole('button', { name: 'Abrir calendário' }))
+    expect(await axe(container)).toHaveNoViolations()
+  })
+
+  test('CampoPeriodo: fechado, com valor, e com o PAINEL ABERTO', async () => {
+    await conferir(
+      <CampoPeriodo
+        aria-label="Período"
+        valor={{ inicio: new Date(2026, 5, 15), fim: new Date(2026, 5, 30) }}
+        onChange={() => {}}
+      />,
+    )
+
+    // Aberto: o painel junta atalhos, grade e o intervalo marcado de ponta a ponta — seis
+    // gridcells com aria-selected numa grade que precisa se declarar multiselecionável.
+    const { container } = render(
+      <CampoPeriodo aria-label="Período do relatório" valor={{ inicio: null, fim: null }} onChange={() => {}} />,
+    )
+    await userEvent.click(screen.getByRole('button', { name: /Período do relatório/ }))
+    expect(await axe(container)).toHaveNoViolations()
   })
 })
 
@@ -258,6 +396,72 @@ describe('axe — navegação', () => {
       <Dica conteudo="Enviado pelo robô">
         <Button>Passe o mouse</Button>
       </Dica>,
+    )
+  })
+
+  test('Popover ABERTO, com conteúdo interativo', async () => {
+    // Fechado, o Popover é um botão — e auditar um botão aqui não significaria nada. O que
+    // este componente promete (role="dialog" COM NOME, aria-modal="false", controles
+    // alcançáveis dentro) só existe depois do clique. É por isso que este teste não usa o
+    // `conferir`: precisa interagir antes de auditar.
+    const { container } = render(
+      <Popover rotulo="Filtros" gatilho={<Button>Filtrar</Button>}>
+        <CampoForm label="Nome do cliente">
+          <Campo />
+        </CampoForm>
+        <Button size="sm">Aplicar</Button>
+      </Popover>,
+    )
+    await userEvent.click(screen.getByRole('button', { name: 'Filtrar' }))
+    expect(await axe(container)).toHaveNoViolations()
+  })
+
+  test('Passos: só indicação e navegável, com erro no meio', async () => {
+    const passos = [
+      { id: 'dados', titulo: 'Dados' },
+      { id: 'end', titulo: 'Endereço', descricao: 'CEP e número', estado: 'erro' as const },
+      { id: 'pag', titulo: 'Pagamento' },
+    ]
+    await conferir(
+      <>
+        <Passos passos={passos} atual={2} />
+        {/* Navegável: aqui existem <button> e um marco <nav>, e o axe confere os nomes. */}
+        <Passos passos={passos} atual={2} onIrPara={() => {}} orientacao="vertical" aria-label="Etapas do cadastro" />
+      </>,
+    )
+  })
+})
+
+describe('axe — estrutura', () => {
+  test('LinhaDoTempo nos seis tons e nas duas orientações', async () => {
+    const itens = [
+      { id: 1, titulo: 'Pedido criado', data: '2026-07-14T09:00:00-03:00', tom: 'marca' as const },
+      { id: 2, titulo: 'Mensagem entregue', descricao: 'D+3', data: '2026-07-16T14:33:00-03:00', tom: 'sucesso' as const },
+      { id: 3, titulo: 'Envio falhou', data: '2026-07-16T14:35:00-03:00', tom: 'perigo' as const },
+      { id: 4, titulo: 'Aguardando resposta', data: '2026-07-16', tom: 'aviso' as const },
+      { id: 5, titulo: 'Observação', data: '2026-07-16', tom: 'info' as const },
+      { id: 6, titulo: 'Sem classificação', data: '2026-07-16', dataTexto: 'hoje' },
+    ]
+    await conferir(
+      <>
+        <LinhaDoTempo itens={itens} />
+        <LinhaDoTempo itens={itens} orientacao="horizontal" compacta />
+      </>,
+    )
+  })
+
+  test('Divisor e Tecla', async () => {
+    await conferir(
+      <>
+        <Divisor />
+        <Divisor orientacao="vertical" espessura="grossa" />
+        {/* Com rótulo o wrapper NÃO é role="separator" — se fosse, o axe passaria e o
+            leitor de tela é que descartaria o "ou". Ver o componente. */}
+        <Divisor rotulo="ou" />
+        <p>
+          <Tecla>Ctrl</Tecla> + <Tecla>K</Tecla> · <Tecla aria-label="Command">⌘</Tecla>
+        </p>
+      </>,
     )
   })
 })

@@ -1,0 +1,117 @@
+/**
+ * CampoData
+ * ═════════════════════════════════════════════════════════════════════════════
+ * A moldura, a altura e o estado de erro vêm do <Campo> — este arquivo só acrescenta o
+ * botão do calendário dentro da moldura e o painel que ele abre. Redesenhar a moldura aqui
+ * criaria um segundo campo de texto na biblioteca, que divergiria do primeiro no dia em que
+ * alguém mexesse num dos dois.
+ */
+
+.amb-campo-data {
+  display: inline-flex;
+  flex-direction: column;
+  gap: var(--amb-espaco-1);
+  font-family: var(--amb-fonte-sans);
+  min-width: 0;
+}
+
+.amb-campo-data__controle {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.amb-campo-data__campo {
+  width: 100%;
+}
+
+/**
+ * Alcança a classe interna do <Campo> de propósito.
+ *
+ * É a única forma de reservar o espaço do botão sem duplicar a moldura inteira aqui: o
+ * texto longo precisa parar antes do ícone em vez de passar por baixo dele. As duas classes
+ * vivem no mesmo pacote e são versionadas juntas — o acoplamento é real, mas é interno, e o
+ * preço da alternativa (um segundo campo de texto na biblioteca) é maior.
+ */
+.amb-campo-data__campo .amb-campo__input {
+  padding-right: var(--amb-espaco-8);
+}
+
+.amb-campo-data__gatilho {
+  position: absolute;
+  right: var(--amb-espaco-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: var(--amb-espaco-1);
+  border-radius: var(--amb-raio-sm);
+  color: var(--amb-color-text-muted);
+  cursor: pointer;
+  transition: color var(--amb-duracao-fast) var(--amb-easing-standard);
+}
+
+.amb-campo-data__gatilho:hover:not(:disabled) {
+  color: var(--amb-color-text-primary);
+  background: var(--amb-color-surfaceSunken);
+}
+
+.amb-campo-data__gatilho:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Painel ─────────────────────────────────────────────────────────────────
+ * Raio maior que o do campo: o que flutua é superfície, o campo é controle. Mesma regra da
+ * lista da Selecao — e a mesma limitação: um ancestral com `overflow: hidden` corta.
+ */
+.amb-campo-data__painel {
+  position: absolute;
+  top: calc(100% + var(--amb-espaco-1));
+  left: 0;
+  z-index: var(--amb-camada-popover);
+  padding: var(--amb-espaco-3);
+  background: var(--amb-color-surface);
+  border: 1px solid var(--amb-color-border-default);
+  border-radius: var(--amb-raio-lg);
+  box-shadow: var(--amb-shadow-lg);
+  animation: amb-campo-data-entrada var(--amb-duracao-fast) var(--amb-easing-entrada);
+}
+
+/* Vira para cima quando não cabe embaixo — decidido em JS, que é quem sabe a altura da
+   janela. O CSS só recebe o veredito. */
+.amb-campo-data__painel--acima {
+  top: auto;
+  bottom: calc(100% + var(--amb-espaco-1));
+}
+
+.amb-campo-data__erro {
+  margin: 0;
+  font-size: var(--amb-texto-sm);
+  line-height: var(--amb-leading-snug);
+  color: var(--amb-color-danger-text);
+}
+
+@keyframes amb-campo-data-entrada {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Quem pediu menos movimento no sistema: o painel aparece direto. Para parte das pessoas
+   animação causa enjoo — não é preferência estética. */
+@media (prefers-reduced-motion: reduce) {
+  .amb-campo-data__painel {
+    animation: none;
+  }
+  .amb-campo-data__gatilho {
+    transition: none;
+  }
+}

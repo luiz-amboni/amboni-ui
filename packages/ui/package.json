@@ -1,6 +1,6 @@
 {
   "name": "@amboni/ui",
-  "version": "0.0.0",
+  "version": "0.2.0",
   "description": "Componentes React do design system Amboni — neutro, temável e acessível por prova",
   "type": "module",
   "license": "MIT",
@@ -43,16 +43,23 @@
     "test": "npm run typecheck && vitest run",
     "dev": "vite build --watch",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "size": "size-limit"
+    "size": "size-limit",
+    "cobertura": "vitest run --coverage",
+    "galeria": "vite --config galeria/vite.config.ts",
+    "typecheck:visual": "tsc -p tsconfig.visual.json --noEmit",
+    "visual": "playwright test",
+    "visual:layout": "playwright test layout.spec.ts",
+    "visual:ver": "playwright show-report"
   },
   "peerDependencies": {
     "react": ">=18",
     "react-dom": ">=18"
   },
   "dependencies": {
-    "@amboni/tokens": "0.0.0"
+    "@amboni/tokens": "0.2.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.61.1",
     "@size-limit/preset-small-lib": "^12.1.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.1.0",
@@ -61,6 +68,7 @@
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
     "@vitejs/plugin-react": "^4.3.4",
+    "@vitest/coverage-v8": "^4.1.10",
     "axe-core": "^4.12.1",
     "jsdom": "^25.0.1",
     "react": "^19.0.0",
@@ -79,18 +87,24 @@
     {
       "name": "a biblioteca inteira (JS)",
       "path": "dist/index.js",
-      "limit": "15 kB"
+      "limit": "26 kB"
     },
     {
       "name": "o CSS inteiro",
       "path": "dist/styles.css",
-      "limit": "9 kB"
+      "limit": "11 kB"
     },
     {
       "name": "importando só o Button",
       "path": "dist/index.js",
       "import": "{ Button }",
-      "limit": "7 kB"
+      "limit": "1 kB"
+    },
+    {
+      "name": "uma tela de CRM típica",
+      "path": "dist/index.js",
+      "import": "{ Button, Campo, CampoForm, Tabela, Selo, Paginacao }",
+      "limit": "12 kB"
     }
   ]
 }

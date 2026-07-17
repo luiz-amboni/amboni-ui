@@ -270,6 +270,134 @@
       ],
       "descricao": "Área de texto (textarea)."
     },
+    "AtalhoPeriodo": {
+      "nome": "AtalhoPeriodo",
+      "tipo": "AtalhoPeriodo",
+      "arquivo": "packages/ui/src/components/CampoPeriodo.tsx",
+      "heranca": [],
+      "props": [
+        {
+          "nome": "rotulo",
+          "tipo": "string",
+          "obrigatoria": true
+        },
+        {
+          "nome": "periodo",
+          "tipo": "() => Periodo",
+          "obrigatoria": true,
+          "descricao": "Função, não valor: um atalho calculado no import congelaria \"hoje\" no instante em que o módulo carregou. Numa aba aberta desde ontem, \"Hoje\" traria ontem."
+        }
+      ]
+    },
+    "Autocomplete": {
+      "nome": "Autocomplete",
+      "tipo": "AutocompleteProps",
+      "arquivo": "packages/ui/src/components/Autocomplete.tsx",
+      "heranca": [
+        "Omit<HTMLAttributes<HTMLInputElement>, 'onChange' | 'children' | 'defaultValue' | 'value'>"
+      ],
+      "props": [
+        {
+          "nome": "opcoes",
+          "tipo": "OpcaoAutocomplete[]",
+          "obrigatoria": true,
+          "descricao": "O que mostrar. Com `onBuscar`, é o resultado da última busca (e serve de lista inicial antes da primeira). Sem `onBuscar`, é a lista inteira e o filtro acontece aqui."
+        },
+        {
+          "nome": "onBuscar",
+          "tipo": "(texto: string) => Promise<OpcaoAutocomplete[]>",
+          "obrigatoria": false,
+          "descricao": "Busca no servidor. Devolva a lista já pronta. **Respostas fora de ordem são tratadas aqui** — ver a nota sobre corrida no JSDoc do componente. Sem isto, o filtro é local (`opcoes` inteira, sem acento, sem caixa)."
+        },
+        {
+          "nome": "carregando",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "descricao": "Força o estado \"buscando\". Use quando a busca é sua (React Query, por exemplo) em vez de `onBuscar`. Com `onBuscar`, o componente já sabe sozinho — isto só soma."
+        },
+        {
+          "nome": "placeholder",
+          "tipo": "string",
+          "obrigatoria": false
+        },
+        {
+          "nome": "semResultado",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "'Nada encontrado'",
+          "descricao": "O que dizer quando a busca não achou nada."
+        },
+        {
+          "nome": "minCaracteres",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0",
+          "descricao": "Só busca a partir daqui. Numa base de 10 mil clientes, buscar por \"a\" devolve 4 mil linhas que ninguém vai ler e derruba o servidor a cada tecla."
+        },
+        {
+          "nome": "criarNovo",
+          "tipo": "(texto: string) => void",
+          "obrigatoria": false,
+          "descricao": "Oferece \"Criar “o que foi digitado”\" no fim da lista, quando o texto não bate exatamente com nenhuma opção. Recebe o texto cru — a criação (e o `onChange` depois dela) é sua."
+        },
+        {
+          "nome": "size",
+          "tipo": "'sm' | 'md' | 'lg'",
+          "obrigatoria": false,
+          "padrao": "'md'"
+        },
+        {
+          "nome": "erro",
+          "tipo": "string",
+          "obrigatoria": false,
+          "descricao": "A mensagem do erro. **É texto, não booleano, de propósito**: pintar a borda de vermelho sem dizer o que está errado não conserta nada — e quem não distingue vermelho não vê nem o aviso."
+        },
+        {
+          "nome": "disabled",
+          "tipo": "boolean",
+          "obrigatoria": false
+        },
+        {
+          "nome": "id",
+          "tipo": "string",
+          "obrigatoria": false
+        },
+        {
+          "nome": "multiplo",
+          "tipo": "false",
+          "obrigatoria": false
+        },
+        {
+          "nome": "valor",
+          "tipo": "string | null",
+          "obrigatoria": true,
+          "descricao": "Controlado. `null` = nada escolhido (mostra o `placeholder`)."
+        },
+        {
+          "nome": "onChange",
+          "tipo": "(valor: string | null) => void",
+          "obrigatoria": true
+        },
+        {
+          "nome": "multiplo",
+          "tipo": "true",
+          "obrigatoria": true
+        },
+        {
+          "nome": "valor",
+          "tipo": "string[]",
+          "obrigatoria": true,
+          "descricao": "Controlado. `[]` = nada escolhido."
+        },
+        {
+          "nome": "onChange",
+          "tipo": "(valor: string[]) => void",
+          "obrigatoria": true
+        }
+      ],
+      "variantes": true,
+      "descricao": "Autocomplete — buscar numa lista GRANDE, ou que vem do servidor. ## Autocomplete ou Selecao buscável? O miolo dos dois é o mesmo código (`utils/combobox.ts`), então a escolha é só sobre a NATUREZA da lista: · **`Selecao buscavel`** — lista **fechada e curta**: as 27 UFs, 8 categorias. Todas as opções cabem na memória e na tela, o filtro é local, e reabrir mostra tudo de novo. · **`Autocomplete`** — lista **grande ou remota**: achar um cliente entre 10 mil. Não há \"mostrar tudo\" — a lista só existe como resposta a uma busca. É aqui que moram `onBuscar`, `minCaracteres`, `carregando`, `multiplo` e `criarNovo`. Na dúvida: **se dá para rolar a lista inteira e escolher, é Selecao.** ## A corrida — o bug clássico do assíncrono Quem digita \"maria\" dispara cinco buscas. Elas voltam **fora de ordem** (a rede não promete nada), e a resposta de \"mar\" chegando DEPOIS da de \"maria\" pinta a tela com o resultado errado — o campo mostra 300 nomes enquanto o texto diz \"maria\", e some quando a pessoa digita mais uma letra. Ninguém reproduz isso na própria máquina; só aparece em 4G ruim, que é onde os clientes estão. Aqui cada busca leva um número de série e **a resposta que não for da última busca é descartada**. É o `buscaAtual` lá embaixo, e é a razão de este componente existir separado da Selecao. ## Grupos não existem aqui, de propósito `OpcaoAutocomplete` não tem `grupo`. Agrupar pressupõe conhecer o conjunto inteiro — o que é justamente o que não se tem quando a lista vem do servidor em pedaços. Se a sua lista dá para agrupar, ela é curta o bastante para ser uma `Selecao`."
+    },
     "Avatar": {
       "nome": "Avatar",
       "tipo": "AvatarProps",
@@ -480,6 +608,89 @@
       ],
       "descricao": "Caixa de seleção. **Caixa ou Interruptor?** A caixa faz parte de um formulário: a escolha só vale depois do \"Salvar\", e dá para desistir. O `<Interruptor>` aplica na hora, sem confirmação. Trocar um pelo outro é o erro de uso mais comum — a pessoa marca a caixa achando que já ligou algo, ou aciona o interruptor achando que ainda pode voltar atrás."
     },
+    "Calendario": {
+      "nome": "Calendario",
+      "tipo": "CalendarioProps",
+      "arquivo": "packages/ui/src/components/Calendario.tsx",
+      "heranca": [
+        "Omit<HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue'>"
+      ],
+      "props": [
+        {
+          "nome": "valor",
+          "tipo": "Date | null",
+          "obrigatoria": true,
+          "descricao": "O dia escolhido. `null` = nenhum."
+        },
+        {
+          "nome": "onChange",
+          "tipo": "(d: Date) => void",
+          "obrigatoria": true,
+          "descricao": "Recebe o DIA (meia-noite local), não o evento."
+        },
+        {
+          "nome": "min",
+          "tipo": "Date",
+          "obrigatoria": false,
+          "descricao": "Primeiro dia escolhível. Dias antes ficam desabilitados de verdade — a seta não pousa neles."
+        },
+        {
+          "nome": "max",
+          "tipo": "Date",
+          "obrigatoria": false,
+          "descricao": "Último dia escolhível."
+        },
+        {
+          "nome": "desabilitar",
+          "tipo": "(d: Date) => boolean",
+          "obrigatoria": false,
+          "descricao": "Desabilita dias avulsos (fim de semana, feriado, agenda cheia). Roda para cada célula."
+        },
+        {
+          "nome": "mes",
+          "tipo": "Date",
+          "obrigatoria": false,
+          "descricao": "O mês visível — qualquer data dentro dele. Controlado: se passar, precisa atualizar no `onMesChange`, senão a navegação não sai do lugar. Omita para o Calendario cuidar sozinho."
+        },
+        {
+          "nome": "onMesChange",
+          "tipo": "(mes: Date) => void",
+          "obrigatoria": false
+        },
+        {
+          "nome": "locale",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "'pt-BR'"
+        },
+        {
+          "nome": "primeiroDiaSemana",
+          "tipo": "0 | 1 | 2 | 3 | 4 | 5 | 6",
+          "obrigatoria": false,
+          "descricao": "Força o começo da semana (0 = domingo). Só para quando a detecção erra — ver a nota em `REGIOES_DOMINGO`. Por padrão quem responde é o `Intl`."
+        },
+        {
+          "nome": "realce",
+          "tipo": "IntervaloDatas | null",
+          "obrigatoria": false,
+          "descricao": "Pinta um intervalo. É o que o `CampoPeriodo` usa para desenhar as duas pontas, o miolo e a prévia do mouse. Com `realce`, o `valor` some do desenho — são dois modos de seleção."
+        },
+        {
+          "nome": "onDiaEntrar",
+          "tipo": "(d: Date | null) => void",
+          "obrigatoria": false,
+          "descricao": "Mouse entrou num dia (ou saiu da grade, com `null`). Serve à prévia do intervalo."
+        },
+        {
+          "nome": "setas",
+          "tipo": "'ambas' | 'esquerda' | 'direita' | 'nenhuma'",
+          "obrigatoria": false,
+          "padrao": "'ambas'",
+          "descricao": "Quais setas de navegação aparecem. `esquerda`/`direita` existem para a vista de dois meses, onde as setas ficam nas pontas de fora e o miolo respira."
+        }
+      ],
+      "descricao": "Calendario — a grade de dias. ## É uma tabela de verdade `<table role=\"grid\">` com `<th scope=\"col\">` nos dias da semana, e não uma pilha de `<div>`. Um calendário **é** uma tabela: tem linhas (semanas), colunas (dias da semana) e cabeçalho. Quem usa leitor de tela navega calendário como navega tabela — e num monte de divs não há coluna, não há \"segunda-feira\", não há nada. O custo de fazer certo aqui é zero; o de fazer errado é o componente não existir para quem não enxerga. ## O teclado é o componente Padrão APG, e não é enfeite: escolher 15/06/2026 no mouse são três cliques e uma mira; no teclado é uma seta. Setas andam 1 dia, ↑↓ andam 1 semana, Home/End vão às pontas da semana, PageUp/PageDown trocam o mês, Shift+PageUp/PageDown trocam o ano, Enter/Espaço escolhem. **Roving tabindex**: um Tab entra na grade e o próximo Tab sai dela — só o dia focado é tabulável. Sem isso, sair de um calendário custa 42 Tabs. A seta **nunca pousa em dia desabilitado**: ela pula por cima e, no limite do `min`/`max`, para na ponta válida. Um foco que pousa onde o Enter não faz nada é um beco sem saída. ## `aria-selected` e `aria-current` são coisas diferentes `aria-current=\"date\"` é HOJE — o dia em que a pessoa está. `aria-selected` é o dia ESCOLHIDO. Trocar um pelo outro (ou usar só um) faz o leitor de tela anunciar \"hoje\" para uma data de 2019. São dois fatos independentes e a grade marca os dois."
+    },
     "Campo": {
       "nome": "Campo",
       "tipo": "CampoProps",
@@ -534,6 +745,183 @@
       ],
       "descricao": "Campo de texto. As cores vêm do tema e já passaram no teste de contraste (@amboni/tokens), então ele é legível em iSafe/VEAR × claro/escuro sem nenhum ajuste no produto."
     },
+    "CampoArquivo": {
+      "nome": "CampoArquivo",
+      "tipo": "CampoArquivoProps",
+      "arquivo": "packages/ui/src/components/CampoArquivo.tsx",
+      "heranca": [],
+      "props": [
+        {
+          "nome": "onArquivos",
+          "tipo": "(arquivos: File[]) => void",
+          "obrigatoria": true,
+          "descricao": "Recebe os arquivos que passaram na validação. **Só é chamado quando sobra alguém**: se tudo foi barrado, o que existe é uma mensagem de erro, não uma escolha."
+        },
+        {
+          "nome": "aceita",
+          "tipo": "string",
+          "obrigatoria": false,
+          "descricao": "O mesmo formato do `accept` do HTML: `'image/*'`, `'.pdf,.csv'`, `'image/png'`. **Isto não é segurança, é conveniência.** O `accept` só filtra o que aparece na janela do sistema — e ainda assim a pessoa troca o filtro para \"Todos os arquivos\" e escolhe o que quiser. Arquivo ARRASTADO ignora o `accept` por completo: o navegador nem consulta. Por isso o componente revalida em JS, o que também não é segurança — JS roda na máquina de quem usa. Quem decide se um `.exe` renomeado para `.pdf` entra é o **servidor**, olhando o conteúdo. Aqui a gente só evita a viagem perdida."
+        },
+        {
+          "nome": "multiplo",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Aceita mais de um por vez."
+        },
+        {
+          "nome": "tamanhoMax",
+          "tipo": "number",
+          "obrigatoria": false,
+          "descricao": "Limite por arquivo, em **bytes** (`5 * 1024 * 1024`). Sem isto, não há limite aqui."
+        },
+        {
+          "nome": "arquivos",
+          "tipo": "File[]",
+          "obrigatoria": false,
+          "descricao": "Os arquivos já escolhidos, para mostrar como etiquetas. O estado é de quem usa."
+        },
+        {
+          "nome": "onRemover",
+          "tipo": "(arquivo: File, indice: number) => void",
+          "obrigatoria": false,
+          "descricao": "Sem isto, a etiqueta não ganha X — um X que não remove nada é uma promessa falsa."
+        },
+        {
+          "nome": "disabled",
+          "tipo": "boolean",
+          "obrigatoria": false
+        },
+        {
+          "nome": "progresso",
+          "tipo": "number",
+          "obrigatoria": false,
+          "descricao": "0 a 100. Presente = tem envio em curso e aparece a `<Progresso>`. `undefined` (e não `0`) quando não há envio: `0` desenharia uma barra parada no começo, dizendo que algo está acontecendo quando não está."
+        },
+        {
+          "nome": "rotulo",
+          "tipo": "ReactNode",
+          "obrigatoria": false,
+          "padrao": "'Escolher arquivo'",
+          "descricao": "O texto da área. Vira o **nome acessível** do input."
+        },
+        {
+          "nome": "ajuda",
+          "tipo": "ReactNode",
+          "obrigatoria": false,
+          "descricao": "Restrições e formato (\"PNG ou PDF\"). O limite de tamanho já entra sozinho."
+        },
+        {
+          "nome": "id",
+          "tipo": "string",
+          "obrigatoria": false,
+          "descricao": "Id fixo, se precisar. Do contrário um é gerado."
+        },
+        {
+          "nome": "name",
+          "tipo": "string",
+          "obrigatoria": false,
+          "descricao": "Nome do campo, para envio por `<form>` nativo."
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false
+        }
+      ],
+      "descricao": "CampoArquivo — anexar contrato, foto, planilha. ## A armadilha nº 1: o input escondido com `display: none` Quase toda biblioteca faz assim — some com o `<input type=\"file\">` e põe um `<button>` que chama `input.click()`. Custa caro e não aparece em nenhum teste de render: · `display: none` **tira o elemento da árvore de acessibilidade**. O leitor de tela não anuncia \"escolher arquivo, botão de seleção\" — anuncia \"botão\", como qualquer outro. A pessoa não sabe que ali vai abrir uma janela do sistema. · O input some do Tab, então quem navega por teclado depende do botão falso funcionar. · O `.click()` disparado por JS é bloqueado por navegador quando não vem de um gesto direto — e é o tipo de coisa que quebra num navegador só, meses depois. Aqui: o input é NATIVO, fica escondido só visualmente (`.amb-sr-only` recorta em 1px, sem tirar da árvore), continua no Tab e continua sendo anunciado como o que é. Quem abre a janela é um `<label>` de verdade em volta dele — comportamento do HTML, zero JS. O anel de foco aparece na área inteira via `:has()`, no CSS. ## Arrastar e soltar é ATALHO, nunca o caminho Não existe arrastar no teclado, e no celular não existe de jeito nenhum. A área de soltar é o mesmo `<label>` que se clica: quem arrasta ganha um atalho, e quem não pode arrastar não perde nada. Uma zona que SÓ aceita `onDrop` exclui, em silêncio, todo mundo que usa toque ou teclado."
+    },
+    "CampoData": {
+      "nome": "CampoData",
+      "tipo": "CampoDataProps",
+      "arquivo": "packages/ui/src/components/CampoData.tsx",
+      "heranca": [
+        "Omit<HTMLAttributes<HTMLElement>, 'onChange' | 'defaultValue'>"
+      ],
+      "props": [
+        {
+          "nome": "valor",
+          "tipo": "Date | null",
+          "obrigatoria": true,
+          "descricao": "Controlado. `null` = campo vazio."
+        },
+        {
+          "nome": "onChange",
+          "tipo": "(d: Date | null) => void",
+          "obrigatoria": true,
+          "descricao": "Recebe o DIA (meia-noite local) ou `null` quando a pessoa esvazia o campo."
+        },
+        {
+          "nome": "min",
+          "tipo": "Date",
+          "obrigatoria": false
+        },
+        {
+          "nome": "max",
+          "tipo": "Date",
+          "obrigatoria": false
+        },
+        {
+          "nome": "desabilitar",
+          "tipo": "CalendarioProps['desabilitar']",
+          "obrigatoria": false,
+          "descricao": "Desabilita dias avulsos no calendário. **Ignorado no modo nativo** — ver a limitação no JSDoc do componente."
+        },
+        {
+          "nome": "formato",
+          "tipo": "'dd/mm/aaaa' | 'aaaa-mm-dd'",
+          "obrigatoria": false,
+          "padrao": "'dd/mm/aaaa'"
+        },
+        {
+          "nome": "placeholder",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "o próprio formato (\"dd/mm/aaaa\") — é a instrução mais curta que existe."
+        },
+        {
+          "nome": "erro",
+          "tipo": "string",
+          "obrigatoria": false,
+          "descricao": "A mensagem do erro de fora (validação do formulário). O campo tem os erros DELE (\"Data inválida\"), que aparecem sozinhos — este é para o que só o produto sabe (\"Escolha uma data depois do pedido\")."
+        },
+        {
+          "nome": "disabled",
+          "tipo": "boolean",
+          "obrigatoria": false
+        },
+        {
+          "nome": "size",
+          "tipo": "'sm' | 'md' | 'lg'",
+          "obrigatoria": false,
+          "padrao": "'md'"
+        },
+        {
+          "nome": "locale",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "'pt-BR'"
+        },
+        {
+          "nome": "nativo",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "descricao": "Força o `<input type=\"date\">` do sistema (`true`) ou o campo com máscara (`false`). Por padrão decide pelo ponteiro: dedo → nativo, mouse → máscara. Ver o JSDoc."
+        },
+        {
+          "nome": "name",
+          "tipo": "string",
+          "obrigatoria": false
+        },
+        {
+          "nome": "id",
+          "tipo": "string",
+          "obrigatoria": false
+        }
+      ],
+      "descricao": "CampoData — o campo de data. ## A decisão: texto com máscara no mouse, `<input type=\"date\">` no dedo As duas opções são ruins de um jeito diferente, e escolher só uma é escolher errado para metade das pessoas. O **nativo** dá de graça o que ninguém imita bem: o teclado do sistema, o calendário do SO e — o que mais pesa — **a roda do celular**. No toque ele ganha de qualquer coisa que a gente desenhe. Mas ele é quase inestilizável, o formato dele obedece ao locale do SISTEMA (um Mac em inglês mostra mm/dd/yyyy no meio de um painel em português, e não há CSS que conserte), e ele não sabe desabilitar dias avulsos — só `min`/`max`. O **texto com máscara** é o certo para quem preenche CRM o dia todo: digitar \"15/06/2026\" é uma rajada de 8 dígitos, contra três cliques e uma mira no calendário. E quem procura uma data de nascimento (1985) não tem paciência para 40 cliques em \"ano anterior\". Então: **`(pointer: coarse)` → nativo; senão, máscara + botão que abre o `Calendario`**. O critério é o ponteiro e não a largura da tela, porque o que muda o jogo é o dedo, não o tamanho da janela. Force com `nativo` quando souber mais que a heurística. ## Limitações, sem maquiagem · **no modo nativo, `desabilitar` não vale** (o `type=date` só entende min/max). Se dias avulsos são essenciais, passe `nativo={false}` e aceite perder a roda do SO; · **no modo nativo, o formato é o do SISTEMA**, não o `formato`. `formato` continua valendo para o `valor` que entra e sai — o que muda é só o que aparece na tela; · **o painel é `position: absolute`**: um ancestral com `overflow: hidden` corta o calendário. Ele vira para cima quando não cabe embaixo, mas não escapa de um recorte. O conserto de verdade é o anchor positioning do CSS, que ainda não tem Firefox."
+    },
     "CampoForm": {
       "nome": "CampoForm",
       "tipo": "CampoFormProps",
@@ -583,6 +971,74 @@
         }
       ],
       "descricao": "CampoForm — o rótulo, a ajuda e o erro de um campo, amarrados por ARIA. **A razão de existir.** Um `<label>` solto ao lado de um `<input>` não é um rótulo: sem `htmlFor` apontando para o `id`, quem usa leitor de tela ouve \"campo de edição\" e nada mais — não sabe QUAL campo nem QUAL erro. Este componente gera o id, liga o label, liga a ajuda e o erro por `aria-describedby`, e marca `aria-invalid` — tudo o que ninguém lembra de fazer à mão em 40 campos de um formulário."
+    },
+    "CampoPeriodo": {
+      "nome": "CampoPeriodo",
+      "tipo": "CampoPeriodoProps",
+      "arquivo": "packages/ui/src/components/CampoPeriodo.tsx",
+      "heranca": [
+        "Omit<HTMLAttributes<HTMLElement>, 'onChange' | 'defaultValue'>"
+      ],
+      "props": [
+        {
+          "nome": "valor",
+          "tipo": "Periodo",
+          "obrigatoria": true,
+          "descricao": "Controlado. `{ inicio: null, fim: null }` = nada escolhido."
+        },
+        {
+          "nome": "onChange",
+          "tipo": "(p: Periodo) => void",
+          "obrigatoria": true,
+          "descricao": "Só dispara com o intervalo COMPLETO — ver a nota sobre o rascunho no JSDoc."
+        },
+        {
+          "nome": "min",
+          "tipo": "Date",
+          "obrigatoria": false
+        },
+        {
+          "nome": "max",
+          "tipo": "Date",
+          "obrigatoria": false
+        },
+        {
+          "nome": "atalhos",
+          "tipo": "AtalhoPeriodo[]",
+          "obrigatoria": false,
+          "padrao": "ATALHOS_PADRAO"
+        },
+        {
+          "nome": "locale",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "'pt-BR'"
+        },
+        {
+          "nome": "formato",
+          "tipo": "'dd/mm/aaaa' | 'aaaa-mm-dd'",
+          "obrigatoria": false,
+          "padrao": "'dd/mm/aaaa' — como as datas aparecem no botão."
+        },
+        {
+          "nome": "placeholder",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "'Escolha o período'"
+        },
+        {
+          "nome": "disabled",
+          "tipo": "boolean",
+          "obrigatoria": false
+        },
+        {
+          "nome": "size",
+          "tipo": "'sm' | 'md' | 'lg'",
+          "obrigatoria": false,
+          "padrao": "'md'"
+        }
+      ],
+      "descricao": "CampoPeriodo — o intervalo de datas. É o que um CRM realmente usa. ## Os atalhos são o componente; o calendário é o plano B \"Campanhas dos últimos 30 dias\", \"vendas deste mês\" — quase ninguém quer apontar duas datas, as pessoas querem um recorte pronto. Por isso os atalhos vêm PRIMEIRO, à esquerda, e é neles que o foco entra ao abrir: para 9 em cada 10 pessoas o fluxo inteiro é um clique (ou um Enter). A grade existe para as outras — e para elas o teclado do `Calendario` vale igual: as duas pontas se escolhem com seta e Enter. ## Duas pontas, um rascunho O primeiro clique NÃO chama `onChange`: meio intervalo não é um valor, e avisar o produto de um `{inicio, fim: null}` faria a tela inteira recarregar com um filtro que a pessoa ainda está montando. O rascunho vive aqui dentro até a segunda ponta; aí sim `onChange` dispara uma vez, com o intervalo pronto, e o painel fecha. **Clicou a segunda ponta antes da primeira** (30/06 e depois 15/06)? O intervalo vira 15–30, invertido em silêncio. Recusar obrigaria a pessoa a recomeçar por causa de uma ordem que ela não sabia que existia, e a intenção é inequívoca: ela apontou as duas pontas. O mesmo vale para um `valor` que chegue trocado — ver `ordenar`. ## Limitações, sem maquiagem · **não dá para digitar as datas aqui.** O gatilho é um botão, não dois campos. Quem precisa cravar \"15/06/2026 a 30/06/2026\" na mão usa dois `<CampoData>`; este componente é para recorte de relatório, onde atalho e arrasto ganham de digitação; · **o painel é `position: absolute`**: um ancestral com `overflow: hidden` corta; · dois meses só a partir de 640px de largura — abaixo disso é um mês, porque dois não cabem em celular nenhum."
     },
     "Card": {
       "nome": "Card",
@@ -672,6 +1128,102 @@
           "descricao": "Nível do título no documento (h2, h3…). **Importe-se com isto:** quem usa leitor de tela navega pelos títulos como um índice. Nível pulado (h2 → h4) quebra o índice."
         }
       ]
+    },
+    "Deslizador": {
+      "nome": "Deslizador",
+      "tipo": "DeslizadorProps",
+      "arquivo": "packages/ui/src/components/Deslizador.tsx",
+      "heranca": [
+        "Omit<HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue'>"
+      ],
+      "props": [
+        {
+          "nome": "min",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "0"
+        },
+        {
+          "nome": "max",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "100"
+        },
+        {
+          "nome": "passo",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "1"
+        },
+        {
+          "nome": "marcas",
+          "tipo": "MarcaDeslizador[]",
+          "obrigatoria": false,
+          "descricao": "Riscos de referência. São `aria-hidden`: o valor já é anunciado pelo próprio controle."
+        },
+        {
+          "nome": "formatarRotulo",
+          "tipo": "(valor: number) => string",
+          "obrigatoria": false,
+          "descricao": "Como o número vira texto. **Ligue sempre que o número não for um número puro.** Vira `aria-valuetext`, e é a diferença entre o leitor de tela dizer \"1500\" e dizer \"R$ 1.500,00\" — ver a nota no JSDoc do componente."
+        },
+        {
+          "nome": "disabled",
+          "tipo": "boolean",
+          "obrigatoria": false
+        },
+        {
+          "nome": "size",
+          "tipo": "'sm' | 'md' | 'lg'",
+          "obrigatoria": false,
+          "padrao": "'md'"
+        },
+        {
+          "nome": "mostrarValor",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "descricao": "Mostra o valor atual em cima do controle. Puramente visual (`aria-hidden`) — quem anuncia é o `aria-valuetext`."
+        },
+        {
+          "nome": "rotuloPontas",
+          "tipo": "[string, string]",
+          "obrigatoria": false,
+          "padrao": "['Mínimo', 'Máximo']",
+          "descricao": "Os nomes das duas pontas, só no modo `intervalo`. Precisam ser DIFERENTES: dois sliders chamados \"Preço\" deixam quem usa leitor de tela sem saber qual é qual."
+        },
+        {
+          "nome": "intervalo",
+          "tipo": "false",
+          "obrigatoria": false
+        },
+        {
+          "nome": "valor",
+          "tipo": "number",
+          "obrigatoria": true
+        },
+        {
+          "nome": "onChange",
+          "tipo": "(valor: number) => void",
+          "obrigatoria": true
+        },
+        {
+          "nome": "intervalo",
+          "tipo": "true",
+          "obrigatoria": true
+        },
+        {
+          "nome": "valor",
+          "tipo": "[number, number]",
+          "obrigatoria": true
+        },
+        {
+          "nome": "onChange",
+          "tipo": "(valor: [number, number]) => void",
+          "obrigatoria": true
+        }
+      ],
+      "variantes": true,
+      "descricao": "Deslizador — escolher um número numa faixa. ## A decisão: `<input type=\"range\">` no simples, ARIA só nas duas pontas Uma ponta só é um `<input type=\"range\">` de verdade. Isso é deliberado, e é o que faz este componente não ter os bugs que sliders customizados têm: o teclado, o `aria-valuenow` sempre correto, o arrasto, o suporte a caneta e — o que mais pesa — **o gesto do celular**, onde o navegador já faz o dedo grudar na ponta. Para `intervalo` o nativo simplesmente não serve: não existe input de duas pontas. Aí cada ponta vira um `role=\"slider\"` com `aria-valuemin/now/max` e **`aria-label` diferente em cada uma** (\"Mínimo\", \"Máximo\") — sem isso o leitor de tela anuncia dois controles com o mesmo nome e a pessoa não sabe qual está mexendo. ## `aria-valuetext`: o detalhe que quase ninguém faz `aria-valuenow` é **número**, e é o que o leitor de tela lê por padrão. Um slider de preço anuncia **\"1500\"** quando devia anunciar **\"R$ 1.500,00\"**; um de prazo anuncia \"7\" quando devia dizer \"7 dias\". `aria-valuetext` é o texto que a pessoa OUVE, e é para isso que serve o `formatarRotulo`: ele pinta o rótulo na tela e alimenta o `aria-valuetext` de uma vez, para os dois nunca divergirem. Sem `formatarRotulo` não inventamos `aria-valuetext` — um número puro já é lido certo, e um valuetext redundante só faria o leitor de tela falar duas vezes. ## Teclado Setas = 1 passo · **PageUp/PageDown = 10 passos** · Home/End = min/max. O PageUp/PageDown é tratado por nós **inclusive no modo nativo**, e isso é de propósito: cada navegador escolhe um salto diferente (uns 10% da faixa, outros um punhado de passos), então o mesmo controle andaria distâncias diferentes no Chrome e no Firefox — e diferente do modo `intervalo`, no mesmo produto."
     },
     "Dialogo": {
       "nome": "Dialogo",
@@ -781,6 +1333,37 @@
         }
       ],
       "descricao": "Dica — o balão de ajuda. ## Leia antes de usar: a Dica não é um lugar seguro para informação **Nunca ponha na Dica algo que a pessoa PRECISE saber.** Não é conservadorismo, é o que o formato é: · **no celular não existe hover.** Toque não é passar o mouse. Quem está no celular — a maioria — simplesmente nunca vê o conteúdo de uma Dica; · **quem enxerga pouco navega com zoom de 200–400%.** O balão aparece fora do recorte ampliado, ou tampa exatamente o que a pessoa estava lendo; · **quem tem tremor ou usa switch** não consegue segurar o ponteiro parado o tempo todo da leitura. Se a informação é necessária para decidir ou agir, ela vai NA TELA: um rótulo, um texto de apoio embaixo do campo, uma linha no card. A Dica serve para o que é bônus: lembrar o nome inteiro de uma sigla, dizer de onde veio um número. ## O que ela faz certo · abre no **foco** também, não só no hover — senão não existe para o teclado; · **Esc fecha** (WCAG 1.4.13), mesmo com a dica aberta por hover; · liga por **`aria-describedby`**, não por `title` (que é lento, feio, não estilizável e some no celular) nem por um `role=\"tooltip\"` solto, que o leitor de tela ignora quando ninguém aponta para ele."
+    },
+    "Divisor": {
+      "nome": "Divisor",
+      "tipo": "DivisorProps",
+      "arquivo": "packages/ui/src/components/Divisor.tsx",
+      "heranca": [
+        "Omit<HTMLAttributes<HTMLElement>, 'children'>"
+      ],
+      "props": [
+        {
+          "nome": "orientacao",
+          "tipo": "'horizontal' | 'vertical'",
+          "obrigatoria": false,
+          "padrao": "'horizontal'",
+          "descricao": "`vertical` só funciona dentro de um container que tenha altura (um flex row, uma barra de ferramentas). Solto no fluxo, ele mede 0 e some — não é bug do componente, é que não existe \"altura\" para herdar."
+        },
+        {
+          "nome": "rotulo",
+          "tipo": "ReactNode",
+          "obrigatoria": false,
+          "descricao": "Uma palavra no meio da linha (\"ou\"). Muda o componente por dentro — ver o bloco sobre filhos presentacionais na documentação do componente."
+        },
+        {
+          "nome": "espessura",
+          "tipo": "'fina' | 'grossa'",
+          "obrigatoria": false,
+          "padrao": "'fina'",
+          "descricao": "`fina` (1px) separa itens de uma mesma lista; `grossa` (2px) separa seções que não têm nada a ver uma com a outra. Se estiver em dúvida, é `fina`: divisor é pontuação, não título."
+        }
+      ],
+      "descricao": "Divisor — a linha entre duas coisas. ## Por que o divisor COM rótulo não é `role=\"separator\"` A tentação é marcar os dois casos igual e pendurar o texto dentro. Não funciona: pela norma ARIA, um `separator` que não recebe foco tem **filhos presentacionais** — o leitor de tela descarta a árvore de dentro e anuncia só \"separador\". O \"ou\" que a pessoa vê no meio da linha simplesmente não existe para quem ouve a tela. (É o que boa parte das bibliotecas faz hoje, inclusive as grandes.) Então os dois casos são componentes diferentes de verdade: · **sem rótulo** → `<hr>`: nada além da linha, e o papel `separator` é justamente o que se quer anunciar. `aria-orientation` explícito porque o implícito do `<hr>` é sempre horizontal, e mentiria no modo vertical. · **com rótulo** → o rótulo é CONTEÚDO (texto normal, lido como qualquer texto) e as duas linhas ao lado é que são decoração (`aria-hidden`). Sem papel nenhum no wrapper: marcá-lo como `separator` seria trocar a informação pelo silêncio."
     },
     "Esqueleto": {
       "nome": "Esqueleto",
@@ -1159,6 +1742,25 @@
       ],
       "descricao": "Interruptor — liga/desliga que vale AGORA. **Interruptor ou Caixa?** É a confusão mais comum do design system, e a diferença é de comportamento, não de aparência: · `<Interruptor>` aplica na hora. Não existe \"Salvar\" depois dele. Ao acionar, algo muda no sistema imediatamente — o envio começa, o robô liga. Se a ação é lenta ou pode falhar, o produto precisa mostrar o resultado (e reverter o estado se der erro), porque a pessoa já foi embora achando que ficou feito. · `<Caixa>` é campo de formulário. A escolha só vale no \"Salvar\" e dá para desistir antes. O leitor de tela também trata os dois de forma diferente: `role=\"switch\"` é anunciado como \"ligado/desligado\", checkbox como \"marcado/desmarcado\". Usar o errado mente sobre o que vai acontecer."
     },
+    "IntervaloDatas": {
+      "nome": "IntervaloDatas",
+      "tipo": "IntervaloDatas",
+      "arquivo": "packages/ui/src/components/Calendario.tsx",
+      "heranca": [],
+      "props": [
+        {
+          "nome": "inicio",
+          "tipo": "Date | null",
+          "obrigatoria": true
+        },
+        {
+          "nome": "fim",
+          "tipo": "Date | null",
+          "obrigatoria": true
+        }
+      ],
+      "descricao": "Ponta a ponta de um intervalo. `null` nas duas pontas = nada escolhido ainda."
+    },
     "ItemAcordeao": {
       "nome": "ItemAcordeao",
       "tipo": "ItemAcordeaoProps",
@@ -1208,6 +1810,56 @@
         }
       ],
       "descricao": "Uma seção do acordeão. ## O painel fechado precisa sumir de verdade \"Fechado\" aqui é o atributo `hidden` (= `display: none`), não altura zero. A diferença é invisível para quem testa com mouse e é a razão deste componente existir: um painel com `height: 0` e `overflow: hidden` continua **alcançável pelo Tab**. A pessoa tecleja, o foco entra num painel fechado, o anel de foco desaparece da tela — e não há nada para clicar, nem para onde voltar. O foco \"sumiu\". ## E a animação, então? `height: auto` não anima (o navegador não sabe para qual número ir), e `display: none` corta qualquer transição. A saída é uma máquina de dois estados: · `visivel` — manda no `hidden`. Entra ANTES da animação de abrir, sai DEPOIS da de fechar. É a garantia de acessibilidade. · `expandido` — manda no `grid-template-rows: 0fr → 1fr`. É a animação. `grid-template-rows` em vez de medir `scrollHeight`: medir obriga a ler o layout a cada abertura (custo e travada), quebra quando o conteúdo muda de tamanho sozinho (imagem que carrega, lista que cresce) e trava a altura num número que envelhece. O grid deixa o navegador continuar decidindo a altura — anima do zero até \"o que for\"."
+    },
+    "ItemLinhaDoTempo": {
+      "nome": "ItemLinhaDoTempo",
+      "tipo": "ItemLinhaDoTempo",
+      "arquivo": "packages/ui/src/components/LinhaDoTempo.tsx",
+      "heranca": [],
+      "props": [
+        {
+          "nome": "id",
+          "tipo": "string | number",
+          "obrigatoria": true,
+          "descricao": "Chave do React. Use o id do evento — índice do array reordena errado ao inserir."
+        },
+        {
+          "nome": "titulo",
+          "tipo": "ReactNode",
+          "obrigatoria": true,
+          "descricao": "O que aconteceu. É ELE que informa — ver a nota sobre `tom`."
+        },
+        {
+          "nome": "descricao",
+          "tipo": "ReactNode",
+          "obrigatoria": false,
+          "descricao": "Detalhe: quem fez, o valor, o motivo."
+        },
+        {
+          "nome": "data",
+          "tipo": "string | Date",
+          "obrigatoria": true,
+          "descricao": "Quando. `Date`, ISO completo (`2026-07-16T14:32:00-03:00`) ou só a data (`2026-07-16`) — este último é tratado como dia LOCAL, ver `analisarData`."
+        },
+        {
+          "nome": "dataTexto",
+          "tipo": "ReactNode",
+          "obrigatoria": false,
+          "descricao": "O texto legível da data. Sem ele, sai a data formatada no idioma de quem está lendo. Passe quando quiser o jeito do produto (\"há 3 dias\", \"ontem às 14h\"). O formato de máquina continua no `dateTime`, então nada se perde."
+        },
+        {
+          "nome": "icone",
+          "tipo": "ReactNode",
+          "obrigatoria": false,
+          "descricao": "Substitui a forma padrão do tom. Decorativo — quem narra o evento é o título."
+        },
+        {
+          "nome": "tom",
+          "tipo": "'neutro' | 'marca' | 'sucesso' | 'aviso' | 'perigo' | 'info'",
+          "obrigatoria": false,
+          "padrao": "'neutro'"
+        }
+      ]
     },
     "ItemMenu": {
       "nome": "ItemMenu",
@@ -1290,6 +1942,36 @@
         }
       ]
     },
+    "LinhaDoTempo": {
+      "nome": "LinhaDoTempo",
+      "tipo": "LinhaDoTempoProps",
+      "arquivo": "packages/ui/src/components/LinhaDoTempo.tsx",
+      "heranca": [
+        "Omit<HTMLAttributes<HTMLOListElement>, 'children'>"
+      ],
+      "props": [
+        {
+          "nome": "itens",
+          "tipo": "ItemLinhaDoTempo[]",
+          "obrigatoria": true,
+          "descricao": "Os eventos, na ordem em que devem ser lidos (normalmente o mais novo primeiro)."
+        },
+        {
+          "nome": "orientacao",
+          "tipo": "'vertical' | 'horizontal'",
+          "obrigatoria": false,
+          "padrao": "'vertical'"
+        },
+        {
+          "nome": "compacta",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Menos respiro entre eventos. Para caber num painel lateral."
+        }
+      ],
+      "descricao": "LinhaDoTempo — o histórico de um cliente, de um pedido, de uma campanha. ## Por que `<ol>` e não um monte de `<div>` Isto é uma lista ORDENADA de eventos, e a ordem é metade da informação. Com `<ol>`, quem usa leitor de tela ouve \"lista de 8 itens\" antes de entrar e \"item 3 de 8\" em cada parada: sabe o tamanho do histórico, sabe onde está e pode pular a lista inteira com um comando. Com `<div>`, tudo isso vira um texto corrido em que \"Mensagem enviada 14:32 Mensagem entregue 14:33\" chega sem fronteira nenhuma entre um evento e o outro. ## `tom` não é informação nova O tom (e a forma) reforçam o que o **título** já diz. \"Envio falhou\" com pontinho ✕ vermelho é a mesma frase duas vezes — de propósito. O componente não injeta um \"erro:\" escondido para leitor de tela justamente porque isso duplicaria o anúncio no caso normal. Se o título não contar o que aconteceu, nenhum pontinho conta."
+    },
     "ListaAbas": {
       "nome": "ListaAbas",
       "tipo": "ListaAbasProps",
@@ -1299,6 +1981,25 @@
       ],
       "props": [],
       "descricao": "A régua das abas. Precisa de `aria-label`: numa página com duas listas, \"abas\" e \"abas\" não distingue nada."
+    },
+    "MarcaDeslizador": {
+      "nome": "MarcaDeslizador",
+      "tipo": "MarcaDeslizador",
+      "arquivo": "packages/ui/src/components/Deslizador.tsx",
+      "heranca": [],
+      "props": [
+        {
+          "nome": "valor",
+          "tipo": "number",
+          "obrigatoria": true
+        },
+        {
+          "nome": "rotulo",
+          "tipo": "ReactNode",
+          "obrigatoria": false,
+          "descricao": "O que aparece embaixo do risco. Sem isto, cai no `formatarRotulo` e depois no número."
+        }
+      ]
     },
     "Menu": {
       "nome": "Menu",
@@ -1336,33 +2037,18 @@
       "nome": "OpcaoSelecao",
       "tipo": "OpcaoSelecao",
       "arquivo": "packages/ui/src/components/Selecao.tsx",
-      "heranca": [],
+      "heranca": [
+        "OpcaoBase"
+      ],
       "props": [
-        {
-          "nome": "valor",
-          "tipo": "string",
-          "obrigatoria": true,
-          "descricao": "O que vai para o `onChange` e para o banco."
-        },
-        {
-          "nome": "rotulo",
-          "tipo": "string",
-          "obrigatoria": true,
-          "descricao": "O que a pessoa lê."
-        },
-        {
-          "nome": "desabilitada",
-          "tipo": "boolean",
-          "obrigatoria": false,
-          "descricao": "Existe, mas não pode ser escolhida agora. **Não é o mesmo que sumir da lista**: some quando não faz sentido; desabilita quando faz sentido mas está bloqueada (e aí a pessoa entende que a opção existe)."
-        },
         {
           "nome": "grupo",
           "tipo": "string",
           "obrigatoria": false,
           "descricao": "Agrupa visualmente. Vira `<optgroup>` no nativo e `role=\"group\"` no buscável."
         }
-      ]
+      ],
+      "descricao": "`valor`, `rotulo` e `desabilitada` vêm do miolo compartilhado do combobox."
     },
     "Ordem": {
       "nome": "Ordem",
@@ -1456,6 +2142,131 @@
           "obrigatoria": false
         }
       ]
+    },
+    "Passo": {
+      "nome": "Passo",
+      "tipo": "Passo",
+      "arquivo": "packages/ui/src/components/Passos.tsx",
+      "heranca": [],
+      "props": [
+        {
+          "nome": "id",
+          "tipo": "string",
+          "obrigatoria": true,
+          "descricao": "Chave do React e identidade do passo."
+        },
+        {
+          "nome": "titulo",
+          "tipo": "ReactNode",
+          "obrigatoria": true,
+          "descricao": "O nome da etapa (\"Endereço\"). Curto: ele cabe numa régua de 4 colunas."
+        },
+        {
+          "nome": "descricao",
+          "tipo": "ReactNode",
+          "obrigatoria": false,
+          "descricao": "Uma linha de apoio (\"CEP, número e complemento\")."
+        },
+        {
+          "nome": "estado",
+          "tipo": "'concluido' | 'atual' | 'futuro' | 'erro'",
+          "obrigatoria": false,
+          "descricao": "Force o estado. Sem isto ele sai de `atual`: antes → concluído, igual → atual, depois → futuro. Na prática só se passa `'erro'`, que é a única coisa que a posição no array não tem como saber."
+        }
+      ]
+    },
+    "Passos": {
+      "nome": "Passos",
+      "tipo": "PassosProps",
+      "arquivo": "packages/ui/src/components/Passos.tsx",
+      "heranca": [
+        "Omit<HTMLAttributes<HTMLElement>, 'children'>"
+      ],
+      "props": [
+        {
+          "nome": "passos",
+          "tipo": "Passo[]",
+          "obrigatoria": true,
+          "descricao": "As etapas, na ordem."
+        },
+        {
+          "nome": "atual",
+          "tipo": "number",
+          "obrigatoria": true,
+          "descricao": "Índice do passo em que a pessoa está, começando em **0**. Fora da faixa é grampeado."
+        },
+        {
+          "nome": "onIrPara",
+          "tipo": "(indice: number, passo: Passo) => void",
+          "obrigatoria": false,
+          "descricao": "Torna os passos já vistos navegáveis. **Ausente = a régua é indicação, não navegação** — ver o bloco sobre isto na documentação do componente."
+        },
+        {
+          "nome": "orientacao",
+          "tipo": "'horizontal' | 'vertical'",
+          "obrigatoria": false,
+          "padrao": "'horizontal'"
+        }
+      ],
+      "descricao": "Passos — o formulário longo dividido em etapas. ## Passo futuro não é clicável, e isso é uma decisão Pular para a etapa 4 sem preencher a 2 quebra a validação: o formulário chega no fim sem dados obrigatórios, e o erro aparece longe de onde nasceu. Então: · **concluído / com erro** → clicável (voltar a revisar é legítimo e comum); · **futuro** → nunca (é o passo a seguir que decide quando ele libera); · **atual** → nunca — mesma regra da `<Trilha>`: não se navega para onde já se está. Um botão que não leva a lugar nenhum é só mais uma parada no Tab. ## Sem `onIrPara`, nada é botão A régua vira indicação pura. Isto não é detalhe de estilo: um `<div onClick>` com cara de clicável, ou um `<button>` que não faz nada, mente para quem navega por teclado — a pessoa para em cima, aperta Enter e não acontece nada. Se não há para onde ir, não há nada no caminho do foco."
+    },
+    "Popover": {
+      "nome": "Popover",
+      "tipo": "PopoverProps",
+      "arquivo": "packages/ui/src/components/Popover.tsx",
+      "heranca": [],
+      "props": [
+        {
+          "nome": "gatilho",
+          "tipo": "ReactElement",
+          "obrigatoria": true,
+          "descricao": "O botão que abre. Recebe `aria-haspopup`, `aria-expanded` e o ref por clonagem — então precisa ser **um elemento que aceite ref e repasse props para o DOM** (`<Button>` da casa, ou um `<button>`). Um componente que engole props não funciona."
+        },
+        {
+          "nome": "rotulo",
+          "tipo": "string",
+          "obrigatoria": true,
+          "descricao": "O nome do painel. **Obrigatório**: `role=\"dialog\"` sem nome é anunciado como \"diálogo\" e nada mais — a pessoa sabe que algo abriu e não o quê. Diga o conteúdo (\"Filtros\", \"Quem viu isto\"), não a ação."
+        },
+        {
+          "nome": "children",
+          "tipo": "ReactNode",
+          "obrigatoria": true,
+          "descricao": "Conteúdo INTERATIVO. Se for só texto de apoio, o certo é a `Dica` — ver o JSDoc."
+        },
+        {
+          "nome": "lado",
+          "tipo": "'cima' | 'baixo' | 'esq' | 'dir'",
+          "obrigatoria": false,
+          "padrao": "'baixo'",
+          "descricao": "Preferência, não garantia: se não couber, o painel é empurrado para dentro da janela."
+        },
+        {
+          "nome": "alinhamento",
+          "tipo": "'inicio' | 'centro' | 'fim'",
+          "obrigatoria": false,
+          "padrao": "'inicio'",
+          "descricao": "Como o painel se alinha ao gatilho no eixo transversal. `fim` é o certo para um botão no canto direito da tela — senão o painel cresce para fora."
+        },
+        {
+          "nome": "aberto",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "descricao": "Controlado. Passe junto com `onAbrirChange`. Omita para o Popover cuidar sozinho — que é o caso comum."
+        },
+        {
+          "nome": "onAbrirChange",
+          "tipo": "(aberto: boolean) => void",
+          "obrigatoria": false,
+          "descricao": "Chamado em toda intenção de abrir/fechar (clique no gatilho, Esc, clique fora)."
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false
+        }
+      ],
+      "descricao": "Popover — o painel com conteúdo que se USA. ## Popover, Dica ou Dialogo? A pergunta é o que tem dentro Os três abrem algo por cima da página. O que os separa não é o tamanho, é **se dá para interagir com o conteúdo** e **se o resto da página continua viva**: · **`Dica`** — texto curto, abre no hover, **não recebe foco**. O balão tem `pointer-events: none`: o ponteiro atravessa. Um link ali dentro é inalcançável, e no celular (onde hover não existe) ninguém nunca vê o conteúdo. É para o que é bônus. · **`Popover`** — um filtro, um mini-formulário, um \"quem viu isto\". O conteúdo **recebe foco e tem controles**. A página atrás continua clicável e lida pelo leitor de tela. · **`Dialogo`** — decisão que precisa de resposta antes de seguir. Bloqueia a página inteira (`aria-modal=\"true\"`, top layer, resto inertizado). ## O que \"ter conteúdo interativo\" muda — e é tudo A `Dica` só precisa aparecer. O Popover precisa ser **habitável**, e isso obriga: · **o foco entra** ao abrir (primeiro controle, ou o painel se não houver nenhum) — senão quem usa teclado abre um painel que não consegue alcançar; · **Esc fecha E devolve o foco ao gatilho** — sem devolver, a pessoa é cuspida no topo do documento e navega tudo de novo até onde estava; · **`role=\"dialog\"` + `aria-modal=\"false\"`** — é diálogo (agrupa e nomeia o conteúdo), mas NÃO é modal: dizer `aria-modal=\"true\"` aqui faria o leitor de tela esconder a página inteira enquanto um painelzinho de filtro está aberto. A mentira é pior que o silêncio. ## Limitações conhecidas (as mesmas da Dica, pelas mesmas razões) 1. **Sem detecção de colisão fina.** `position: fixed` + `getBoundingClientRect`, sem floating-ui. Perto da borda o painel é **empurrado para dentro da janela**, não vira para o lado oposto (\"flip\"), e num canto apertado pode cobrir o próprio gatilho. Preferimos tampar o gatilho a cortar o conteúdo — conteúdo cortado não se usa. 2. **Ancestral com `transform`/`filter`/`will-change`** vira bloco contedor do `fixed`, e o painel passa a se posicionar em relação a ELE: sai do lugar. A saída seria um portal para o `<body>`, que trocaria este bug por um pior — dentro de um `Dialogo` (top layer) o painel portalado renderiza ATRÁS do modal e some. 3. **A armadilha de foco desvia do APG**, de propósito. Ver o comentário em `aoTeclar`."
     },
     "Progresso": {
       "nome": "Progresso",
@@ -1853,6 +2664,23 @@
         }
       ],
       "descricao": "Tabela — a tela de trabalho de um CRM. É um `<table>` de verdade. Isso não é purismo: quem usa leitor de tela navega tabela célula a célula (Ctrl+Alt+setas no VoiceOver) e ouve \"Valor, coluna 3 de 5, R$ 1.200, linha 7\" — e isso vem do navegador, de graça, só com a marcação certa. Divs com `role=\"table\"` perdem tudo isso: cada célula vira um texto solto sem coordenada. Não ordena, não pagina e não filtra sozinha. Em CRM esses três moram no servidor — uma tabela que ordena só a página atual mente para quem olha."
+    },
+    "Tecla": {
+      "nome": "Tecla",
+      "tipo": "TeclaProps",
+      "arquivo": "packages/ui/src/components/Tecla.tsx",
+      "heranca": [
+        "Omit<HTMLAttributes<HTMLElement>, 'children'>"
+      ],
+      "props": [
+        {
+          "nome": "children",
+          "tipo": "ReactNode",
+          "obrigatoria": true,
+          "descricao": "A tecla. Uma por componente — ver a nota sobre combinações."
+        }
+      ],
+      "descricao": "Tecla — o atalho de teclado, do jeito que ele aparece no teclado. `<kbd>` existe no HTML desde sempre e diz exatamente isto: \"este texto é uma tecla que você aperta\". Um `<span>` pintado de cinza com borda entrega o mesmo desenho e nenhuma informação — e é o que a documentação estava fazendo à mão, em cada página, com classes copiadas. ## Combinação é uma tecla por `<Tecla>` O \"+\" fica FORA, como texto normal. Enfiar `Ctrl+K` dentro de um `<kbd>` só desenha uma caixa comprida: some a noção de que são duas teclas, e o \"+\" ganha a mesma borda de tecla — só que não existe tecla \"+\" nesse atalho."
     },
     "Trilha": {
       "nome": "Trilha",

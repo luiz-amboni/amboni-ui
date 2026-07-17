@@ -1,5 +1,5 @@
 import { AreaTexto, CampoForm } from '@amboni/ui'
-import { Secao, P, Demo, Titulo, H3, Aviso, TabelaProps, FacaNaoFaca, Bloco } from '../lib/blocos'
+import { Secao, P, Demo, Titulo, H3, Aviso, TabelaProps, FacaNaoFaca, Bloco, Teclado } from '../lib/blocos'
 
 export default function AreaTextoPage() {
   return (
@@ -138,6 +138,30 @@ el.style.height = \`\${el.scrollHeight}px\``}</Bloco>
           <code> aria-invalid</code> e a <code>AreaTexto</code> lê o atributo e se pinta sozinha.
           A prop <code>erro</code> booleana só serve para validação solta, sem wrapper.
         </P>
+      </Secao>
+
+      <Secao titulo="Teclado">
+        <P>
+          Como o <code>Campo</code>, a <code>AreaTexto</code> <strong>não implementa tecla
+          nenhuma</strong>: é um <code>&lt;textarea&gt;</code> nativo, e o que o
+          <code> autoResize</code> e o <code>contador</code> fazem acontece no{' '}
+          <code>onChange</code>, depois que o navegador já escreveu a letra. Nenhuma tecla é
+          interceptada no caminho.
+        </P>
+        <Teclado
+          atalhos={[
+            { tecla: 'Tab', faz: <>Move o foco para a área e, apertado de novo, <strong>sai dela</strong> — não indenta. Sequestrar o Tab aqui é a armadilha clássica do editor de código embutido: quem navega por teclado ficaria preso dentro da caixa, sem saída.</> },
+            { tecla: 'Enter', faz: <>Quebra a linha. <strong>Não envia o formulário</strong>, ao contrário do <code>&lt;Campo&gt;</code> — comportamento nativo do <code>&lt;textarea&gt;</code>. Para enviar, a pessoa usa o botão (ou você trata a tecla no seu <code>onKeyDown</code>).</> },
+            { tecla: '↑ ↓ Home End', faz: 'Andam pelo texto, linha a linha. Edição nativa, intocada.' },
+          ]}
+        />
+        <Aviso tipo="warn">
+          Com <code>maxLength</code>, o navegador <strong>para de aceitar a digitação em
+          silêncio</strong> ao bater no limite: nenhuma tecla dá erro, nada é anunciado, e o texto
+          colado é cortado sem aviso. Não há tecla para documentar aqui — há um buraco do HTML. É
+          exatamente por isso que o <code>contador</code> existe, e por que o limite deve estar na{' '}
+          <code>ajuda</code> do <code>CampoForm</code>, dito antes de a pessoa começar a escrever.
+        </Aviso>
       </Secao>
 
       <Secao titulo="Props">

@@ -1,5 +1,5 @@
 import { Menu, ItemMenu, SeparadorMenu, RotuloMenu, Button } from '@amboni/ui'
-import { Secao, P, Demo, Titulo, H3, Aviso, TabelaProps, FacaNaoFaca, Bloco } from '../lib/blocos'
+import { Secao, P, Demo, Titulo, H3, Aviso, TabelaProps, FacaNaoFaca, Bloco, Teclado } from '../lib/blocos'
 
 export default function MenuPage() {
   return (
@@ -96,14 +96,6 @@ Selecao buscavel   → o foco FICA no campo; só uma marca virtual
           foco real pode (e deve) ir para os itens. No combobox, tirar o foco do campo mataria a
           digitação.
         </P>
-        <Bloco lang="jsx">{`↓ no gatilho    abre no PRIMEIRO item
-↑ no gatilho    abre no ÚLTIMO item — atalho para chegar em "Excluir"
-                sem percorrer o menu inteiro
-↑ ↓             andam entre os itens, e CIRCULAM nas duas pontas
-Home / End      primeiro / último
-Enter · Espaço  ativam o item focado
-Esc             fecha e DEVOLVE O FOCO ao gatilho
-Tab             fecha e segue para o próximo campo da página`}</Bloco>
         <P>
           <strong>Esc devolve o foco ao gatilho.</strong> Sem isso, quem fecha pelo teclado é
           jogado para o topo da página (o foco volta para o <code>&lt;body&gt;</code>) e precisa
@@ -198,6 +190,28 @@ document.addEventListener('pointerdown', aoApontar)`}</Bloco>
           item vira "Editar ⌘E", e tudo bem. Note que ele é só a dica visual:{' '}
           <strong>não registra atalho nenhum</strong> — quem escuta a tecla é o produto.
         </P>
+      </Secao>
+
+      <Secao titulo="Teclado">
+        <P>
+          O gatilho abre pelo clique <em>e</em> pelas setas — e a seta escolhida decide onde o foco
+          cai, porque descer até "Excluir" no fim de um menu de oito itens é a razão de o ↑ existir.
+          Dentro do painel, o Tab não anda de item em item: quem anda são as setas, e o Tab sai do
+          menu inteiro. Os itens ficam todos em <code>tabIndex=-1</code> justamente para isso.
+        </P>
+        <Teclado
+          apg="https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/"
+          atalhos={[
+            { tecla: '↓', faz: <>No gatilho: abre o menu e foca o <strong>primeiro</strong> item.</> },
+            { tecla: '↑', faz: <>No gatilho: abre o menu e foca o <strong>último</strong> item — o atalho para chegar em "Excluir" sem percorrer o menu inteiro.</> },
+            { tecla: '↑ ↓', faz: <>Com o menu aberto: andam entre os itens e <strong>circulam</strong> nas duas pontas. Pulam os desabilitados — veja a limitação acima.</> },
+            { tecla: 'Home', faz: 'Primeiro item habilitado.' },
+            { tecla: 'End', faz: 'Último item habilitado.' },
+            { tecla: 'Enter Espaço', faz: <>Ativam o item focado. Vêm do navegador: o item é um <code>&lt;button&gt;</code> de verdade. Depois de agir, o menu fecha.</> },
+            { tecla: 'Esc', faz: <>Fecha e <strong>devolve o foco ao gatilho</strong>. Chama <code>stopPropagation</code>: dentro de um <code>Dialogo</code>, fecha só o menu — um Esc, um nível.</> },
+            { tecla: 'Tab', faz: <>Fecha o menu e segue para o próximo campo da <strong>página</strong> — não para o próximo item. Sem <code>preventDefault</code>: o Tab tem que continuar sendo o Tab.</> },
+          ]}
+        />
       </Secao>
 
       <Secao titulo="Props">

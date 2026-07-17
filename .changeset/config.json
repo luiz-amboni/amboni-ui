@@ -1,0 +1,17 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@3.1.4/schema.json",
+  "changelog": "@changesets/cli/changelog",
+  "commit": false,
+
+  "//fixed": "Os dois sobem SEMPRE juntos, com o mesmo número. @amboni/ui lê as variáveis que @amboni/tokens gera: publicar um token novo sem a UI correspondente deixa o consumidor com componente lendo `var(--amb-algo)` que não existe — e o sintoma é a tela sem cor, sem erro nenhum no console. Versão casada custa alguns bumps a mais e elimina a classe inteira de bug.",
+  "fixed": [["@amboni/ui", "@amboni/tokens"]],
+  "linked": [],
+
+  "//access": "public: o escopo @amboni é privado por padrão no npm, e sem isto o publish falha com 402 pedindo assinatura paga.",
+  "access": "public",
+  "baseBranch": "main",
+  "updateInternalDependencies": "patch",
+
+  "//ignore": "@amboni/docs é o site: privado, nunca vai para o npm.",
+  "ignore": ["@amboni/docs"]
+}

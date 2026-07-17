@@ -1,0 +1,192 @@
+/**
+ * Calendario
+ * ═════════════════════════════════════════════════════════════════════════════
+ * A grade é uma <table> de verdade, então o CSS trabalha COM a tabela: border-collapse
+ * para o realce do intervalo virar uma barra contínua entre as células, e largura fixa
+ * por coluna para o mês de 31 dias não ficar mais largo que o de 28 — se a grade mudar de
+ * tamanho ao trocar de mês, o painel inteiro tremeluz.
+ */
+
+.amb-calendario {
+  display: inline-flex;
+  flex-direction: column;
+  gap: var(--amb-espaco-2);
+  font-family: var(--amb-fonte-sans);
+  color: var(--amb-color-text-primary);
+  /* user-select: navegar por seta no teclado, ou arrastar o mouse ao escolher um
+     intervalo, ia pintando os números de azul como se fosse texto copiável. */
+  user-select: none;
+}
+
+/* ── Cabeçalho ──────────────────────────────────────────────────────────────
+ * O título no meio, as setas nas pontas. O espaçador mantém o título centralizado
+ * quando um dos lados não tem setas (vista de dois meses).
+ */
+.amb-calendario__cabecalho {
+  display: flex;
+  align-items: center;
+  gap: var(--amb-espaco-1);
+}
+
+.amb-calendario__titulo {
+  flex: 1;
+  text-align: center;
+  font-size: var(--amb-texto-base);
+  font-weight: var(--amb-peso-semibold);
+  /* O nome do mês vem do Intl: em pt-BR chega minúsculo ("junho de 2026"). */
+  text-transform: capitalize;
+}
+
+.amb-calendario__nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Alvo de toque: uma seta de 14px é impossível de acertar com o dedo — o botão é maior
+     que o ícone de propósito. */
+  width: var(--amb-altura-sm);
+  height: var(--amb-altura-sm);
+  appearance: none;
+  border: 0;
+  background: transparent;
+  border-radius: var(--amb-raio-sm);
+  color: var(--amb-color-text-secondary);
+  cursor: pointer;
+  transition:
+    background-color var(--amb-duracao-fast) var(--amb-easing-standard),
+    color var(--amb-duracao-fast) var(--amb-easing-standard);
+}
+
+.amb-calendario__nav:hover {
+  background: var(--amb-color-surfaceSunken);
+  color: var(--amb-color-text-primary);
+}
+
+.amb-calendario__nav-vazio {
+  /* Dois botões de largura — é o que o outro lado ocupa. */
+  width: calc(var(--amb-altura-sm) * 2);
+}
+
+/* ── Grade ──────────────────────────────────────────────────────────────────
+ * border-collapse + border-spacing 0: sem isso sobra um vão entre as células e a barra
+ * do intervalo sai picotada, um retângulo por dia.
+ */
+.amb-calendario__tabela {
+  border-collapse: collapse;
+  border-spacing: 0;
+  table-layout: fixed;
+}
+
+.amb-calendario__dia-semana {
+  width: var(--amb-altura-sm);
+  padding: var(--amb-espaco-1) 0;
+  font-size: var(--amb-texto-xs);
+  font-weight: var(--amb-peso-semibold);
+  color: var(--amb-color-text-muted);
+  text-transform: capitalize;
+}
+
+.amb-calendario__dia {
+  position: relative;
+  width: var(--amb-altura-sm);
+  height: var(--amb-altura-sm);
+  padding: 0;
+  text-align: center;
+  font-size: var(--amb-texto-sm);
+  cursor: pointer;
+}
+
+/* O número mora num span para o círculo do dia escolhido ser redondo mesmo com a célula
+   pintada de ponta a ponta pelo realce do intervalo. */
+.amb-calendario__numero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--amb-raio-full);
+  transition: background-color var(--amb-duracao-fast) var(--amb-easing-standard);
+}
+
+.amb-calendario__dia:hover:not([aria-disabled='true']) .amb-calendario__numero {
+  background: var(--amb-color-surfaceSunken);
+}
+
+/* Foco na CÉLULA, não no número: quem recebe o tabindex é o gridcell. */
+.amb-calendario__dia.amb-focus-ring:focus-visible,
+.amb-calendario__dia:focus-visible {
+  outline: 2px solid var(--amb-color-border-focus);
+  outline-offset: -2px;
+  border-radius: var(--amb-raio-sm);
+}
+
+/* ── Hoje ───────────────────────────────────────────────────────────────────
+ * Anel, não preenchimento: o preenchimento é do dia ESCOLHIDO, e os dois precisam poder
+ * aparecer ao mesmo tempo na mesma célula sem virar a mesma coisa.
+ */
+.amb-calendario__dia[aria-current='date'] .amb-calendario__numero {
+  box-shadow: inset 0 0 0 1px var(--amb-color-border-strong);
+  font-weight: var(--amb-peso-semibold);
+}
+
+/* ── Escolhido ──────────────────────────────────────────────────────────────
+ * Cor + PESO. Cor sozinha não marca nada para quem não distingue matiz — e a marca de
+ * verdade, a que não depende de olho nenhum, é o aria-selected.
+ */
+.amb-calendario__dia--selecionado .amb-calendario__numero,
+.amb-calendario__dia--ponta-inicio .amb-calendario__numero,
+.amb-calendario__dia--ponta-fim .amb-calendario__numero {
+  background: var(--amb-color-brand-solid);
+  color: var(--amb-color-text-onBrand);
+  font-weight: var(--amb-peso-semibold);
+}
+
+.amb-calendario__dia--selecionado:hover .amb-calendario__numero,
+.amb-calendario__dia--ponta-inicio:hover .amb-calendario__numero,
+.amb-calendario__dia--ponta-fim:hover .amb-calendario__numero {
+  background: var(--amb-color-brand-solidHover);
+}
+
+/* ── Intervalo ──────────────────────────────────────────────────────────────
+ * O miolo pinta a célula inteira (barra contínua); as pontas ganham o círculo cheio da
+ * regra acima e arredondam só o lado de fora, para a barra "entrar" na ponta.
+ */
+.amb-calendario__dia--realce {
+  background: var(--amb-color-brand-subtle);
+}
+
+.amb-calendario__dia--ponta-inicio {
+  border-top-left-radius: var(--amb-raio-full);
+  border-bottom-left-radius: var(--amb-raio-full);
+}
+
+.amb-calendario__dia--ponta-fim {
+  border-top-right-radius: var(--amb-raio-full);
+  border-bottom-right-radius: var(--amb-raio-full);
+}
+
+/* ── Indisponível ───────────────────────────────────────────────────────────
+ * `--fora` são os dias dos meses vizinhos: inertes de propósito (ver o comentário no
+ * .tsx). Ficam mais apagados que os desabilitados porque não são recusa, são contexto.
+ */
+.amb-calendario__dia--desabilitado {
+  cursor: not-allowed;
+  color: var(--amb-color-text-muted);
+  opacity: 0.45;
+}
+
+.amb-calendario__dia--fora {
+  cursor: default;
+  color: var(--amb-color-text-muted);
+  opacity: 0.35;
+}
+
+.amb-calendario__dia--fora:hover .amb-calendario__numero {
+  background: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .amb-calendario__nav,
+  .amb-calendario__numero {
+    transition: none;
+  }
+}

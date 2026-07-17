@@ -1,0 +1,27 @@
+{
+  // O typecheck da galeria e dos specs visuais.
+  //
+  // Fica FORA do tsconfig.json principal (que inclui só `src`) de propósito: os tipos aqui
+  // são de outro mundo — `@playwright/test` traz globais próprios que brigariam com os do
+  // Vitest no mesmo projeto, e a galeria importa `@amboni/ui` pelo alias, que só o Vite da
+  // galeria conhece. Misturar os dois faria o typecheck da BIBLIOTECA depender de
+  // ferramenta de teste, que é o oposto do que se quer.
+  //
+  // Roda no job visual do CI (npm run typecheck:visual -w @amboni/ui).
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "types": ["node"],
+    "paths": {
+      // mesmo alias do galeria/vite.config.ts: aponta para a FONTE
+      "@amboni/ui": ["./src/index.ts"],
+      "@amboni/tokens/tokens.css": ["../tokens/tokens.css"]
+    }
+  },
+  "include": ["galeria", "visual", "playwright.config.ts"]
+}

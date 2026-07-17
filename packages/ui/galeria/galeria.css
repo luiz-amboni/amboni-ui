@@ -1,0 +1,105 @@
+/**
+ * O cenário. Tudo aqui é do PALCO, nunca dos componentes.
+ *
+ * Regra de ouro deste arquivo: ele não pode "consertar" nada. Se um componente precisa de
+ * uma margem para não ficar feio na galeria, o lugar da margem é o componente — corrigir
+ * aqui esconderia do print exatamente o defeito que o print existe para achar.
+ */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  /* fundo e texto vêm do tema: é o que prova que a troca de marca alcança a página toda */
+  background: var(--amb-color-bg);
+  color: var(--amb-color-text-primary);
+  font-family: var(--amb-fonte-sans);
+  font-size: var(--amb-texto-base);
+
+  /**
+   * Antialiasing travado no padrão.
+   *
+   * O `-webkit-font-smoothing: antialiased` que quase todo projeto copia deixa o texto
+   * mais fino no Mac e NÃO faz nada no Linux. Como a baseline é de Linux (ver
+   * playwright.config.ts), qualquer diferença de suavização entre as duas máquinas vira
+   * ruído em cima de cada letra da tela. Deixamos o padrão do navegador nos dois.
+   */
+  -webkit-font-smoothing: auto;
+}
+
+.gal {
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  /**
+   * Largura fixa, não `100%`.
+   *
+   * O print da seção é do elemento, e elemento de largura fluida muda de tamanho junto com
+   * a janela. Basta alguém mexer no viewport do playwright.config.ts para as 200 baselines
+   * reprovarem de uma vez, sem um componente ter mudado. Travando aqui, viewport e
+   * baseline ficam independentes.
+   */
+  width: 1100px;
+}
+
+.gal-secao {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+  border: 1px solid var(--amb-color-border-default);
+  border-radius: var(--amb-raio-lg);
+  background: var(--amb-color-surface);
+}
+
+.gal-secao > h2 {
+  margin: 0;
+  font-size: var(--amb-texto-xs);
+  font-weight: var(--amb-peso-semibold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--amb-color-text-muted);
+}
+
+/* Uma faixa de exemplos lado a lado, com o nome do estado em cima. */
+.gal-fila {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.gal-fila--fim {
+  align-items: flex-end;
+}
+
+.gal-grade {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.gal-grade--2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.gal-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.gal-nome {
+  font-size: 10px;
+  font-family: var(--amb-fonte-mono);
+  color: var(--amb-color-text-muted);
+}
+
+/* Cenas de sobreposição: o palco é a janela inteira, sem a moldura das seções. */
+.gal-cena {
+  padding: 24px;
+  min-height: 100vh;
+}

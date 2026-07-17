@@ -1,5 +1,5 @@
 import { Campo, AreaTexto, CampoForm } from '@amboni/ui'
-import { Secao, P, Demo, Titulo, H3, Aviso, TabelaProps, FacaNaoFaca, Bloco } from '../lib/blocos'
+import { Secao, P, Demo, Titulo, H3, Aviso, TabelaProps, FacaNaoFaca, Bloco, Teclado } from '../lib/blocos'
 
 export default function CampoFormPage() {
   return (
@@ -203,6 +203,32 @@ export default function CampoFormPage() {
           que <code>Campo</code> e <code>AreaTexto</code> leem <code>aria-invalid</code> e se
           pintam sozinhos: o erro é declarado uma vez, aqui.
         </P>
+      </Secao>
+
+      <Secao titulo="Teclado">
+        <P>
+          O <code>CampoForm</code> <strong>não tem teclado</strong>, e não deveria mesmo ter: quem
+          responde às teclas é o controle que está dentro dele. Ele não acrescenta nenhuma parada
+          na ordem de foco — rótulo, ajuda e erro são texto, e texto não se tabula. O que ele muda
+          é o que a pessoa <em>ouve</em> quando o foco chega no controle.
+        </P>
+        <Teclado
+          atalhos={[
+            { tecla: 'Tab', faz: <>Vai direto ao controle — o wrapper é invisível para o foco. Ao chegar, o leitor de tela anuncia o rótulo (pelo <code>htmlFor</code>), depois o erro e a ajuda (pelo <code>aria-describedby</code>), e "obrigatório" quando for o caso.</> },
+          ]}
+        />
+        <P>
+          A tabela é curta porque o trabalho é outro: o <code>CampoForm</code> existe para que o
+          controle <strong>não seja mudo</strong> quando o Tab parar nele. Um{' '}
+          <code>&lt;label&gt;</code> solto ao lado de um <code>&lt;input&gt;</code> tem o mesmo
+          teclado que este aqui — e anuncia "campo de edição", nada mais.
+        </P>
+        <Aviso>
+          O rótulo não é atalho de teclado, mas é área de clique: clicar no texto do{' '}
+          <code>label</code> manda o foco para o controle. Sai de graça do{' '}
+          <code>htmlFor</code> — e some se o id do label e o do controle divergirem, que é o bug
+          que a seção "O id: uma variável só" existe para impedir.
+        </Aviso>
       </Secao>
 
       <Secao titulo="Props">

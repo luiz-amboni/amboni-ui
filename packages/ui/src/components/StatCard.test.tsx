@@ -2,7 +2,6 @@ import { describe, test, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { StatCard } from './StatCard'
-import { Card, CardHeader, CardBody } from './Card'
 
 describe('StatCard — os três estados', () => {
   test('com valor: mostra rótulo, número e apoio', () => {
@@ -86,57 +85,5 @@ describe('StatCard — variação (delta)', () => {
   test('não mostra variação quando o valor está vazio (comparar com o quê?)', () => {
     render(<StatCard label="X" value="—" delta={{ percent: 50, betterWhenUp: true }} emptyReason="sem dados" />)
     expect(screen.queryByText('50%')).not.toBeInTheDocument()
-  })
-})
-
-describe('Card', () => {
-  test('renderiza cabeçalho e corpo', () => {
-    render(
-      <Card>
-        <CardHeader title="Campanhas" subtitle="ativas primeiro" />
-        <CardBody>conteúdo</CardBody>
-      </Card>,
-    )
-    expect(screen.getByText('Campanhas')).toBeInTheDocument()
-    expect(screen.getByText('ativas primeiro')).toBeInTheDocument()
-    expect(screen.getByText('conteúdo')).toBeInTheDocument()
-  })
-
-  test('o título é um heading de verdade — leitor de tela navega por eles', () => {
-    render(<Card><CardHeader title="Campanhas" /></Card>)
-    expect(screen.getByRole('heading', { name: 'Campanhas', level: 3 })).toBeInTheDocument()
-  })
-
-  test('o nível do heading é configurável (nível pulado quebra o índice da página)', () => {
-    render(<Card><CardHeader title="Seção" headingLevel={2} /></Card>)
-    expect(screen.getByRole('heading', { level: 2 })).toBeInTheDocument()
-  })
-
-  test('card clicável vira <button> — não uma div com onClick', () => {
-    const clicar = vi.fn()
-    render(<Card onCardClick={clicar}><CardBody>Ver detalhes</CardBody></Card>)
-    // Uma <div onClick> não recebe foco, ignora Enter/Espaço e o leitor de tela não
-    // anuncia que dá para clicar.
-    expect(screen.getByRole('button')).toBeInTheDocument()
-  })
-
-  test('card clicável funciona no teclado', async () => {
-    const clicar = vi.fn()
-    render(<Card onCardClick={clicar}><CardBody>Ver</CardBody></Card>)
-
-    const btn = screen.getByRole('button')
-    btn.focus()
-    await userEvent.keyboard('{Enter}')
-    expect(clicar).toHaveBeenCalled()
-  })
-
-  test('card NÃO clicável não vira botão (não polui a navegação)', () => {
-    render(<Card><CardBody>só leitura</CardBody></Card>)
-    expect(screen.queryByRole('button')).not.toBeInTheDocument()
-  })
-
-  test.each(['flat', 'raised', 'floating'] as const)('elevação %s', e => {
-    const { container } = render(<Card elevation={e}>x</Card>)
-    expect(container.querySelector(`.amb-card--${e}`)).toBeTruthy()
   })
 })

@@ -1,5 +1,5 @@
 import { Caixa, Radio, GrupoRadio, Interruptor } from '@amboni/ui'
-import { Secao, P, Demo, Titulo, H3, Aviso, TabelaProps, FacaNaoFaca, Bloco } from '../lib/blocos'
+import { Secao, P, Demo, Titulo, H3, Aviso, TabelaProps, FacaNaoFaca, Bloco, Teclado } from '../lib/blocos'
 
 export default function CaixaPage() {
   return (
@@ -266,6 +266,59 @@ export default function CaixaPage() {
           ele costuma ligar coisa que vale na hora, então perder o teclado significa que parte
           das pessoas simplesmente <em>não consegue desligar o sistema</em>.
         </P>
+      </Secao>
+
+      <Secao titulo="Teclado">
+        <P>
+          Os três componentes desta página têm <strong>zero linhas de <code>onKeyDown</code></strong>.
+          Todo o teclado abaixo é do <code>&lt;input&gt;</code> nativo que mora dentro de cada um —
+          é a mesma decisão contada em "A técnica que sustenta os três", vista pelo lado de quem
+          usa. Uma <code>&lt;div onClick&gt;</code> não teria <em>nada</em> desta seção.
+        </P>
+
+        <H3>Caixa</H3>
+        <Teclado
+          apg="https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/"
+          atalhos={[
+            { tecla: 'Tab', faz: <>Move o foco para a caixa. Cada caixa é uma parada — são independentes entre si, ao contrário do <code>GrupoRadio</code>.</> },
+            { tecla: 'Espaço', faz: <>Marca e desmarca. <strong>É a única tecla que aciona um checkbox.</strong></> },
+          ]}
+        />
+        <Aviso tipo="warn">
+          <strong>Enter não marca a caixa</strong> — e isso não é bug nosso, é o HTML. Dentro de um{' '}
+          <code>&lt;form&gt;</code>, o Enter <em>envia o formulário</em>. Vale o mesmo para o{' '}
+          <code>Radio</code> e o <code>Interruptor</code>. É a diferença que mais surpreende quem
+          espera que "Enter aciona o que está focado": num botão, sim; num checkbox, nunca.
+        </Aviso>
+        <P>
+          O estado <code>indeterminado</code> não tem tecla própria: o Espaço sai dele para
+          "marcado". Ele é um estado que o produto <em>mostra</em> ("alguns filhos marcados"), não
+          um terceiro valor que a pessoa alcança pelo teclado.
+        </P>
+
+        <H3>GrupoRadio</H3>
+        <P>
+          O grupo inteiro é <strong>uma</strong> parada de Tab, e as setas escolhem dentro dele.
+          Nada disso é nosso: sai do <code>name</code> compartilhado, como conta a seção "Zero{' '}
+          <code>onKeyDown</code> — de propósito".
+        </P>
+        <Teclado
+          apg="https://www.w3.org/WAI/ARIA/apg/patterns/radio/"
+          atalhos={[
+            { tecla: 'Tab', faz: <>Entra no grupo pela opção <strong>marcada</strong> (ou pela primeira, se nenhuma estiver) e, de novo, <strong>sai do grupo inteiro</strong> — não anda para a próxima opção.</> },
+            { tecla: '↑ ↓ ← →', faz: <>Andam entre as opções e <strong>já marcam</strong> a opção em que param, circulando nas pontas. As quatro setas funcionam, em qualquer orientação.</> },
+            { tecla: 'Espaço', faz: 'Marca a opção focada. Na prática a seta já marcou.' },
+          ]}
+        />
+
+        <H3>Interruptor</H3>
+        <Teclado
+          apg="https://www.w3.org/WAI/ARIA/apg/patterns/switch/"
+          atalhos={[
+            { tecla: 'Tab', faz: 'Move o foco para o interruptor.' },
+            { tecla: 'Espaço', faz: <>Liga e desliga — <strong>e vale na hora</strong>. É um <code>&lt;input type="checkbox" role="switch"&gt;</code>: o teclado é o do checkbox, só o anúncio muda ("ligado/desligado", não "marcado").</> },
+          ]}
+        />
       </Secao>
 
       <Secao titulo="Props — Caixa">

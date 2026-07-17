@@ -1,0 +1,69 @@
+/* ── Divisor ────────────────────────────────────────────────────────────────
+ * Reset primeiro: o `<hr>` do navegador vem com margem, borda 3D e cor própria —
+ * herança do HTML de 1995. Sem zerar, cada navegador desenha um cinza diferente.
+ */
+.amb-divisor {
+  border: 0;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+/* A espessura mora numa variável para o modo com rótulo reusar exatamente a mesma
+   régua nas duas metades da linha — senão o "ou" fica entre traços de grossuras
+   diferentes quando alguém mexer num só. */
+.amb-divisor--fina { --amb-divisor-espessura: 1px; }
+.amb-divisor--grossa { --amb-divisor-espessura: 2px; }
+
+.amb-divisor--horizontal {
+  width: 100%;
+  height: var(--amb-divisor-espessura);
+  background: var(--amb-color-border-default);
+}
+
+/* `align-self: stretch` para acompanhar a altura do irmão mais alto no flex row.
+   Sem isto o divisor vertical nasce com 0 de altura e ninguém entende por que sumiu. */
+.amb-divisor--vertical {
+  width: var(--amb-divisor-espessura);
+  align-self: stretch;
+  /* Piso mínimo para o caso de o container não ter altura nenhuma: melhor um traço
+     curto e visível do que um elemento invisível que parece bug do componente. */
+  min-height: 1em;
+  background: var(--amb-color-border-default);
+}
+
+/* ── Com rótulo ─────────────────────────────────────────────────────────────
+ * Vira flex: duas linhas que crescem e o texto no meio. `flex: 1` nos dois lados
+ * centraliza o rótulo sozinho, sem conta de largura.
+ */
+.amb-divisor--com-rotulo {
+  display: flex;
+  align-items: center;
+  gap: var(--amb-espaco-3);
+  background: none;
+}
+
+.amb-divisor--com-rotulo.amb-divisor--vertical {
+  flex-direction: column;
+  width: auto;
+}
+
+.amb-divisor__linha {
+  border: 0;
+  margin: 0;
+  flex: 1;
+  background: var(--amb-color-border-default);
+}
+
+.amb-divisor--horizontal .amb-divisor__linha { height: var(--amb-divisor-espessura); }
+.amb-divisor--vertical .amb-divisor__linha { width: var(--amb-divisor-espessura); }
+
+/* Texto secundário e pequeno: o divisor é pontuação da tela, não um título. Se o "ou"
+   pesar mais que o conteúdo em volta, o divisor virou protagonista — e ele não é. */
+.amb-divisor__rotulo {
+  font-family: var(--amb-fonte-sans);
+  font-size: var(--amb-texto-xs);
+  font-weight: var(--amb-peso-medium);
+  color: var(--amb-color-text-muted);
+  line-height: 1;
+  white-space: nowrap;
+}

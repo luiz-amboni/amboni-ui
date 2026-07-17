@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Dialogo, Gaveta, Button, type GavetaLado } from '@amboni/ui'
 // `Aviso` da biblioteca é o toast; `Aviso` dos blocos é a caixa de destaque do site.
-import { Secao, P, Demo, Titulo, H3, Aviso as Destaque, TabelaProps, FacaNaoFaca, Bloco } from '../lib/blocos'
+import { Secao, P, Demo, Titulo, H3, Aviso as Destaque, TabelaProps, FacaNaoFaca, Bloco, Teclado } from '../lib/blocos'
 
 /** O modal é controlado: o exemplo precisa do estado que o produto teria. */
 function DemoDialogo() {
@@ -336,6 +336,37 @@ export default function DialogoPage() {
           <code>fecharNoEsc={'{false}'}</code> só quando perder o que está na tela for caro (um
           formulário longo). Esc é o jeito que as pessoas esperam sair — tirar isso surpreende, e
           surpresa em modal é a pessoa achando que o site travou.
+        </Destaque>
+      </Secao>
+
+      <Secao titulo="Teclado">
+        <P>
+          Quase tudo aqui é do <code>&lt;dialog&gt;</code> nativo — o Esc, o foco preso dentro do
+          modal, a inertização do resto da página. A biblioteca só faz uma coisa, e é a mais
+          importante da página: <strong>impede que o navegador feche o modal sozinho</strong> e
+          avisa o React, para que o <code>aberto</code> continue sendo a única verdade. A{' '}
+          <code>Gaveta</code> herda este mesmo teclado, inteiro.
+        </P>
+        <Teclado
+          apg="https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/"
+          atalhos={[
+            { tecla: 'Esc', faz: <>Pede para fechar: chama <code>onFechar</code>, e quem fecha de fato é você virando o <code>aberto</code>. O evento <code>cancel</code> do navegador é barrado com <code>preventDefault</code> — sem isso o modal fecharia na tela, continuaria <code>aberto</code> no React e <strong>nunca mais abriria</strong>. Desligável com <code>fecharNoEsc={'{false}'}</code>.</> },
+            { tecla: 'Tab', faz: <>Circula <strong>só dentro do modal</strong>, e volta ao primeiro elemento no fim. Não é focus trap nosso: o <code>showModal()</code> inertiza o resto da página, que para de receber foco, clique e leitor de tela.</> },
+            { tecla: 'Enter Espaço', faz: <>Acionam o botão focado, como em qualquer lugar. O guarda <code>detail === 0</code> existe por causa deles: o clique sintético do teclado chega com coordenadas zeradas, que cairiam "fora" do modal e o fechariam a cada Enter. <strong>Teclado não clica no fundo.</strong></> },
+          ]}
+        />
+        <P>
+          Ao fechar, <strong>o foco volta para quem abriu</strong> — guardado antes do{' '}
+          <code>showModal()</code>, e conferido com <code>isConnected</code> para o caso de o
+          abridor ter saído da tela junto (a linha da tabela que acabou de ser excluída). Sem isso
+          a pessoa é cuspida no topo do documento e refaz o caminho inteiro até onde estava.
+        </P>
+        <Destaque tipo="warn">
+          <strong>Uma Dica aberta dentro do modal come o mesmo Esc.</strong> O primeiro Esc dispensa
+          a dica <em>e</em> cancela o modal, porque o <code>cancel</code> do{' '}
+          <code>&lt;dialog&gt;</code> é ação padrão do navegador e não passa pelo listener da Dica
+          para ser barrado. O <code>Menu</code> e a <code>Selecao buscavel</code> não têm esse
+          problema — eles chamam <code>stopPropagation</code>.
         </Destaque>
       </Secao>
 
