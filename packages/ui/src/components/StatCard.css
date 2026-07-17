@@ -16,7 +16,12 @@
   display: flex;
   gap: var(--amb-espaco-4);
   padding: var(--amb-espaco-5);
-  align-items: flex-start;
+  /* `center`, não `flex-start`. Com o topo, o ícone colava no rótulo e sobrava um vão
+     grande embaixo dele — medido, 21px em cima e 55px embaixo num card de 118px. O olho
+     lê isso como "torto", porque o ícone é um bloco pesado e visualmente ele pede o
+     centro da linha, não o começo. Centralizado funciona nos dois casos: card de 2 linhas
+     (rótulo + número) e de 3 (com subtítulo). */
+  align-items: center;
 }
 
 .amb-stat__icon {

@@ -11,8 +11,8 @@
     "test": "tsc -p tsconfig.json --noEmit && vitest run"
   },
   "dependencies": {
-    "@amboni/tokens": "0.3.0",
-    "@amboni/ui": "0.3.0",
+    "@amboni/tokens": "0.3.1",
+    "@amboni/ui": "0.3.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

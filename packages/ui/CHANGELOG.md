@@ -1,5 +1,19 @@
 # @amboni/ui
 
+## 0.3.1
+
+### Patch Changes
+
+- **StatCard**: o ícone ficava colado no topo do card, não centrado na vertical.
+
+  Apontado a olho nu: 21px de folga em cima, 55px embaixo, num card de 118px — o olho lê como
+  torto porque o ícone é um bloco pesado que pede o centro da linha. A causa era
+  `align-items: flex-start`. Agora centraliza, e funciona nos dois casos: card de 2 linhas
+  (rótulo + número) e de 3 (com subtítulo). Teste de layout em navegador travando as folgas
+  iguais.
+
+  - @amboni/tokens@0.3.1
+
 ## 0.3.0
 
 ### Minor Changes

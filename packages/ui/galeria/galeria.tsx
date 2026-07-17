@@ -398,7 +398,12 @@ function Dados() {
       </div>
 
       <div className="gal-grade">
-        <StatCard label="Investido" value="R$ 1.994,31" sub="159.111 exibições" />
+        {/* Com ícone: um tingido (suave) e um vivo, para o teste medir a centralização
+            vertical e o iconeVivo. O SVG é inline — a biblioteca não impõe pacote de ícones. */}
+        <StatCard label="Investido" value="R$ 1.994,31" sub="159.111 exibições"
+          icon={<svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor"><circle cx="10" cy="10" r="7" /></svg>} />
+        <StatCard label="Atas vigentes" value="892" sub="ativas hoje" tone="success" iconeVivo
+          icon={<svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor"><rect x="3" y="3" width="14" height="14" rx="3" /></svg>} />
         <StatCard label="Conversas" value="140" tone="success" delta={{ percent: 12, betterWhenUp: true }} />
         <StatCard label="Custo por conversa" value="R$ 14,25" tone="warning" delta={{ percent: 46, betterWhenUp: false }} />
         <StatCard label="Carregando" value={null} />
@@ -739,7 +744,12 @@ function CenaResponsiva() {
           e, sem border-box, o padding some por fora e estoura. Com auto-fit isto viraria
           uma coluna no celular e o bug se esconderia. */}
       <div style={{ display: 'grid', gap: 12, gridTemplateColumns: '1fr 1fr' }}>
-        <StatCard label="Investido" value="R$ 1.994,31" sub="159.111 exibições" />
+        {/* Com ícone: um tingido (suave) e um vivo, para o teste medir a centralização
+            vertical e o iconeVivo. O SVG é inline — a biblioteca não impõe pacote de ícones. */}
+        <StatCard label="Investido" value="R$ 1.994,31" sub="159.111 exibições"
+          icon={<svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor"><circle cx="10" cy="10" r="7" /></svg>} />
+        <StatCard label="Atas vigentes" value="892" sub="ativas hoje" tone="success" iconeVivo
+          icon={<svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor"><rect x="3" y="3" width="14" height="14" rx="3" /></svg>} />
         <StatCard label="Custo por conversa" value="R$ 14,25" delta={{ percent: 46, betterWhenUp: false }} />
       </div>
       <Card>

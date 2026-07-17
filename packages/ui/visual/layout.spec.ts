@@ -418,3 +418,32 @@ test('o valor do StatCard nunca é cortado, por mais estreito que fique o card',
   const cortados = cabe.filter(r => !r.cabe)
   expect(cortados, `valores cortados: ${cortados.map(c => `"${c.texto}" em ${c.largura}px`).join(', ')}`).toEqual([])
 })
+
+/**
+ * O ícone do StatCard fica centrado na vertical, não colado no topo.
+ *
+ * Apontado a olho nu por quem usava ("o ícone não tá centralizado no eixo Y, ficou
+ * esquisito") — e a medida confirmou: 21px de folga em cima, 55px embaixo, num card de
+ * 118px. A causa era `align-items: flex-start`, que colava o ícone no rótulo.
+ *
+ * O ícone é um bloco pesado; o olho pede que ele fique no centro da linha, não no começo.
+ * Este teste garante as folgas de cima e de baixo iguais.
+ */
+test('o ícone do StatCard fica centrado na vertical do card', async ({ page }) => {
+  await abrir(page, { cena: 'dados' })
+
+  const folgas = await page.evaluate(() => {
+    const stat = document.querySelector('.amb-stat')
+    const icone = stat?.querySelector('.amb-stat__icon')
+    if (!stat || !icone) return null
+    const s = stat.getBoundingClientRect(), i = icone.getBoundingClientRect()
+    return { topo: Math.round(i.top - s.top), baixo: Math.round(s.bottom - i.bottom) }
+  })
+
+  expect(folgas, 'não achei StatCard com ícone na cena').not.toBeNull()
+  // tolerância de 1px para arredondamento de subpixel
+  expect(
+    Math.abs(folgas!.topo - folgas!.baixo),
+    `ícone descentrado: ${folgas!.topo}px em cima, ${folgas!.baixo}px embaixo`,
+  ).toBeLessThanOrEqual(1)
+})
