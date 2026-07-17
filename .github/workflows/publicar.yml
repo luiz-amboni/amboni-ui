@@ -16,7 +16,12 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          # Node 24, e não 22, por um motivo específico: publicar por OIDC (sem token)
+          # exige **npm 11.5.1+**, e o Node 22 vem com o npm 10.9.8 — que simplesmente não
+          # conhece o mecanismo. A publicação falhava com o npm certo, o repositório certo
+          # e a configuração certa no npmjs.com; só a ferramenta era velha demais para
+          # usá-los. O Node 24 traz o npm 11.16.
+          node-version: 24
           cache: npm
           registry-url: https://registry.npmjs.org
 
