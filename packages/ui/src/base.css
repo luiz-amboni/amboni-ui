@@ -10,6 +10,24 @@
  * Tudo lê as variáveis do @amboni/tokens. Nenhuma cor é escrita aqui.
  */
 
+/* ── box-sizing ─────────────────────────────────────────────────────────────
+ * `[class*="amb-"]` alcança só os nossos elementos — não é o `*` global que uma
+ * biblioteca não tem o direito de escrever no CSS de quem instala.
+ *
+ * Obrigatório, não preferência: com o `content-box` padrão, uma caixa de `width: 100%`
+ * com padding e borda fica MAIOR que 100% — o navegador soma o padding por fora. Foi o
+ * que aconteceu quando pus `width: 100%` no Card: cada card ficou 42px mais largo que a
+ * coluna dele (690px de espaço, 732px renderizados), em toda largura de tela.
+ *
+ * A biblioteca dependia de o produto ter escrito `* { box-sizing: border-box }`. Quase
+ * todo projeto tem, e é por isso que o defeito não aparecia no iSafe e apareceria no
+ * primeiro projeto que não tivesse. Dependência invisível é dívida. */
+[class*='amb-'],
+[class*='amb-']::before,
+[class*='amb-']::after {
+  box-sizing: border-box;
+}
+
 /* ── Anel de foco ───────────────────────────────────────────────────────────
  * A regra mais importante deste arquivo.
  *

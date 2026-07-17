@@ -95,6 +95,25 @@ describe('o pacote publicado', () => {
     expect(css.length).toBeGreaterThan(0)
   })
 
+  test('o CSS publicado define box-sizing próprio — não depende do reset do produto', () => {
+    const css = dist('styles.css')
+    if (!css) return
+
+    // A biblioteca usava `width: 100%` em vários componentes contando que o PRODUTO
+    // tivesse escrito `* { box-sizing: border-box }`. Quase todo projeto tem (frameworks,
+    // Tailwind, resets), e por isso o defeito ficou escondido — até um projeto sem reset
+    // instalar o pacote e ver cada Card estourar a coluna em 42px, em toda largura de
+    // tela. Uma biblioteca não pode depender de CSS que ela não trouxe.
+    //
+    // O seletor é `[class*="amb-"]`, não `*`: alcança só os nossos elementos, sem invadir
+    // o CSS de quem instala.
+    // As aspas são opcionais: o minificador tira as de `[class*="amb-"]` e vira
+    // `[class*=amb-]`. Cravar as aspas reprovaria um pacote correto.
+    expect(css, 'o styles.css não define box-sizing próprio').toMatch(
+      /\[class\*=["']?amb-["']?\][^{]*\{[^}]*box-sizing:\s*border-box/,
+    )
+  })
+
   test('o CSS não traz cor literal fora dos comentários', () => {
     const css = dist('styles.css')
     if (!css) return

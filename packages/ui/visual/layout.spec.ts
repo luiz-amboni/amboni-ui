@@ -342,3 +342,79 @@ test.describe('o símbolo fica no centro da caixa', () => {
     expect(folgas!.esq, `torto: esq=${folgas!.esq} dir=${folgas!.dir}`).toBe(folgas!.dir)
   })
 })
+
+/**
+ * ── Responsividade: nada vaza para fora da tela ─────────────────────────────
+ *
+ * A pergunta que motivou tudo: "o UI kit é responsivo?" A resposta honesta era "não sei,
+ * nunca testei". Este teste passa a saber.
+ *
+ * Ele mede contra `clientWidth`, não `innerWidth`: o segundo INCLUI a barra de rolagem, e
+ * medir por ele acusa 18px de vazamento fantasma em toda largura — inclusive no desktop,
+ * onde não há vazamento nenhum. Foi o erro da primeira medição, e é o motivo de este
+ * comentário existir.
+ *
+ * Estas larguras não são decorativas: 320 é o menor telefone que ainda importa (iPhone
+ * SE), 768 é o iPad em retrato, 1440 é o notebook. Se um componente vaza em alguma, a
+ * pessoa naquela tela vê a página inteira torta, com rolagem lateral — o sintoma nº 1 de
+ * "site não foi feito para celular".
+ */
+for (const largura of [320, 375, 768, 1440]) {
+  test(`nada vaza da tela a ${largura}px`, async ({ page }) => {
+    await page.setViewportSize({ width: largura, height: 900 })
+    // Cena de largura FLUIDA, não a galeria travada em 1100px: a galeria é o cenário de
+    // foto (largura fixa de propósito), não o produto. Responsividade se mede onde a
+    // largura de fato muda com a tela.
+    await abrir(page, { cena: 'responsivo' })
+
+    const r = await page.evaluate(() => {
+      const util = document.documentElement.clientWidth
+      const vaza: string[] = []
+      document.querySelectorAll('[class*="amb-"]').forEach(el => {
+        const b = el.getBoundingClientRect()
+        if (b.width > 0 && b.right > util + 0.5) {
+          vaza.push(`${(el.className as unknown as { baseVal?: string }).baseVal ?? el.className}`.split(' ')[0] + ` +${Math.round(b.right - util)}px`)
+        }
+      })
+      return { excesso: document.documentElement.scrollWidth - util, vaza: [...new Set(vaza)].slice(0, 5) }
+    })
+
+    expect(
+      r.excesso,
+      `a página rola ${r.excesso}px na horizontal — vazando: ${r.vaza.join(', ')}`,
+    ).toBeLessThanOrEqual(1)
+  })
+}
+
+/**
+ * O número de dinheiro do StatCard cede TAMANHO, nunca dígito.
+ *
+ * Num card estreito, "R$ 1.994,31" já quebrou em duas linhas (e eu "consertei" com
+ * `white-space: nowrap`, o que só trocou a quebra por um CORTE — sumia o último dígito).
+ * A resposta certa foi container query: o card se mede pelo próprio espaço e encolhe a
+ * fonte. Este teste garante que o valor sempre cabe inteiro, em qualquer largura.
+ */
+test('o valor do StatCard nunca é cortado, por mais estreito que fique o card', async ({ page }) => {
+  await abrir(page, { cena: 'dados' })
+
+  const cabe = await page.evaluate(() => {
+    const resultados: { largura: number; cabe: boolean; texto: string }[] = []
+    document.querySelectorAll('.amb-stat').forEach(card => {
+      const v = card.querySelector('.amb-stat__value') as HTMLElement | null
+      if (!v || !v.textContent?.trim() || v.textContent === '—') return
+      const cs = getComputedStyle(card)
+      const disponivel =
+        card.getBoundingClientRect().width -
+        parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight)
+      resultados.push({
+        largura: Math.round(disponivel),
+        cabe: v.scrollWidth <= disponivel + 1,
+        texto: v.textContent,
+      })
+    })
+    return resultados
+  })
+
+  const cortados = cabe.filter(r => !r.cabe)
+  expect(cortados, `valores cortados: ${cortados.map(c => `"${c.texto}" em ${c.largura}px`).join(', ')}`).toEqual([])
+})

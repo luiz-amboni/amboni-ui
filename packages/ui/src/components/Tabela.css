@@ -119,6 +119,11 @@
 .amb-tabela__celula--num {
   text-align: right;
   font-variant-numeric: tabular-nums;
+  /* Coluna de dinheiro não quebra linha. Numa tabela estreita, "R$ 8.888,88" virava duas
+     linhas — e aí a coluna inteira perde o alinhamento vertical que o `tabular-nums`
+     acima existe para dar. Se faltar espaço, o container rola na horizontal (ele já é
+     focável por teclado); o número, não. */
+  white-space: nowrap;
 }
 
 .amb-tabela__sem-valor { color: var(--amb-color-text-muted); }

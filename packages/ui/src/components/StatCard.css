@@ -1,4 +1,18 @@
+/**
+ * O card se mede pelo PRÓPRIO espaço, não pelo tamanho da tela.
+ *
+ * `container-type: inline-size` deixa os filhos perguntarem "quanto eu tenho de largura?"
+ * — e a resposta é a do card, não a do celular. É a pergunta certa: o mesmo StatCard vive
+ * sozinho numa linha e espremido em quatro colunas na MESMA tela, e uma media query não
+ * sabe distinguir os dois casos.
+ *
+ * Nasceu de um defeito real, visto num iPhone de 375px: dois cards lado a lado, e o
+ * "R$ 1.994,31" saía cortado no "R$ 1.994,3". Antes de eu pôr `white-space: nowrap` ele
+ * quebrava em duas linhas; depois, mentia. As duas saídas eram ruins porque as duas
+ * tratavam o sintoma — o número não cabia, e insistir no tamanho grande era o erro.
+ */
 .amb-stat {
+  container-type: inline-size;
   display: flex;
   gap: var(--amb-espaco-4);
   padding: var(--amb-espaco-5);
@@ -46,9 +60,35 @@
   margin-top: var(--amb-espaco-1);
   /* tabular: sem isso a coluna "dança" a cada atualização em tempo real */
   font-variant-numeric: tabular-nums;
+  /* Dinheiro NÃO quebra. No celular, "R$ 1.994,31" virava "R$" numa linha e "1.994,31"
+     na outra — e um valor partido ao meio força a pessoa a remontá-lo com o olho, que é
+     o oposto do que um número grande de painel existe para fazer. Achado olhando a
+     biblioteca num iPhone de 375px. Se não couber, é melhor a caixa ceder que o número. */
+  white-space: nowrap;
 }
 
 .amb-stat__value--empty { color: var(--amb-color-text-muted); }
+
+/**
+ * Card estreito: o número cede tamanho, nunca dígito.
+ *
+ * A ordem de sacrifício importa e é esta: primeiro o TAMANHO da fonte, depois o ícone.
+ * Nunca o número — dinheiro cortado ou quebrado no meio é pior que dinheiro pequeno,
+ * porque obriga a pessoa a remontar o valor com o olho, que é o oposto do que um número
+ * grande de painel existe para fazer.
+ *
+ * 200px é onde "R$ 1.994,31" para de caber em 28px extrabold — medido, não chutado.
+ */
+@container (max-width: 200px) {
+  .amb-stat__value { font-size: var(--amb-texto-xl); }
+}
+
+@container (max-width: 150px) {
+  .amb-stat__value { font-size: var(--amb-texto-lg); }
+  /* Abaixo disto o ícone está roubando espaço do que importa. Ele é decorativo — quem
+     informa é o rótulo. Some ele antes de tocar no número. */
+  .amb-stat__icon { display: none; }
+}
 
 .amb-stat__foot {
   display: flex;

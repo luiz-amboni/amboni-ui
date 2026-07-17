@@ -711,6 +711,70 @@ function CenaDica() {
  * Os textos têm comprimentos MUITO diferentes de propósito: com rótulos parecidos o
  * encolhimento passa despercebido. É a diferença que denuncia.
  */
+/**
+ * A cena que responde "o UI kit é responsivo?".
+ *
+ * DIFERENTE de todas as outras: largura FLUIDA (`gal-fluido`), não os 1100px fixos da
+ * galeria. As outras cenas travam a largura de propósito, para o print de referência não
+ * mudar com a janela — mas aqui a pergunta É justamente o que acontece quando a largura
+ * muda. Medir responsividade numa moldura fixa seria impossível por definição.
+ *
+ * É uma tela de CRM de verdade em miniatura: formulário, cards, tabela, navegação. Se algo
+ * vaza da tela num celular, vaza aqui.
+ */
+function CenaResponsiva() {
+  return (
+    <div className="gal-fluido" style={{ display: 'grid', gap: 12, padding: 12 }}>
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+        <Button variant="primary">Salvar</Button>
+        <Button variant="danger">Excluir cliente</Button>
+      </div>
+      <Button variant="primary" block>Largura cheia</Button>
+      <CampoForm label="E-mail" ajuda="usamos só para o recibo">
+        <Campo type="email" placeholder="voce@empresa.com.br" />
+      </CampoForm>
+      <Caixa label="Receber dicas no WhatsApp" descricao="no máximo uma por semana" defaultChecked />
+      {/* Duas colunas FIXAS, não auto-fit: é o que a tela de Custos do iSafe faz, e é a
+          condição EXATA que expôs o bug do box-sizing — cada card recebe metade da largura
+          e, sem border-box, o padding some por fora e estoura. Com auto-fit isto viraria
+          uma coluna no celular e o bug se esconderia. */}
+      <div style={{ display: 'grid', gap: 12, gridTemplateColumns: '1fr 1fr' }}>
+        <StatCard label="Investido" value="R$ 1.994,31" sub="159.111 exibições" />
+        <StatCard label="Custo por conversa" value="R$ 14,25" delta={{ percent: 46, betterWhenUp: false }} />
+      </div>
+      <Card>
+        <CardHeader title="Campanha de julho" subtitle="Meta Ads · últimos 30 dias" />
+        <CardBody flush>
+          <Tabela
+            rotulo="Clientes"
+            colunas={[
+              { chave: 'nome', titulo: 'Cliente' },
+              { chave: 'valor', titulo: 'Valor', numerico: true, largura: '110px' },
+            ]}
+            linhas={[
+              { id: 1, nome: 'Ana Souza', valor: 'R$ 8.888,88' },
+              { id: 2, nome: 'Bruno Lima', valor: 'R$ 1.111,11' },
+            ]}
+            chaveLinha={l => l.id}
+          />
+        </CardBody>
+      </Card>
+      <Paginacao pagina={3} totalPaginas={10} onChange={() => {}} totalItens={195} porPagina={20} onPorPaginaChange={() => {}} />
+      {/* Card com CampoForm dentro: dois níveis de padding. É o caso que SÓ cabe com
+          box-sizing — sem ele, os paddings somam por fora e o card estoura a coluna.
+          Sem esta cena, o teste de vazamento passava mesmo com o defeito. */}
+      <Card>
+        <CardHeader title="Novo cliente" />
+        <CardBody>
+          <CampoForm label="Nome completo" ajuda="como aparece no documento">
+            <Campo placeholder="Maria Silva Santos" />
+          </CampoForm>
+        </CardBody>
+      </Card>
+    </div>
+  )
+}
+
 function CenaCardFlex() {
   return (
     <div className="gal-cena" style={{ display: 'flex', gap: 16, padding: 40 }}>
@@ -806,6 +870,7 @@ const CENAS: Record<string, () => ReactNode> = {
   dica: () => <CenaDica />,
   'dica-flex': () => <CenaDicaFlex />,
   'card-flex': () => <CenaCardFlex />,
+  responsivo: () => <CenaResponsiva />,
   menu: () => <CenaMenu />,
   popover: () => <CenaPopover />,
   aviso: () => <CenaAviso />,

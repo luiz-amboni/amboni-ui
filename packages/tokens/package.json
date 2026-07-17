@@ -1,6 +1,6 @@
 {
   "name": "@amboni/tokens",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Design tokens do sistema Amboni — cor, tipografia, espaço, movimento",
   "type": "module",
   "license": "MIT",

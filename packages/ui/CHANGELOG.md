@@ -1,5 +1,32 @@
 # @amboni/ui
 
+## 0.2.4
+
+### Patch Changes
+
+- Responsividade — a resposta honesta a "o UI kit funciona em várias telas?" era "nunca
+  testei". Agora testa, e três bugs reais apareceram.
+
+  **box-sizing próprio no CSS publicado.** A biblioteca usava `width: 100%` em vários
+  componentes contando que o produto tivesse escrito `* { box-sizing: border-box }`. Quase
+  todo projeto tem — por isso o defeito ficava escondido até um projeto sem reset instalar o
+  pacote e ver cada Card estourar a coluna em 42px, em toda largura de tela. Uma biblioteca
+  não pode depender de CSS que não trouxe. O seletor é `[class*="amb-"]`, não `*`: alcança só
+  os nossos elementos.
+
+  **O número do StatCard cede tamanho, nunca dígito.** Num card estreito, "R$ 1.994,31"
+  quebrava em duas linhas; um `white-space: nowrap` ingênuo só trocou a quebra por um CORTE,
+  que sumia o último dígito. A saída certa foi container query: o card se mede pelo próprio
+  espaço (não pela tela) e encolhe a fonte de 28 para 18px, depois esconde o ícone — o número
+  por último. 28px no notebook, 18px no celular, o mesmo componente, zero código no produto.
+
+  **A Caixa vinha de 0.2.3**, com o ✓ centrado.
+
+  Testado em 320, 375, 768 e 1440px: nada vaza da tela. E o contrato do box-sizing é
+  verificado no CSS publicado, não só no fonte.
+
+  - @amboni/tokens@0.2.4
+
 ## 0.2.3
 
 ### Patch Changes

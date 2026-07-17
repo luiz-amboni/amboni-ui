@@ -103,3 +103,12 @@ body {
   padding: 24px;
   min-height: 100vh;
 }
+
+/* A cena de responsividade é a ÚNICA de largura fluida: ela mede o que acontece quando a
+   janela encolhe, então travar em 1100px (como o `.gal` faz) mataria o propósito. Um teto
+   confortável no desktop, e 100% quando a tela é menor que ele. */
+.gal-fluido {
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+}
