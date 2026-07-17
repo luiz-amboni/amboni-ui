@@ -10,6 +10,23 @@
   /* Sem `position: relative` de propósito: o balão é `fixed` e se posiciona pela
      janela. `relative` aqui não ajudaria e ainda criaria um contêiner de empilhamento
      a mais para depurar. */
+
+  /* `align-self: flex-start` — a linha que a regressão visual arrancou de nós.
+   *
+   * O `inline-flex` acima resolve a caixa quando a Dica é o CONTAINER. Não resolve
+   * quando ela é ITEM de outro flex: aí vale o `align-items: stretch` do pai, que é o
+   * padrão de fábrica, e a Dica estica até a altura da linha. O balão então ancora na
+   * caixa esticada — medido: 560px de altura onde o gatilho tinha 44, com o balão
+   * pousando ~520px longe do botão.
+   *
+   * Não é arranjo exótico: uma barra de ações com `display: flex` é o lugar mais provável
+   * de uma Dica existir. E nenhum dos 974 testes de jsdom podia pegar isto — jsdom não
+   * faz layout. Foi o primeiro print num navegador de verdade que mostrou.
+   *
+   * `flex-start`, não `center`: a Dica tem que ter a altura do gatilho, e quem decide
+   * onde ele fica na linha é ele. Encolher para o conteúdo é o que o `inline-flex` já
+   * prometia; esta linha só faz a promessa valer dentro de um flex também. */
+  align-self: flex-start;
 }
 
 .amb-dica__balao {

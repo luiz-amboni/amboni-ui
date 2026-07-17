@@ -69,6 +69,50 @@ Duas lições que este repositório pagou caro para aprender:
 - **`userEvent` + `vi.useFakeTimers()` trava todo `await user.click()`** no Vitest. Já está
   resolvido em `packages/ui/src/test-setup.ts` — não perca a tarde de novo.
 
+## Regressão visual
+
+Os testes de jsdom **não olham um pixel**. jsdom não faz layout: `getBoundingClientRect()`
+devolve zero, CSS não é avaliado. Numa biblioteca de design, isso deixava de fora
+exatamente o que ela entrega. Quem cobre essa parte é o Playwright, em
+`packages/ui/visual/`, com a galeria (`packages/ui/galeria/`) de cenário.
+
+```bash
+npm run galeria -w @amboni/ui      # abre a galeria em http://127.0.0.1:5199
+npm run visual:layout -w @amboni/ui   # medidas — roda em qualquer sistema
+AMB_VISUAL_LOCAL=1 npm run visual -w @amboni/ui   # prints, com baseline local
+```
+
+### A baseline é do Linux. Sempre.
+
+Chromium desenha texto e sombra com pixels diferentes em cada sistema operacional.
+Baseline feita no seu Mac **reprova inteira** no Ubuntu do CI. Por isso:
+
+- **no CI (Ubuntu)** o print roda, compara e reprova o PR — é a única fonte da verdade;
+- **no seu Mac** o print é pulado por padrão. `AMB_VISUAL_LOCAL=1` liga uma baseline local
+  (`__baseline-local__/`, fora do git) para você iterar. Ela **nunca** entra no commit;
+- **os testes de layout rodam em todo lugar**: medem número, e número não muda com
+  antialiasing. É a rede que você tem antes de abrir o PR.
+
+**A baseline mudou de propósito?** Actions → *Atualizar baseline visual* → Run workflow. Ele
+regenera no Ubuntu e abre um PR com as imagens, para alguém **olhar** antes de entrar.
+Baseline que se atualiza sozinha é carimbo, não teste.
+
+> **A baseline ainda não existe.** Ela nasce vazia — o primeiro job de regressão visual
+> reprova com `A snapshot doesn't exist`, e é o esperado. Rode o workflow acima uma vez
+> (motivo: `baseline inicial`) para preenchê-la. Ver
+> `packages/ui/visual/__baseline__/LEIA-ME.md`.
+
+**Reprovou e você não sabe o quê?** O job sobe o relatório como artefato quando falha:
+esperado / recebido / diff lado a lado.
+
+### A regra da cena
+
+Nada na galeria pode mudar sozinho: **sem `Math.random()`, sem `new Date()`, sem hover, sem
+animação em curso, sem imagem da rede**. Data é literal e o relógio do navegador é congelado
+(`clock.setFixedTime`); as fontes são servidas do disco (`galeria/fontes/`), nunca do Google
+Fonts. Um print que reprova por conta própria treina o time a rodar `--update-snapshots` sem
+olhar — e aí a suíte inteira deixa de proteger qualquer coisa.
+
 ## Comentários
 
 Comentário **não descreve o que a linha faz**. Ele registra a decisão e o porquê: a
@@ -97,6 +141,10 @@ mentir.
 4. `forwardRef` em todo controle de formulário — `react-hook-form` depende disso
 5. Exportar em `src/index.ts`, no grupo certo
 6. Uma página em `apps/docs/src/paginas/` e a rota em `rotas.ts`
+7. **Uma cena em `packages/ui/galeria/galeria.tsx`**, na seção do papel dele, com os
+   estados que valem um pixel: normal, foco, desabilitado, erro, carregando, vazio.
+   Componente fora da galeria é componente sem rede visual — e ninguém percebe a falta,
+   porque o CI fica verde do mesmo jeito
 
 A referência de API é **gerada do código** no build (`scripts/gerar-api.mjs`). Escreva o
 JSDoc pensando nisso: `@default` na prop, e o "porquê" no texto. O que não estiver no
@@ -108,6 +156,12 @@ JSDoc não existe na documentação.
 npm test
 npx tsc -p packages/ui/tsconfig.json --noEmit
 npx tsc -p apps/docs/tsconfig.json --noEmit
+
+# Layout: mede altura, transbordo e posição num navegador de verdade. Roda no seu Mac.
+npm run visual:layout -w @amboni/ui
 ```
+
+O print em si só reprova no CI (a baseline é de Linux — ver acima). Se ele acusar
+diferença, o relatório fica no artefato do job.
 
 Falha de segurança **não** vem por PR nem por issue — ver [SECURITY.md](./SECURITY.md).

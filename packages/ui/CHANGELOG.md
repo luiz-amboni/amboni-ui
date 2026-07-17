@@ -1,5 +1,22 @@
 # @amboni/ui
 
+## 0.2.1
+
+### Patch Changes
+
+- **Dica**: o balão pousava longe do gatilho quando a Dica era item de um `flex`.
+
+  O invólucro é `inline-flex`, o que resolve a caixa quando ele é o container — mas não
+  quando é ITEM de outro flex. Aí valia o `align-items: stretch` do pai, e o invólucro
+  esticava até a altura da linha: medido, 560px de altura contra 44 do botão, com o balão
+  pousando ~520px longe. Ele não sumia; pousava no meio do nada, apontando para nada.
+
+  Não era arranjo exótico — uma barra de ações com `display: flex` é o lugar mais provável
+  de existir uma Dica. Nenhum dos 974 testes podia pegar: jsdom não faz layout. O primeiro
+  print de regressão visual num navegador de verdade mostrou na primeira tentativa.
+
+  - @amboni/tokens@0.2.1
+
 ## 0.2.0
 
 ### Minor Changes

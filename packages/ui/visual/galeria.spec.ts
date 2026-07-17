@@ -24,7 +24,23 @@ import { PODE_TIRAR_PRINT } from '../playwright.config'
 
 const MARCAS = ['isafe', 'vear'] as const
 const TEMAS = ['light', 'dark'] as const
-const SECOES = ['acao', 'formulario', 'dados', 'identidade', 'retorno', 'navegacao'] as const
+const SECOES = ['acao', 'formulario', 'entrada', 'dados', 'identidade', 'retorno', 'navegacao', 'utilitario'] as const
+
+/**
+ * O relógio do navegador, parado em 12/03/2026 — a mesma data que a galeria usa nos dados.
+ *
+ * Não basta a cena passar datas fixas: os componentes de data leem o relógio POR DENTRO.
+ * O Calendario calcula `hoje` para decidir qual dia recebe o `tabindex` quando o foco
+ * ainda não entrou na grade, e os atalhos do CampoPeriodo ("últimos 7 dias") são funções
+ * que chamam `new Date()` na hora. Com o relógio andando, o print de hoje e o de amanhã
+ * podem sair diferentes com o código idêntico — e a suíte reprova sozinha na virada do
+ * mês, que é quando ninguém está esperando e todo mundo desconfia do teste.
+ *
+ * `setFixedTime` e não `install()`: o `install` troca os TIMERS por falsos, e aí um
+ * `setTimeout` que nunca dispara trava componente que espera timer (a Dica é um deles).
+ * Aqui só congelamos `Date.now()`/`new Date()`, que é exatamente o que faz falta.
+ */
+const AGORA = new Date('2026-03-12T13:30:00.000Z') // 10h30 em São Paulo (UTC-3)
 
 test.skip(
   !PODE_TIRAR_PRINT,
@@ -47,6 +63,8 @@ test.skip(
  *  3. `requestAnimationFrame` duplo — garante um quadro inteiro desenhado depois de tudo.
  */
 async function abrir(page: Page, params: Record<string, string>) {
+  // Antes do goto: depois, o React já teria lido o relógio de verdade na primeira pintura.
+  await page.clock.setFixedTime(AGORA)
   const q = new URLSearchParams(params).toString()
   await page.goto(`/?${q}`)
   await page.waitForLoadState('networkidle')
@@ -133,6 +151,13 @@ for (const tema of TEMAS) {
     await page.locator('#gatilho-menu').click()
     await expect(page.getByRole('menu')).toBeVisible()
     await expect(page).toHaveScreenshot(`sobreposicao-menu-${tema}.png`)
+  })
+
+  // O Popover é controlado: a cena já abre aberta, sem clique nenhum para dar errado.
+  test(`sobreposição popover / isafe / ${tema}`, async ({ page }) => {
+    await abrir(page, { marca: 'isafe', tema, cena: 'popover' })
+    await expect(page.getByRole('dialog')).toBeVisible()
+    await expect(page).toHaveScreenshot(`sobreposicao-popover-${tema}.png`)
   })
 
   for (const lado of ['cima', 'baixo', 'esq', 'dir'] as const) {

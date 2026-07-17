@@ -3,12 +3,14 @@ import { useEffect, type ReactNode } from 'react'
 import {
   Button, Menu, ItemMenu, SeparadorMenu, RotuloMenu,
   CampoForm, Campo, AreaTexto, Selecao, Caixa, Radio, GrupoRadio, Interruptor,
+  Autocomplete, CampoData, CampoPeriodo, Calendario, CampoArquivo, Deslizador,
   Card, CardHeader, CardBody, CardFooter, StatCard, Tabela, EstadoVazio,
   Selo, Etiqueta, Avatar, GrupoAvatar,
   Alerta, ProvedorAvisos, useAviso, Giro, Progresso, Esqueleto,
-  Dialogo, Gaveta, Dica,
+  Dialogo, Gaveta, Dica, Popover,
   Abas, ListaAbas, Aba, PainelAba, Acordeao, ItemAcordeao,
-  Trilha, ItemTrilha, Paginacao,
+  Trilha, ItemTrilha, Passos, LinhaDoTempo, Paginacao,
+  Divisor, Tecla,
 } from '@amboni/ui'
 
 /**
@@ -56,6 +58,43 @@ const OPCOES = [
   { valor: 'bling', rotulo: 'Bling' },
   { valor: 'omie', rotulo: 'Omie' },
   { valor: 'tiny', rotulo: 'Tiny' },
+]
+
+/**
+ * A data do palco — 12 de março de 2026, cravada.
+ *
+ * `new Date()` aqui seria uma bomba-relógio literal: a baseline nasceria com o mês
+ * corrente no calendário e reprovaria sozinha na virada do mês, sem ninguém ter tocado em
+ * nada. O culpado apareceria como "o Calendario mudou", e alguém gastaria uma tarde nisso.
+ *
+ * Os componentes de data também leem o relógio POR DENTRO (o Calendario calcula `hoje`
+ * para decidir o dia tabulável), e disso a constante não protege — quem trata é o
+ * `clock.setFixedTime()` no spec, que congela o relógio do navegador na mesma data.
+ * As duas peças precisam concordar, e é por isso que esta constante é exportada.
+ */
+export const DIA = new Date(2026, 2, 12, 10, 30) // março = 2
+
+const PERIODO = { inicio: new Date(2026, 2, 1), fim: new Date(2026, 2, 12) }
+
+/**
+ * Datas em ISO (`aaaa-mm-dd`), que é o contrato da LinhaDoTempo — e aprendi na marca.
+ *
+ * A primeira versão escrevia `'10/03/2026'`, do jeito que um brasileiro digita. O print
+ * mostrou "03 de out. de 2026": a string cai no `new Date()` cru, que lê `10/03` como
+ * MÊS 10, DIA 3, à moda americana. A linha do tempo inteira saiu com as datas trocadas, em
+ * silêncio, sem erro nenhum no console.
+ *
+ * Não é bug do componente — o JSDoc dele explica que espera ISO ou Date, e o `analisarData`
+ * trata com cuidado o caso ISO. É uma armadilha da API: o tipo aceita `string`, e a string
+ * mais natural para quem escreve em português é justamente a que o JavaScript entende ao
+ * contrário. Anotado para quem cuidar do componente (só o print pegaria isso: o texto está
+ * bem-formado, bonito e errado).
+ */
+const EVENTOS = [
+  { id: 1, titulo: 'Pedido criado', descricao: 'via Bling', data: '2026-03-10', tom: 'neutro' as const },
+  { id: 2, titulo: 'Pagamento aprovado', data: '2026-03-10', tom: 'sucesso' as const },
+  { id: 3, titulo: 'Enviado', descricao: 'Transportadora XYZ', data: '2026-03-11', tom: 'marca' as const },
+  { id: 4, titulo: 'Falha na entrega', descricao: 'Endereço não encontrado', data: '2026-03-12', tom: 'perigo' as const },
 ]
 
 /* ── Peças do palco ───────────────────────────────────────────────────────── */
@@ -203,6 +242,114 @@ function Formulario() {
           <Interruptor label="Desligado" />
           <Interruptor label="Desabilitado" disabled />
           <Interruptor size="sm" label="Pequeno" defaultChecked />
+        </div>
+      </div>
+    </Secao>
+  )
+}
+
+/**
+ * Os componentes que chegaram depois — a biblioteca passou de 28 para 39 no meio deste
+ * trabalho, com outro agente commitando enquanto eu escrevia.
+ *
+ * Entram na galeria pelo mesmo motivo dos outros: componente sem print é componente sem
+ * rede. E os de DATA entram com cuidado extra — eles leem o relógio, e é exatamente a
+ * classe de coisa que faz uma suíte visual reprovar na virada do mês e ser abandonada.
+ * Valor, mês visível e período são todos fixos; o relógio do navegador é congelado no spec.
+ */
+function Entrada() {
+  return (
+    <Secao id="entrada" titulo="Entrada avançada — Autocomplete, CampoData, CampoPeriodo, Calendario, CampoArquivo, Deslizador">
+      <div className="gal-grade gal-grade--2">
+        <CampoForm label="Cliente">
+          <Autocomplete
+            aria-label="Cliente"
+            opcoes={[{ valor: '1', rotulo: 'Ana Souza' }, { valor: '2', rotulo: 'Bruno Lima' }]}
+            valor="1"
+            onChange={() => {}}
+          />
+        </CampoForm>
+        <CampoForm label="Cliente (carregando)">
+          <Autocomplete aria-label="Carregando" opcoes={[]} valor={null} onChange={() => {}} carregando />
+        </CampoForm>
+        <CampoForm label="Data da compra">
+          <CampoData aria-label="Data" valor={DIA} onChange={() => {}} />
+        </CampoForm>
+        <CampoForm label="Data (erro)">
+          <CampoData aria-label="Data com erro" valor={null} onChange={() => {}} erro="Data inválida" />
+        </CampoForm>
+        <CampoForm label="Período">
+          <CampoPeriodo aria-label="Período" valor={PERIODO} onChange={() => {}} />
+        </CampoForm>
+        <CampoForm label="Arquivo">
+          <CampoArquivo onArquivos={() => {}} rotulo="Anexar comprovante" ajuda="PDF ou imagem, até 5 MB" />
+        </CampoForm>
+      </div>
+
+      <div className="gal-grade gal-grade--2">
+        <div className="gal-item">
+          <span className="gal-nome">Deslizador</span>
+          <Deslizador aria-label="Desconto" valor={30} onChange={() => {}} mostrarValor />
+          <Deslizador aria-label="Com marcas" valor={50} onChange={() => {}} marcas={[{ valor: 0, rotulo: '0%' }, { valor: 50, rotulo: '50%' }, { valor: 100, rotulo: '100%' }]} />
+          <Deslizador aria-label="Desabilitado" valor={20} onChange={() => {}} disabled />
+        </div>
+        <div className="gal-item">
+          <span className="gal-nome">Calendario (março/2026 fixo)</span>
+          {/* `mes` explícito: sem ele o calendário abre no mês do relógio e a baseline
+              venceria no dia 1º do mês seguinte. */}
+          <Calendario valor={DIA} mes={new Date(2026, 2, 1)} onChange={() => {}} />
+        </div>
+      </div>
+    </Secao>
+  )
+}
+
+function Utilitario() {
+  return (
+    <Secao id="utilitario" titulo="Estrutura — Divisor, Tecla, Passos, LinhaDoTempo">
+      <div className="gal-item">
+        <span className="gal-nome">Divisor</span>
+        <Divisor />
+        <Divisor rotulo="ou" />
+        <Divisor espessura="grossa" />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, height: 40 }}>
+          <span>Esquerda</span>
+          <Divisor orientacao="vertical" />
+          <span>Direita</span>
+        </div>
+      </div>
+
+      <div className="gal-fila">
+        <Item nome="Tecla">
+          <span style={{ display: 'inline-flex', gap: 6, alignItems: 'center' }}>
+            <Tecla>⌘</Tecla><Tecla>K</Tecla><span>para buscar</span><Tecla>Esc</Tecla>
+          </span>
+        </Item>
+      </div>
+
+      <div className="gal-item">
+        <span className="gal-nome">Passos</span>
+        <Passos
+          atual={1}
+          passos={[
+            { id: 'a', titulo: 'Dados', descricao: 'Nome e telefone', estado: 'concluido' },
+            { id: 'b', titulo: 'Endereço', descricao: 'Entrega', estado: 'atual' },
+            { id: 'c', titulo: 'Pagamento', estado: 'futuro' },
+            { id: 'd', titulo: 'Revisão', estado: 'erro' },
+          ]}
+        />
+      </div>
+
+      <div className="gal-grade gal-grade--2">
+        <div className="gal-item">
+          <span className="gal-nome">LinhaDoTempo</span>
+          {/* `data` como string, nunca Date sem hora fixa: um Date "agora" traria o
+              horário do print para dentro da imagem. */}
+          <LinhaDoTempo itens={EVENTOS} />
+        </div>
+        <div className="gal-item">
+          <span className="gal-nome">LinhaDoTempo compacta</span>
+          <LinhaDoTempo itens={EVENTOS} compacta />
         </div>
       </div>
     </Secao>
@@ -518,7 +665,21 @@ function CenaGaveta({ lado }: { lado: 'esquerda' | 'direita' | 'baixo' }) {
  */
 function CenaDica() {
   return (
-    <div className="gal-cena" style={{ display: 'flex', gap: 80, padding: 120, flexWrap: 'wrap' }}>
+    /**
+     * `alignItems: 'flex-start'` — e esta linha tem história.
+     *
+     * Sem ela, os gatilhos são flex items e ESTICAM (`align-items: stretch` é o padrão do
+     * flex). O `<span class="amb-dica">` que a Dica usa como âncora passa a ter 560px de
+     * altura enquanto o botão dentro dele tem 44px, e o balão vai ancorar na caixa
+     * esticada — 500px longe do botão. Foi o que o primeiro print mostrou, e está
+     * registrado como defeito conhecido em visual/layout.spec.ts ("a Dica ancora no
+     * gatilho, não no invólucro esticado").
+     *
+     * Aqui a cena usa o arranjo NORMAL, para a baseline guardar o balão onde ele deve
+     * ficar. O caso quebrado tem cena própria (`dica-flex`) — misturar os dois faria a
+     * baseline eternizar o bug como se fosse o esperado.
+     */
+    <div className="gal-cena" style={{ display: 'flex', alignItems: 'flex-start', gap: 80, padding: 120, flexWrap: 'wrap' }}>
       {(['cima', 'baixo', 'esq', 'dir'] as const).map(l => (
         // `atraso={0}`: o meio segundo de espera do hover existe para o mouse atravessar a
         // tela sem acender dicas pelo caminho. Num teste, é meio segundo de corrida contra
@@ -527,6 +688,49 @@ function CenaDica() {
           <Button id={`gatilho-dica-${l}`} variant="secondary">{`lado ${l}`}</Button>
         </Dica>
       ))}
+    </div>
+  )
+}
+
+/**
+ * O caso quebrado, isolado: uma Dica dentro de um flex com o `align-items` de fábrica.
+ *
+ * Não é um arranjo exótico — é uma barra de ações, o lugar mais provável de existir uma
+ * dica. A cena existe para o teste `test.fail()` de layout.spec.ts ter onde medir o
+ * defeito, e para o dia em que alguém consertar a Dica: aí o teste avisa sozinho.
+ * Fora do print de propósito — não se guarda baseline de bug conhecido.
+ */
+function CenaDicaFlex() {
+  return (
+    <div className="gal-cena" style={{ display: 'flex', gap: 40, padding: 120, height: '100vh' }}>
+      <Dica conteudo="Enviado pelo robô em 12/03/2026" lado="baixo" atraso={0}>
+        <Button id="gatilho-dica-flex" variant="secondary">Numa barra de ações</Button>
+      </Dica>
+    </div>
+  )
+}
+
+/**
+ * O Popover é controlado (`aberto` é prop), então a cena já nasce com ele aberto — sem
+ * clique, sem espera, sem chance de o print pegar o meio da transição. Quando o
+ * componente deixa você controlar o estado, use: é sempre mais estável que simular a
+ * interação.
+ */
+function CenaPopover() {
+  return (
+    <div className="gal-cena" style={{ padding: 200 }}>
+      <Popover
+        aberto
+        onAbrirChange={() => {}}
+        rotulo="Filtros rápidos"
+        gatilho={<Button variant="secondary">Filtros</Button>}
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12, minWidth: 220 }}>
+          <Caixa label="Somente com telefone" defaultChecked />
+          <Caixa label="Somente Apple" />
+          <Button variant="primary" size="sm">Aplicar</Button>
+        </div>
+      </Popover>
     </div>
   )
 }
@@ -578,7 +782,9 @@ const CENAS: Record<string, () => ReactNode> = {
   'gaveta-esquerda': () => <CenaGaveta lado="esquerda" />,
   'gaveta-baixo': () => <CenaGaveta lado="baixo" />,
   dica: () => <CenaDica />,
+  'dica-flex': () => <CenaDicaFlex />,
   menu: () => <CenaMenu />,
+  popover: () => <CenaPopover />,
   aviso: () => <CenaAviso />,
 }
 
@@ -590,10 +796,12 @@ export function Galeria({ cena }: { cena: string }) {
     <div className="gal">
       <Acao />
       <Formulario />
+      <Entrada />
       <Dados />
       <Identidade />
       <Retorno />
       <Navegacao />
+      <Utilitario />
     </div>
   )
 }

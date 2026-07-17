@@ -1,0 +1,83 @@
+name: Atualizar baseline visual
+
+# Só na mão (Actions → "Atualizar baseline visual" → Run workflow).
+#
+# ── A decisão que este arquivo materializa ───────────────────────────────────
+# A baseline é de Linux e nasce AQUI, nunca no Mac de quem contribui. Chromium desenha
+# texto e sombra com outros pixels em cada sistema: baseline feita no macOS reprova
+# inteira no Ubuntu, e o caminho natural depois disso é marcar o job como
+# `continue-on-error` e nunca mais olhar. Ver o comentário longo em
+# packages/ui/playwright.config.ts.
+#
+# E é NA MÃO, com PR, de propósito. Baseline que se atualiza sozinha a cada push não é
+# baseline — é um carimbo. O ponto todo do teste é alguém OLHAR a imagem nova e dizer "sim,
+# era isso que eu queria mudar". O PR existe para forçar esse olhar.
+
+on:
+  workflow_dispatch:
+    inputs:
+      motivo:
+        description: 'Por que a baseline está mudando? (vai no corpo do PR)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  baseline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+
+      - run: npm ci
+      - run: npm run build -w @amboni/tokens
+
+      - name: Versão do Playwright
+        id: pw
+        run: echo "versao=$(node -p "require('./package-lock.json').packages['node_modules/@playwright/test'].version")" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/cache@v4
+        id: cache-navegador
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.pw.outputs.versao }}
+
+      - name: Instalar Chromium
+        run: npx playwright install --with-deps chromium
+        working-directory: packages/ui
+
+      # `|| true`: com a baseline mudando, o teste reprova por definição — é o que estamos
+      # aceitando. O que importa é o arquivo que ele escreve.
+      - name: Regerar prints
+        run: npm run visual -w @amboni/ui -- --update-snapshots || true
+
+      - name: Abrir PR com as imagens novas
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: baseline-visual/${{ github.run_id }}
+          commit-message: 'test(visual): atualiza baseline — ${{ inputs.motivo }}'
+          title: 'Baseline visual: ${{ inputs.motivo }}'
+          body: |
+            Baseline regenerada no Ubuntu por **@${{ github.actor }}**.
+
+            **Motivo informado:** ${{ inputs.motivo }}
+
+            ---
+
+            ### Como revisar
+
+            Abra a aba **Files changed** e olhe cada imagem. O GitHub tem um controle de
+            comparação para PNG (Swipe / Onion skin) — use.
+
+            A única pergunta que importa: **toda diferença aqui é intencional?**
+
+            Se aparecer uma mudança que você não pediu, o PR está te mostrando um bug de
+            verdade, agora, em vez de deixá-lo entrar como "baseline nova". Feche o PR e
+            conserte o código.
+          add-paths: packages/ui/visual/__baseline__/**

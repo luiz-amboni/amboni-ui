@@ -18,7 +18,11 @@ import { test, expect, type Page, type Locator } from '@playwright/test'
  * sem verificar nada, que é a pior espécie de teste verde.
  */
 
+/** Mesmo relógio congelado do galeria.spec.ts — ver a explicação longa lá. */
+const AGORA = new Date('2026-03-12T13:30:00.000Z')
+
 async function abrir(page: Page, params: Record<string, string>) {
+  await page.clock.setFixedTime(AGORA)
   await page.goto(`/?${new URLSearchParams(params)}`)
   await page.waitForLoadState('networkidle')
   await page.evaluate(() => document.fonts.ready)
@@ -127,6 +131,48 @@ test('a coluna fixa da Tabela realmente gruda ao rolar na horizontal', async ({ 
   // ...e o resto andou. As duas metades importam: se nada rolou, a primeira asserção
   // passaria por acidente.
   expect(antesUltima - depoisUltima, 'nada rolou — a asserção da coluna fixa passaria de graça').toBeGreaterThan(50)
+})
+
+/**
+ * ── O defeito que este teste achou no dia em que nasceu, e já foi corrigido ──
+ *
+ * A Dica ancora no `<span class="amb-dica">` que ela põe em volta do gatilho. Esse span é
+ * `display: inline-flex`, o que resolve a caixa dele quando ele é o container — mas não
+ * quando ele é ITEM de outro flex. Aí valia o `align-items: stretch` do pai, de fábrica: o
+ * span esticava até a altura da linha e o balão ancorava na caixa esticada, não no botão.
+ *
+ * Medido aqui, numa janela de 800px: o invólucro ficava com 560px de altura contra 44 do
+ * botão, e o balão pousava a ~520px do gatilho. Ele não sumia — pousava no meio do nada,
+ * apontando para nada.
+ *
+ * Não é arranjo exótico: uma barra de ações com `display: flex` é o lugar mais provável de
+ * existir uma Dica. E as "limitações conhecidas" no fim de Dica.tsx não mencionavam este
+ * caso — ninguém sabia. Nenhum dos 974 testes de jsdom podia saber: jsdom não faz layout.
+ * O primeiro print de um navegador de verdade mostrou na primeira tentativa.
+ *
+ * Corrigido com `align-self: flex-start` no `.amb-dica`. O teste nasceu como `test.fail()`
+ * — bug conhecido registrado como vermelho controlado, nunca como comentário que ninguém
+ * lê — e virou exigência assim que o conserto entrou. É para isso que o `test.fail()`
+ * serve: ele avisa no dia em que deixa de ser verdade.
+ */
+test('a Dica ancora no gatilho, não no invólucro esticado por um flex pai', async ({ page }) => {
+  await abrir(page, { cena: 'dica-flex' })
+
+  const gatilho = page.locator('#gatilho-dica-flex')
+  await gatilho.focus()
+  const balao = page.getByRole('tooltip')
+  await balao.waitFor()
+
+  const g = (await gatilho.boundingBox())!
+  const b = (await balao.boundingBox())!
+
+  // lado "baixo": o balão nasce 8px abaixo do gatilho. Damos 4px de folga para
+  // arredondamento — o que se quer pegar é o erro de 500px, não o de meio pixel.
+  const esperado = g.y + g.height + 8
+  expect(
+    Math.abs(b.y - esperado),
+    `o balão está a ${Math.round(b.y)}px e o gatilho acaba em ${Math.round(g.y + g.height)}px — ${Math.round(b.y - esperado)}px de distância do lugar`,
+  ).toBeLessThanOrEqual(4)
 })
 
 test('o anel de foco é visível — ninguém apagou o outline', async ({ page }) => {

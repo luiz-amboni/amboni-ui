@@ -1,0 +1,82 @@
+name: Regressão visual
+
+on:
+  push: { branches: [main] }
+  pull_request: { branches: [main] }
+
+permissions:
+  contents: read
+
+jobs:
+  visual:
+    # ── Por que este job é SEPARADO do CI ──────────────────────────────────────
+    # Ele baixa um Chromium (~170 MB), sobe um servidor e tira ~60 fotos: leva minutos,
+    # onde os testes unitários levam segundos. Junto no mesmo job, todo mundo passaria a
+    # esperar o navegador para saber que um teste de unidade quebrou — e o primeiro
+    # reflexo, quando o feedback fica lento, é parar de olhar o CI.
+    #
+    # Separado, os dois correm em paralelo e cada um reprova por conta própria. O preço é
+    # um `npm ci` a mais, que o cache paga.
+    name: Print e layout (Chromium/Ubuntu)
+    runs-on: ubuntu-latest
+    # Uma suíte visual travada por 6 horas é o pior dos mundos: gasta minuto e não diz nada.
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+
+      - run: npm ci
+
+      # Os tokens viram CSS aqui; a galeria importa o tokens.css gerado. Sem isto, a página
+      # sobe sem nenhuma variável de cor e TODA baseline reprova de uma vez — com um diff
+      # que parece um bug de tema e é só build faltando.
+      - name: Build dos tokens
+        run: npm run build -w @amboni/tokens
+
+      # ── Cache do navegador ────────────────────────────────────────────────────
+      # O download do Chromium é o passo mais caro deste job. A chave leva a versão do
+      # Playwright (lida do package-lock): subiu a versão, cache novo — que é o certo, já
+      # que binário velho com runner novo dá erro obscuro de biblioteca faltando.
+      - name: Versão do Playwright
+        id: pw
+        run: echo "versao=$(node -p "require('./package-lock.json').packages['node_modules/@playwright/test'].version")" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.pw.outputs.versao }}
+
+      # Roda sempre, com ou sem cache, e é de propósito: o `install` sozinho já pula o
+      # download quando acha o binário em ~/.cache/ms-playwright, e o `--with-deps` instala
+      # as bibliotecas de sistema do Ubuntu (fontconfig, libnss…), que NÃO ficam nessa
+      # pasta e portanto não vêm no cache. Um `if: cache-miss` aqui pareceria mais esperto
+      # e quebraria o job na primeira vez que o runner viesse sem uma dessas libs — com um
+      # erro de símbolo faltando que não parece, nem de longe, com "faltou apt-get".
+      - name: Instalar Chromium
+        run: npx playwright install --with-deps chromium
+        working-directory: packages/ui
+
+      - name: Typecheck da galeria e dos specs
+        run: npm run typecheck:visual -w @amboni/ui
+
+      - name: Testes visuais
+        run: npm run visual -w @amboni/ui
+
+      # ── O artefato ────────────────────────────────────────────────────────────
+      # Sem isto o job é inútil quando reprova: "3 prints diferentes" não diz O QUE mudou,
+      # e ninguém consegue rodar Linux no próprio Mac para ver. O relatório traz
+      # esperado / recebido / diff lado a lado — é onde a pessoa decide se a mudança era
+      # intencional.
+      #
+      # `if: failure()` porque relatório de execução verde é lixo que ninguém abre.
+      - name: Subir relatório (só quando reprova)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio-visual
+          path: |
+            packages/ui/playwright-report/
+            packages/ui/test-results/
+          retention-days: 14

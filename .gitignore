@@ -15,5 +15,8 @@ coverage/
 #  · playwright-report/ e test-results/ — saída de uma rodada, não código. No CI elas
 #    viram artefato do job, que é onde se olha um diff.
 packages/ui/visual/__baseline-local__/
-packages/ui/playwright-report/
-packages/ui/test-results/
+# Sem prefixo de caminho: o Playwright escreve estas pastas a partir de onde foi invocado,
+# e rodá-lo da raiz do monorepo (em vez de packages/ui) espalha uma `test-results/` na raiz.
+# Já aconteceu. A regra genérica pega os dois casos.
+playwright-report/
+test-results/
