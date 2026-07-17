@@ -66,7 +66,6 @@ interface Cliente {
   etapa: Etapa
   produto: string
   valor: number
-  dias: number
 }
 
 const ETAPAS: Record<Etapa, { rotulo: string; tom: SeloTom }> = {
@@ -93,22 +92,22 @@ const OPCOES_CIDADE = [
 ]
 
 const CLIENTES: Cliente[] = [
-  { id: 1, nome: 'Marina Rodrigues Lima', cidade: 'Criciúma', telefone: '(48) 99612-4471', etapa: 'd15', produto: 'iPhone 15 Pro', valor: 8299.0, dias: 15 },
-  { id: 2, nome: 'Carlos Eduardo Souza', cidade: 'Tubarão', telefone: '(48) 99841-2093', etapa: 'd3', produto: 'MacBook Air M3', valor: 11499.0, dias: 3 },
-  { id: 3, nome: 'Juliana Beatriz Alves', cidade: 'Araranguá', telefone: '(48) 99127-8830', etapa: 'd90', produto: 'iPad Air', valor: 5799.0, dias: 92 },
-  { id: 4, nome: 'Rafael Menezes', cidade: 'Criciúma', telefone: '(48) 99320-5514', etapa: 'd15', produto: 'MacBook Pro 14"', valor: 18990.0, dias: 16 },
-  { id: 5, nome: 'Patrícia Nogueira', cidade: 'Florianópolis', telefone: '(48) 99754-1102', etapa: 'd365', produto: 'iPhone 14', valor: 5499.0, dias: 364 },
-  { id: 6, nome: 'Bruno Tavares', cidade: 'Tubarão', telefone: '(48) 99009-7743', etapa: 'd90', produto: 'Apple Watch S9', valor: 4299.0, dias: 88 },
-  { id: 7, nome: 'Ana Cláudia Ferreira', cidade: 'Criciúma', telefone: '(48) 99655-3321', etapa: 'd3', produto: 'AirPods Pro 2', valor: 2199.0, dias: 4 },
-  { id: 8, nome: 'Diego Marchetti', cidade: 'Araranguá', telefone: '(48) 99188-6690', etapa: 'fora', produto: 'Magic Keyboard', valor: 1499.0, dias: 412 },
-  { id: 9, nome: 'Fernanda da Silva Costa', cidade: 'Florianópolis', telefone: '(48) 99432-2218', etapa: 'd15', produto: 'iPhone 15', valor: 6799.0, dias: 14 },
-  { id: 10, nome: 'Gustavo Henrique Prado', cidade: 'Criciúma', telefone: '(48) 99871-0056', etapa: 'd90', produto: 'iMac 24"', valor: 14299.0, dias: 95 },
-  { id: 11, nome: 'Letícia Amaral', cidade: 'Tubarão', telefone: '(48) 99266-4487', etapa: 'd3', produto: 'iPad Pro 11"', valor: 9899.0, dias: 3 },
-  { id: 12, nome: 'Ricardo Bittencourt', cidade: 'Criciúma', telefone: '(48) 99510-9932', etapa: 'fora', produto: 'AirTag (4un)', valor: 599.0, dias: 520 },
-  { id: 13, nome: 'Camila Vasconcelos', cidade: 'Florianópolis', telefone: '(48) 99377-1145', etapa: 'd365', produto: 'MacBook Air M2', valor: 8999.0, dias: 361 },
-  { id: 14, nome: 'Thiago Boeira', cidade: 'Araranguá', telefone: '(48) 99044-7728', etapa: 'd15', produto: 'iPhone 13', valor: 3999.0, dias: 17 },
-  { id: 15, nome: 'Vanessa Cardoso Reis', cidade: 'Tubarão', telefone: '(48) 99623-8890', etapa: 'd90', produto: 'Apple Watch SE', valor: 2799.0, dias: 90 },
-  { id: 16, nome: 'Eduardo Zanette', cidade: 'Criciúma', telefone: '(48) 99118-2264', etapa: 'd3', produto: 'iPhone 15 Pro Max', valor: 10499.0, dias: 5 },
+  { id: 1, nome: 'Marina Rodrigues Lima', cidade: 'Criciúma', telefone: '(48) 99612-4471', etapa: 'd15', produto: 'iPhone 15 Pro', valor: 8299.0 },
+  { id: 2, nome: 'Carlos Eduardo Souza', cidade: 'Tubarão', telefone: '(48) 99841-2093', etapa: 'd3', produto: 'MacBook Air M3', valor: 11499.0 },
+  { id: 3, nome: 'Juliana Beatriz Alves', cidade: 'Araranguá', telefone: '(48) 99127-8830', etapa: 'd90', produto: 'iPad Air', valor: 5799.0 },
+  { id: 4, nome: 'Rafael Menezes', cidade: 'Criciúma', telefone: '(48) 99320-5514', etapa: 'd15', produto: 'MacBook Pro 14"', valor: 18990.0 },
+  { id: 5, nome: 'Patrícia Nogueira', cidade: 'Florianópolis', telefone: '(48) 99754-1102', etapa: 'd365', produto: 'iPhone 14', valor: 5499.0 },
+  { id: 6, nome: 'Bruno Tavares', cidade: 'Tubarão', telefone: '(48) 99009-7743', etapa: 'd90', produto: 'Apple Watch S9', valor: 4299.0 },
+  { id: 7, nome: 'Ana Cláudia Ferreira', cidade: 'Criciúma', telefone: '(48) 99655-3321', etapa: 'd3', produto: 'AirPods Pro 2', valor: 2199.0 },
+  { id: 8, nome: 'Diego Marchetti', cidade: 'Araranguá', telefone: '(48) 99188-6690', etapa: 'fora', produto: 'Magic Keyboard', valor: 1499.0 },
+  { id: 9, nome: 'Fernanda da Silva Costa', cidade: 'Florianópolis', telefone: '(48) 99432-2218', etapa: 'd15', produto: 'iPhone 15', valor: 6799.0 },
+  { id: 10, nome: 'Gustavo Henrique Prado', cidade: 'Criciúma', telefone: '(48) 99871-0056', etapa: 'd90', produto: 'iMac 24"', valor: 14299.0 },
+  { id: 11, nome: 'Letícia Amaral', cidade: 'Tubarão', telefone: '(48) 99266-4487', etapa: 'd3', produto: 'iPad Pro 11"', valor: 9899.0 },
+  { id: 12, nome: 'Ricardo Bittencourt', cidade: 'Criciúma', telefone: '(48) 99510-9932', etapa: 'fora', produto: 'AirTag (4un)', valor: 599.0 },
+  { id: 13, nome: 'Camila Vasconcelos', cidade: 'Florianópolis', telefone: '(48) 99377-1145', etapa: 'd365', produto: 'MacBook Air M2', valor: 8999.0 },
+  { id: 14, nome: 'Thiago Boeira', cidade: 'Araranguá', telefone: '(48) 99044-7728', etapa: 'd15', produto: 'iPhone 13', valor: 3999.0 },
+  { id: 15, nome: 'Vanessa Cardoso Reis', cidade: 'Tubarão', telefone: '(48) 99623-8890', etapa: 'd90', produto: 'Apple Watch SE', valor: 2799.0 },
+  { id: 16, nome: 'Eduardo Zanette', cidade: 'Criciúma', telefone: '(48) 99118-2264', etapa: 'd3', produto: 'iPhone 15 Pro Max', valor: 10499.0 },
 ]
 
 const brl = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })
@@ -121,7 +120,7 @@ function ListaClientes() {
   const [busca, setBusca] = useState('')
   const [etapa, setEtapa] = useState('')
   const [cidade, setCidade] = useState('')
-  const [ordem, setOrdem] = useState<Ordem>({ coluna: 'dias', direcao: 'asc' })
+  const [ordem, setOrdem] = useState<Ordem>({ coluna: 'nome', direcao: 'asc' })
   const [pagina, setPagina] = useState(1)
   const [selecionadas, setSelecionadas] = useState<ChaveDeLinha[]>([])
   const [alvo, setAlvo] = useState<Cliente | null>(null)
@@ -166,7 +165,6 @@ function ListaClientes() {
     const sinal = ordem.direcao === 'asc' ? 1 : -1
     return [...filtradas].sort((a, b) => {
       if (ordem.coluna === 'valor') return (a.valor - b.valor) * sinal
-      if (ordem.coluna === 'dias') return (a.dias - b.dias) * sinal
       // localeCompare com pt-BR: sem isso "Ávila" cai depois de "Zanette", porque o
       // comparador padrão ordena por código do caractere e o "Á" mora longe do "A".
       return a.nome.localeCompare(b.nome, 'pt-BR') * sinal
@@ -223,13 +221,13 @@ function ListaClientes() {
           <Avatar nome={c.nome} size="sm" decorativo />
           <div className="ex-pessoa__texto">
             <div className="ex-pessoa__nome">{c.nome}</div>
-            <div className="ex-pessoa__sub">{c.telefone}</div>
+            <div className="ex-pessoa__sub">
+              {c.cidade} · {c.produto}
+            </div>
           </div>
         </div>
       ),
     },
-    { chave: 'cidade', titulo: 'Cidade' },
-    { chave: 'produto', titulo: 'Comprou' },
     {
       chave: 'etapa',
       titulo: 'Etapa',
@@ -241,13 +239,6 @@ function ListaClientes() {
       numerico: true,
       ordenavel: true,
       render: c => brl.format(c.valor),
-    },
-    {
-      chave: 'dias',
-      titulo: 'Dias',
-      numerico: true,
-      ordenavel: true,
-      render: c => `${c.dias}d`,
     },
     {
       chave: 'acoes',
@@ -431,7 +422,7 @@ function ListaClientes() {
         titulo="Excluir cliente?"
         descricao={
           alvo
-            ? `${alvo.nome} sai do pipeline e para de receber mensagens automáticas.`
+            ? `${alvo.nome} — ${alvo.telefone} — sai do pipeline e para de receber mensagens automáticas.`
             : undefined
         }
         size="sm"

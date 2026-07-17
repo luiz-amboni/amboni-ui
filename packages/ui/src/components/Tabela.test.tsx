@@ -403,3 +403,66 @@ describe('Tabela — chaveLinha', () => {
     expect(screen.getByLabelText('Nota de Carla Dias')).toHaveValue('')
   })
 })
+
+// ── Largura de coluna ───────────────────────────────────────────────────────
+// Nasceu de um atrito real: montando a tela de clientes da documentação, seis colunas
+// pediram 899px num card de 674 e a tabela abria já rolada de lado. Sem esta prop, a
+// única saída foi CORTAR coluna — decisão de produto tomada por falta de uma prop.
+describe('Tabela — largura de coluna', () => {
+  const linhas = [{ id: 1, nome: 'Ana Souza', valor: 8888 }]
+
+  test('a largura vira <colgroup>, não style no <th>', () => {
+    const { container } = render(
+      <Tabela
+        rotulo="Clientes"
+        colunas={[
+          { chave: 'nome', titulo: 'Cliente' },
+          { chave: 'valor', titulo: 'Valor', numerico: true, largura: '110px' },
+        ]}
+        linhas={linhas}
+        chaveLinha={l => l.id}
+      />,
+    )
+    // <colgroup> vale para a coluna inteira antes de qualquer linha existir. Largura no
+    // <th> é só uma sugestão que o navegador descarta quando o corpo é mais largo.
+    const cols = container.querySelectorAll('colgroup col')
+    expect(cols).toHaveLength(2)
+    expect(cols[1]).toHaveStyle({ width: '110px' })
+  })
+
+  test('sem nenhuma largura pedida, não há colgroup', () => {
+    // Marcação que não faz nada é ruído para quem for ler isto depois.
+    const { container } = render(
+      <Tabela
+        rotulo="Clientes"
+        colunas={[{ chave: 'nome', titulo: 'Cliente' }]}
+        linhas={linhas}
+        chaveLinha={l => l.id}
+      />,
+    )
+    expect(container.querySelector('colgroup')).toBeNull()
+  })
+
+  test('com seleção, o <col> da caixa entra antes — senão as larguras deslizam', () => {
+    // A coluna do checkbox é uma coluna de verdade na tabela. Esquecê-la no colgroup faz
+    // cada <col> valer para a coluna seguinte, e a largura pedida para "Valor" cai em
+    // "Cliente". Erro silencioso: a tabela renderiza, só fica errada.
+    const { container } = render(
+      <Tabela
+        rotulo="Clientes"
+        selecionaveis
+        selecionadas={[]}
+        onSelecionar={() => {}}
+        colunas={[
+          { chave: 'nome', titulo: 'Cliente' },
+          { chave: 'valor', titulo: 'Valor', largura: '110px' },
+        ]}
+        linhas={linhas}
+        chaveLinha={l => l.id}
+      />,
+    )
+    const cols = container.querySelectorAll('colgroup col')
+    expect(cols).toHaveLength(3)
+    expect(cols[2]).toHaveStyle({ width: '110px' })
+  })
+})

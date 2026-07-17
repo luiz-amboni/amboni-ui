@@ -581,6 +581,182 @@
   ]
  },
  {
+  "slug": "guia-tema",
+  "titulo": "Marca e tema",
+  "grupo": "Guias",
+  "secoes": [
+   {
+    "texto": "O caminho de uma cor até a tela",
+    "nivel": 2
+   },
+   {
+    "texto": "Adicionar uma marca é uma linha",
+    "nivel": 2
+   },
+   {
+    "texto": "A regra que quase ninguém aplica",
+    "nivel": 2
+   },
+   {
+    "texto": "Trocar de tema em tempo de execução",
+    "nivel": 2
+   },
+   {
+    "texto": "O contrato de acessibilidade",
+    "nivel": 2
+   },
+   {
+    "texto": "Sobrescrever um token no produto",
+    "nivel": 2
+   },
+   {
+    "texto": "O que é verificado, em cada marca × modo",
+    "nivel": 3
+   },
+   {
+    "texto": "Por que isso existe: o #0FA6BE",
+    "nivel": 3
+   }
+  ]
+ },
+ {
+  "slug": "guia-icones",
+  "titulo": "Ícones",
+  "grupo": "Guias",
+  "secoes": [
+   {
+    "texto": "Por que não temos um pacote de ícones",
+    "nivel": 2
+   },
+   {
+    "texto": "Onde os ícones entram",
+    "nivel": 2
+   },
+   {
+    "texto": "Com lucide-react (o que o iSafe usa)",
+    "nivel": 2
+   },
+   {
+    "texto": "Tamanho: 1em resolve sozinho",
+    "nivel": 2
+   },
+   {
+    "texto": "Ícone é decoração. Quem informa é o texto",
+    "nivel": 2
+   },
+   {
+    "texto": "A cor nunca é o único sinal",
+    "nivel": 2
+   },
+   {
+    "texto": "Ícone grande: EstadoVazio e StatCard",
+    "nivel": 2
+   },
+   {
+    "texto": "Resumo",
+    "nivel": 2
+   },
+   {
+    "texto": "Com react-icons",
+    "nivel": 3
+   },
+   {
+    "texto": "Com SVG próprio (o que o VEAR faz)",
+    "nivel": 3
+   }
+  ]
+ },
+ {
+  "slug": "guia-mui",
+  "titulo": "Vindo do MUI",
+  "grupo": "Migração",
+  "secoes": [
+   {
+    "texto": "Primeiro: por que não é big bang",
+    "nivel": 2
+   },
+   {
+    "texto": "O risco real: as duas paletas divergirem",
+    "nivel": 2
+   },
+   {
+    "texto": "A história do #0FA6BE (esta é real)",
+    "nivel": 2
+   },
+   {
+    "texto": "Migrar uma tela",
+    "nivel": 2
+   },
+   {
+    "texto": "Tabela de equivalência",
+    "nivel": 2
+   },
+   {
+    "texto": "O que a gente não tem",
+    "nivel": 2
+   },
+   {
+    "texto": "O peso — medido, não estimado",
+    "nivel": 2
+   },
+   {
+    "texto": "Enquanto os dois convivem",
+    "nivel": 2
+   },
+   {
+    "texto": "Selo ou Etiqueta? A regra de 5 segundos",
+    "nivel": 3
+   },
+   {
+    "texto": "TextField vira dois componentes",
+    "nivel": 3
+   }
+  ]
+ },
+ {
+  "slug": "guia-tailwind",
+  "titulo": "Vindo do Tailwind",
+  "grupo": "Migração",
+  "secoes": [
+   {
+    "texto": "A ponte",
+    "nivel": 2
+   },
+   {
+    "texto": "O caso VEAR: 313 roxos",
+    "nivel": 2
+   },
+   {
+    "texto": "Por que não busca-e-troca",
+    "nivel": 2
+   },
+   {
+    "texto": "A troca é de graça (no claro)",
+    "nivel": 2
+   },
+   {
+    "texto": "O rosa não tem token (leia antes de migrar)",
+    "nivel": 2
+   },
+   {
+    "texto": "A armadilha do tema escuro",
+    "nivel": 2
+   },
+   {
+    "texto": "Ajustar nossos componentes com Tailwind",
+    "nivel": 2
+   },
+   {
+    "texto": "A ordem de migração do VEAR",
+    "nivel": 2
+   },
+   {
+    "texto": "Por que inline , e não só @theme",
+    "nivel": 3
+   }
+  ]
+ },
+ {
   "slug": "button",
   "titulo": "Button",
   "grupo": "Ação",

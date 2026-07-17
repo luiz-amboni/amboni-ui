@@ -89,11 +89,16 @@ export function CardHeader({
   const H = `h${headingLevel}` as const
   return (
     <div className={cx('amb-card__header', className)} {...rest}>
-      <div style={{ minWidth: 0 }}>
+      {/* `minWidth: 0` é o que deixa o título encolher e cortar com reticências: item de
+          grid/flex tem `min-width: auto` por padrão e se recusa a ficar menor que o
+          conteúdo, empurrando a `action` para fora do card. Vive no CSS, não num
+          `style=` — era o único inline do arquivo, dentro da biblioteca que prega o
+          contrário. */}
+      <div className="amb-card__header-txt">
         <H className="amb-card__title">{title}</H>
         {subtitle && <p className="amb-card__subtitle">{subtitle}</p>}
       </div>
-      {action && <div style={{ flexShrink: 0 }}>{action}</div>}
+      {action && <div className="amb-card__header-acao">{action}</div>}
     </div>
   )
 }

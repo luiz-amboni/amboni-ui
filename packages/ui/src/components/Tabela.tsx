@@ -38,6 +38,19 @@ interface ColunaBase<T> {
    * R$ 1.200". Sem isso, a pessoa ouve "R$ 1.200" e não sabe de quem é.
    */
   cabecalhoDeLinha?: boolean
+  /**
+   * Largura da coluna — qualquer medida CSS (`'110px'`, `'8rem'`, `'20%'`).
+   *
+   * Existe porque montar uma tela de CRM de verdade sem isto não deu certo: seis colunas
+   * pediram 899px num card de 674 e a tabela abria já rolada de lado. Sem controle de
+   * largura, a única saída foi CORTAR coluna — decisão de produto tomada por falta de uma
+   * prop, que é o pior motivo para tomar uma.
+   *
+   * O navegador reparte o espaço restante entre as colunas sem largura, então o padrão
+   * que funciona é fixar as previsíveis (valor, data, ações) e deixar o texto respirar.
+   * Não é mínimo nem máximo: é uma dica forte, e conteúdo maior ainda empurra.
+   */
+  largura?: string
 }
 
 /** Coluna que aponta para um campo real de `T`. `render` é opcional — o padrão é imprimir o campo. */
@@ -265,6 +278,21 @@ export function Tabela<T>({
         {/* <caption> é o jeito nativo de nomear tabela — some do olho, fica para o leitor
             de tela. Visível seria repetir o título que o CardHeader já mostra. */}
         {rotulo && <caption className="amb-sr-only">{rotulo}</caption>}
+
+        {/* `<colgroup>` é o mecanismo do HTML para largura de coluna, e é o certo aqui:
+            declarar a largura no <th> obriga o navegador a conciliar o cabeçalho com as
+            células depois — some quando o conteúdo do corpo é maior. O <col> vale para a
+            coluna inteira, antes de qualquer linha existir.
+            Só sai quando alguém pediu largura: um <colgroup> vazio não faz mal, mas
+            marcação que não faz nada é ruído para quem for ler isto depois. */}
+        {colunas.some(c => c.largura) && (
+          <colgroup>
+            {selecionaveis && <col style={{ width: '44px' }} />}
+            {colunas.map(c => (
+              <col key={String(c.chave)} style={c.largura ? { width: c.largura } : undefined} />
+            ))}
+          </colgroup>
+        )}
 
         <thead className="amb-tabela__cabecalho">
           <tr>

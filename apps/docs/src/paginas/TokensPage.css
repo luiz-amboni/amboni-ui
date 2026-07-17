@@ -112,7 +112,7 @@
 .tok-linha__txt {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--amb-espaco-1);
   min-width: 0;
 }
 

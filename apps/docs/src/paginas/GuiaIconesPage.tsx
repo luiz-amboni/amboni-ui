@@ -75,9 +75,9 @@ function Seta({ dir }: { dir: 'up' | 'down' | 'flat' }) {
         </P>
         <Aviso>
           <strong>Escolher é com você — e os dois produtos já escolheram diferente.</strong> O
-          iSafe usa <code>lucide-react</code> em 36 arquivos. O VEAR não usa pacote nenhum: tem
-          5 SVGs inline e vive bem. Se a biblioteca tivesse imposto um, um dos dois estaria
-          carregando ícone à toa.
+          iSafe usa <code>lucide-react</code> em 33 arquivos. O VEAR não usa pacote nenhum: tem
+          5 SVGs inline, em 3 arquivos, e vive bem. Se a biblioteca tivesse imposto um, um dos
+          dois estaria carregando ícone à toa.
         </Aviso>
       </Secao>
 

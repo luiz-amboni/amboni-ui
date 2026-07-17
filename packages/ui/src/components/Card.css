@@ -69,3 +69,11 @@
 
 /* Para tabela dentro de card: ela precisa encostar na borda. */
 .amb-card__body--flush { padding: 0; }
+
+/* `min-width: 0` derruba o `auto` que todo item de flex/grid traz: sem ele o título se
+   recusa a ficar menor que o próprio texto e empurra a `action` para fora do card, em vez
+   de cortar com reticências. É a regra menos óbvia deste arquivo. */
+.amb-card__header-txt { min-width: 0; }
+
+/* A ação não encolhe: se o título for longo, quem cede é o título, não o botão. */
+.amb-card__header-acao { flex-shrink: 0; }

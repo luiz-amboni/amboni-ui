@@ -26,14 +26,39 @@ import './TokensPage.css'
 // ── Descoberta ───────────────────────────────────────────────────────────────────
 
 /**
+ * Token é o que está num seletor GLOBAL: `:root`, ou os blocos de marca/tema.
+ *
+ * Existe `--amb-*` que não é token. Os componentes usam a mesma sintaxe para variável
+ * interna — `--amb-selo-fundo` mora dentro de `.amb-selo--neutro`, `--amb-etiqueta-hover`
+ * dentro de `.amb-etiqueta--marca`. São detalhe de implementação: ninguém escreve
+ * `var(--amb-selo-fundo)` num produto, e trocar isso não é decisão de quem usa a
+ * biblioteca.
+ *
+ * Sem este filtro a página listava 102 "tokens" em vez de 91 — e as onze linhas extras
+ * eram `fundo`, `texto`, `borda`, `borda`, `fundo`… repetidas e sem sentido fora do
+ * componente delas. Um contador errado numa página que existe para ser a autoridade sobre
+ * os tokens é pior que não ter contador.
+ *
+ * O corte é pelo seletor, não por uma lista de nomes proibidos: é a diferença estrutural
+ * de verdade (global = API pública; classe de componente = interno), então continua certa
+ * quando alguém criar o próximo componente.
+ */
+function seletorGlobal(seletor: string): boolean {
+  return seletor.split(',').some(parte => {
+    const s = parte.trim()
+    return s === ':root' || /^(\[data-amb-(brand|theme)="[^"]*"\])+$/.test(s)
+  })
+}
+
+/**
  * `@media`/`@supports` são CSSGroupingRule: têm regras dentro. Sem recursão, os tokens
  * de duração declarados no bloco `prefers-reduced-motion` do tokens.css sumiriam da varredura.
  */
 function nomesDaRegra(regra: CSSRule, saida: Set<string>) {
-  const estilo = (regra as CSSStyleRule).style
-  if (estilo) {
-    for (let i = 0; i < estilo.length; i++) {
-      const prop = estilo.item(i)
+  const { selectorText, style } = regra as CSSStyleRule
+  if (style && selectorText && seletorGlobal(selectorText)) {
+    for (let i = 0; i < style.length; i++) {
+      const prop = style.item(i)
       if (prop.startsWith('--amb-')) saida.add(prop)
     }
   }
@@ -621,12 +646,19 @@ export default function TokensPage() {
           </>
         )}
 
-        {bloqueadas.length > 0 && total > 0 && (
+        {total > 0 && (
           <p className="tok-rodape">
-            A varredura não conseguiu ler {bloqueadas.length === 1 ? 'a folha de' : 'as folhas de'}{' '}
-            {bloqueadas.join(', ')} — CSS de outra origem é privado para o navegador. São as
-            fontes, e não declaram token nenhum; mas se um dia declararem, os {total} acima
-            deixam de ser a lista inteira.
+            A lista sai dos seletores globais — <code>:root</code> e os blocos de marca e tema.
+            Componente também declara <code>--amb-*</code> por dentro (<code>--amb-selo-fundo</code>{' '}
+            vive em <code>.amb-selo--neutro</code>), e isso fica de fora de propósito: é
+            implementação, não API. Ninguém escreve <code>var(--amb-selo-fundo)</code> num produto.
+            {bloqueadas.length > 0 && (
+              <>
+                {' '}A varredura também não lê {bloqueadas.join(', ')} — CSS de outra origem é
+                privado para o navegador. São as fontes, e não declaram token nenhum; mas se um
+                dia declararem, os {total} acima deixam de ser a lista inteira.
+              </>
+            )}
           </p>
         )}
       </Secao>

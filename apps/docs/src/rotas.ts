@@ -11,6 +11,10 @@ import GuiaTypeScriptPage from './paginas/GuiaTypeScriptPage'
 import GuiaFormulariosPage from './paginas/GuiaFormulariosPage'
 import GuiaTestesPage from './paginas/GuiaTestesPage'
 import GuiaSSRPage from './paginas/GuiaSSRPage'
+import GuiaTemaPage from './paginas/GuiaTemaPage'
+import GuiaIconesPage from './paginas/GuiaIconesPage'
+import GuiaMuiPage from './paginas/GuiaMuiPage'
+import GuiaTailwindPage from './paginas/GuiaTailwindPage'
 
 import ButtonPage from './paginas/ButtonPage'
 import MenuPage from './paginas/MenuPage'
@@ -83,6 +87,12 @@ export const PAGINAS: Pagina[] = [
   { slug: 'guia-formularios', titulo: 'Formulários', grupo: 'Guias', componente: GuiaFormulariosPage },
   { slug: 'guia-testes', titulo: 'Testes', grupo: 'Guias', componente: GuiaTestesPage },
   { slug: 'guia-ssr', titulo: 'Next.js e SSR', grupo: 'Guias', componente: GuiaSSRPage },
+  { slug: 'guia-tema', titulo: 'Marca e tema', grupo: 'Guias', componente: GuiaTemaPage },
+  { slug: 'guia-icones', titulo: 'Ícones', grupo: 'Guias', componente: GuiaIconesPage },
+
+  // Migração fica num grupo só: quem chega aqui já decidiu adotar e quer saber o custo.
+  { slug: 'guia-mui', titulo: 'Vindo do MUI', grupo: 'Migração', componente: GuiaMuiPage },
+  { slug: 'guia-tailwind', titulo: 'Vindo do Tailwind', grupo: 'Migração', componente: GuiaTailwindPage },
 
   { slug: 'button', titulo: 'Button', grupo: 'Ação', componente: ButtonPage },
   { slug: 'menu', titulo: 'Menu', grupo: 'Ação', componente: MenuPage },

@@ -77,7 +77,10 @@ export default function Cores() {
             <tbody>
               <tr>
                 <td><strong>Primitiva</strong><br /><span style={{ opacity: 0.7 }}>o valor cru</span></td>
-                <td><code>cyan[700] = #0e7490</code></td>
+                {/* Lido da paleta, não digitado. Esta célula já dizia `#0e7490`, um valor
+                    que nunca existiu — nesta página, que prega justamente calcular em vez
+                    de repetir número à mão. A ironia é o melhor argumento que ela tem. */}
+                <td><code>cyan[700] = {paleta.cyan[700]}</code></td>
                 <td>Ninguém, direto. É matéria-prima.</td>
               </tr>
               <tr>
@@ -171,7 +174,18 @@ export default function Cores() {
               <tr><td><code className="doc-mono-brand">amber</code></td><td>Atenção</td></tr>
               <tr><td><code className="doc-mono-brand">red</code></td><td>Erro, destrutivo</td></tr>
               <tr><td><code className="doc-mono-brand">blue</code></td><td>Informação</td></tr>
-              <tr><td><code className="doc-mono-brand">pink</code></td><td>Reserva para uma terceira marca</td></tr>
+              {/* Dizia "reserva para uma terceira marca"; o primitives.ts diz "apoio da
+                  marca VEAR (#e6007e no original)". Duas verdades sobre o mesmo token, e
+                  o código ganha — é ele que alguém vai ler antes de usar. */}
+              <tr>
+                <td><code className="doc-mono-brand">pink</code></td>
+                <td>
+                  Apoio da marca VEAR (o <code>#e6007e</code> do original).
+                  <strong> Ainda não é token</strong>: <code>MARCAS</code> aceita uma escala por
+                  marca, então o rosa do VEAR não tem <code>var(--amb-*)</code> — é a
+                  lacuna real da migração deles.
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>

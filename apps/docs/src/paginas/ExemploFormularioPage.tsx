@@ -306,7 +306,7 @@ export default function ExemploFormularioPage() {
         eyebrow="Exemplos de tela"
         lead="Onze controles em quatro blocos — e a única pergunta que importa num formulário longo: o que acontece quando o erro está numa seção fechada?"
       >
-        Cadastro
+        Cadastro de cliente
       </Titulo>
 
       <Secao>

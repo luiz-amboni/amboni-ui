@@ -24,14 +24,22 @@ import '@amboni/ui/styles.css'      // o estilo dos componentes`}</Bloco>
       </Secao>
 
       <Secao titulo="3. Declare a marca e o tema no <html>">
-        <P>
-          <strong>Este é o passo esquecido.</strong> Sem os dois atributos, nenhuma variável é
-          definida e a tela aparece sem cor nenhuma — parecendo que a biblioteca quebrou.
-        </P>
         <Bloco lang="jsx">{`<html lang="pt-BR" data-amb-brand="isafe" data-amb-theme="light">`}</Bloco>
         <P>
           <code>data-amb-brand</code> aceita <code>isafe</code> ou <code>vear</code>.
           <code> data-amb-theme</code> aceita <code>light</code> ou <code>dark</code>.
+        </P>
+        <Aviso>
+          <strong>Sem isto, nada quebra</strong> — o <code>tokens.css</code> traz um
+          <code> :root</code> de reserva com a iSafe clara, então a biblioteca funciona sem
+          configurar nada. O que você perde é a escolha: fica na iSafe clara para sempre, e o
+          <code> data-amb-theme</code> é o único jeito de sair de lá.
+        </Aviso>
+        <P>
+          <em>Esta página já afirmou o contrário</em> — que sem os atributos "a tela aparece sem
+          cor nenhuma". Era falso, e ninguém tinha conferido contra o CSS gerado. Fica o
+          registro, porque uma documentação que assusta com um problema inexistente gasta o
+          crédito que ela vai precisar quando o problema for real.
         </P>
 
         <H3>Trocando o tema em tempo de execução</H3>

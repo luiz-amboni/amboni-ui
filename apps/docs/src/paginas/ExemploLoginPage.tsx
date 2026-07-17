@@ -186,7 +186,7 @@ export default function ExemploLoginPage() {
         eyebrow="Exemplos de tela"
         lead="A tela de acesso inteira: validação por campo, falha de credencial que não some, e o botão que não foge do dedo enquanto carrega."
       >
-        Login
+        Tela de acesso
       </Titulo>
 
       <Secao>

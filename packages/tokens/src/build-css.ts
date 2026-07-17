@@ -100,5 +100,20 @@ const raiz = join(dirname(fileURLToPath(import.meta.url)), '..')
 mkdirSync(raiz, { recursive: true })
 writeFileSync(join(raiz, 'tokens.css'), css, 'utf8')
 
-const totalVars = css.match(/--amb-/g)?.length ?? 0
-console.log(`✅ tokens.css gerado — ${marcas.length} marcas × 2 modos, ${totalVars} variáveis`)
+/**
+ * Conta tokens DISTINTOS, não ocorrências do texto `--amb-`.
+ *
+ * O contador aqui era `css.match(/--amb-/g).length`, que dava 235 — e 235 virou "a
+ * biblioteca tem 231 tokens", repetido em conversa, em commit e quase no site. Mas ele
+ * contava cada aparição do texto: as cores saem repetidas nos 6 blocos de seletor (2
+ * marcas × 2 temas, mais o :root base e o de reserva), e comentário também casava.
+ *
+ * São 91. A diferença não é detalhe de log: um número inflado 2,5× num README é o tipo
+ * de coisa que alguém confere uma vez, na frente de quem importa.
+ */
+const distintos = new Set(
+  [...css.replace(/\/\*[\s\S]*?\*\//g, '').matchAll(/(--amb-[\w-]+)\s*:/g)].map(m => m[1]),
+)
+console.log(
+  `✅ tokens.css gerado — ${marcas.length} marcas × 2 modos, ${distintos.size} tokens distintos`,
+)
