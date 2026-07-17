@@ -1,0 +1,163 @@
+/* A busca ⌘K. Como todo o resto do site: só var(--amb-*), nenhum valor de cor cravado. */
+
+.doc-busca-abrir {
+  appearance: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: var(--amb-espaco-2);
+  height: 32px;
+  padding: 0 var(--amb-espaco-2) 0 var(--amb-espaco-3);
+  background: var(--amb-color-surfaceSunken);
+  border: 1px solid var(--amb-color-border-default);
+  border-radius: var(--amb-raio-md);
+  color: var(--amb-color-text-muted);
+  font-family: inherit;
+  font-size: var(--amb-texto-sm);
+  transition: all var(--amb-duracao-fast) var(--amb-easing-standard);
+}
+.doc-busca-abrir:hover {
+  border-color: var(--amb-color-border-strong);
+  color: var(--amb-color-text-secondary);
+}
+.doc-busca-abrir__txt { min-width: 96px; text-align: left; }
+
+kbd {
+  font-family: var(--amb-fonte-mono);
+  font-size: 10px;
+  padding: 2px 5px;
+  border-radius: var(--amb-raio-sm);
+  background: var(--amb-color-surface);
+  border: 1px solid var(--amb-color-border-default);
+  color: var(--amb-color-text-muted);
+  line-height: 1.4;
+}
+
+/* ── O painel ─────────────────────────────────────────────────────────────── */
+
+.doc-busca__fundo {
+  position: fixed;
+  inset: 0;
+  z-index: var(--amb-camada-overlay);
+  background: color-mix(in srgb, var(--amb-color-text-primary) 40%, transparent);
+  backdrop-filter: blur(2px);
+  display: flex;
+  justify-content: center;
+  /* Não centralizado na vertical: o painel cresce para baixo conforme os resultados
+     chegam. Centralizado, ele pularia a cada tecla digitada. */
+  padding-top: 12vh;
+}
+
+.doc-busca {
+  width: min(560px, calc(100vw - 32px));
+  max-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--amb-color-surface);
+  border: 1px solid var(--amb-color-border-default);
+  border-radius: var(--amb-raio-xl);
+  box-shadow: var(--amb-shadow-xl);
+  overflow: hidden;
+}
+
+.doc-busca__topo {
+  display: flex;
+  align-items: center;
+  gap: var(--amb-espaco-3);
+  padding: 0 var(--amb-espaco-4);
+  height: 52px;
+  border-bottom: 1px solid var(--amb-color-border-default);
+  color: var(--amb-color-text-muted);
+  flex-shrink: 0;
+}
+
+.doc-busca__campo {
+  flex: 1;
+  border: 0;
+  outline: none; /* o painel inteiro já é o foco visual; um anel aqui dentro seria ruído */
+  background: transparent;
+  font-family: inherit;
+  font-size: var(--amb-texto-md);
+  color: var(--amb-color-text-primary);
+  min-width: 0;
+}
+.doc-busca__campo::placeholder { color: var(--amb-color-text-muted); }
+
+.doc-busca__esc { flex-shrink: 0; }
+
+.doc-busca__lista {
+  list-style: none;
+  margin: 0;
+  padding: var(--amb-espaco-2);
+  overflow-y: auto;
+  flex: 1;
+}
+
+.doc-busca__item {
+  width: 100%;
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--amb-espaco-3);
+  padding: var(--amb-espaco-2) var(--amb-espaco-3);
+  border-radius: var(--amb-raio-md);
+  text-align: left;
+  font-family: inherit;
+  color: var(--amb-color-text-secondary);
+}
+/* `is-ativo` em vez de `:hover`: o teclado e o mouse mandam no MESMO estado. Com :hover,
+   a seta move a seleção e o cursor parado destaca outro item — dois itens "ativos". */
+.doc-busca__item.is-ativo {
+  background: var(--amb-color-brand-subtle);
+  color: var(--amb-color-brand-text);
+}
+
+.doc-busca__item-txt { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.doc-busca__item-txt strong {
+  font-size: var(--amb-texto-base);
+  font-weight: var(--amb-peso-semibold);
+  color: var(--amb-color-text-primary);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.doc-busca__item.is-ativo .doc-busca__item-txt strong { color: var(--amb-color-brand-text); }
+
+.doc-busca__caminho { font-size: var(--amb-texto-xs); color: var(--amb-color-text-muted); }
+
+.doc-busca__seta { opacity: 0; font-size: var(--amb-texto-sm); flex-shrink: 0; }
+.doc-busca__item.is-ativo .doc-busca__seta { opacity: 0.6; }
+
+.doc-busca__vazio {
+  padding: var(--amb-espaco-6) var(--amb-espaco-4);
+  text-align: center;
+  font-size: var(--amb-texto-base);
+  color: var(--amb-color-text-secondary);
+}
+.doc-busca__vazio span {
+  display: block;
+  margin-top: var(--amb-espaco-1);
+  font-size: var(--amb-texto-sm);
+  color: var(--amb-color-text-muted);
+}
+
+.doc-busca__rodape {
+  display: flex;
+  gap: var(--amb-espaco-4);
+  padding: var(--amb-espaco-2) var(--amb-espaco-4);
+  border-top: 1px solid var(--amb-color-border-default);
+  background: var(--amb-color-surfaceSunken);
+  font-size: var(--amb-texto-xs);
+  color: var(--amb-color-text-muted);
+  flex-shrink: 0;
+}
+.doc-busca__rodape span { display: flex; align-items: center; gap: 5px; }
+
+@media (max-width: 720px) {
+  /* No celular o atalho não existe: some a dica de tecla e fica só a lupa. */
+  .doc-busca-abrir__txt, .doc-busca-abrir__kbd { display: none; }
+  .doc-busca-abrir { width: 32px; justify-content: center; padding: 0; }
+  .doc-busca__rodape { display: none; }
+}

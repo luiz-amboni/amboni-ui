@@ -1,0 +1,54 @@
+/**
+ * Playground — só a faixa de controles.
+ *
+ * O palco e o bloco de código reusam .doc-demo / .doc-code do docs.css: o playground é um
+ * <Demo> que ganhou controles, e ter um segundo jeito de emoldurar um exemplo era começar
+ * a inconsistência pela casa do design system. Daqui para baixo só existe o que o Demo não
+ * tem — a faixa dos controles.
+ *
+ * Tudo em var(--amb-*): trocar a marca ou o tema no topo do site repinta isto de graça.
+ */
+
+.doc-pg__controles {
+  display: grid;
+  /* auto-fit em vez de colunas fixas: com 2 controles a faixa não fica com buraco, com 6
+     ela vira duas fileiras sozinha. Nenhuma página precisa declarar quantas colunas quer. */
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--amb-espaco-4);
+  align-items: end;
+  padding: var(--amb-espaco-5) var(--amb-espaco-6);
+  background: var(--amb-color-surfaceSunken);
+  border-top: 1px solid var(--amb-color-border-default);
+}
+
+/* O nome da prop no rótulo é o MESMO texto que aparece no código gerado logo abaixo.
+   Monoespaçada e na cor da marca para o olho fazer a ligação sem precisar de legenda. */
+.doc-pg__prop {
+  font-family: var(--amb-fonte-mono);
+  font-size: var(--amb-texto-xs);
+  color: var(--amb-color-brand-text);
+}
+
+/* A Caixa não tem rótulo por cima como o CampoForm — sem isto ela flutuaria no meio da
+   célula enquanto os campos ao lado se alinham pela base. */
+.doc-pg__caixa {
+  display: flex;
+  align-items: center;
+  min-height: var(--amb-altura-sm);
+}
+
+.doc-pg__acoes {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  /* Ocupa a fileira inteira e empurra o botão para a direita: "Restaurar padrões" é a saída
+     do experimento, não mais um controle. Misturado na grade, ele viraria uma prop falsa. */
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 640px) {
+  .doc-pg__controles {
+    grid-template-columns: 1fr;
+    padding: var(--amb-espaco-4);
+  }
+}

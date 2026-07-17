@@ -1,0 +1,74 @@
+/* O índice da página, à direita. Só var(--amb-*), como todo o resto. */
+
+.doc-indice {
+  /* Some antes do menu lateral esquerdo: entre os dois, saber ONDE você está no site
+     vale mais que saber o que tem abaixo nesta página. */
+  display: none;
+}
+
+@media (min-width: 1280px) {
+  .doc-indice { display: block; }
+}
+
+.doc-indice__inner {
+  position: sticky;
+  top: 60px;
+  max-height: calc(100vh - 60px);
+  overflow-y: auto;
+  padding: var(--amb-espaco-6) var(--amb-espaco-4) var(--amb-espaco-6) 0;
+}
+
+.doc-indice__titulo {
+  font-size: var(--amb-texto-xs);
+  font-weight: var(--amb-peso-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--amb-color-text-muted);
+  margin-bottom: var(--amb-espaco-3);
+  padding-left: var(--amb-espaco-3);
+}
+
+.doc-indice__link {
+  display: block;
+  padding: var(--amb-espaco-1) var(--amb-espaco-3);
+  font-size: var(--amb-texto-sm);
+  line-height: var(--amb-leading-snug);
+  color: var(--amb-color-text-muted);
+  text-decoration: none;
+  /* A barra da esquerda é o trilho: sem ela, o item ativo "flutua" e não se lê como uma
+     lista percorrida de cima para baixo. */
+  border-left: 2px solid var(--amb-color-border-default);
+  transition: color var(--amb-duracao-fast) var(--amb-easing-standard),
+              border-color var(--amb-duracao-fast) var(--amb-easing-standard);
+}
+.doc-indice__link:hover { color: var(--amb-color-text-primary); }
+
+.doc-indice__link[aria-current='location'] {
+  color: var(--amb-color-brand-text);
+  border-left-color: var(--amb-color-brand-solid);
+  font-weight: var(--amb-peso-semibold);
+}
+
+/* H3 recua: a hierarquia do texto tem que aparecer no índice, senão ele vira uma lista
+   plana de 20 itens sem relação entre si. */
+.doc-indice__link--n3 { padding-left: var(--amb-espaco-6); font-size: var(--amb-texto-xs); }
+
+/* ── Âncora no título ───────────────────────────────────────────────────────
+ * O "#" que aparece ao passar o mouse. É como se manda um pedaço específico da doc para
+ * alguém — sem ele, a única forma de indicar uma seção é "role até achar".
+ * Some da impressão e do leitor de tela: é ferramenta de navegação, não conteúdo.
+ */
+.doc-ancora {
+  margin-left: var(--amb-espaco-2);
+  color: var(--amb-color-text-muted);
+  text-decoration: none;
+  opacity: 0;
+  font-weight: var(--amb-peso-normal);
+  transition: opacity var(--amb-duracao-fast) var(--amb-easing-standard);
+}
+.doc-h2:hover .doc-ancora,
+.doc-h3:hover .doc-ancora,
+.doc-ancora:focus-visible { opacity: 1; }
+.doc-ancora:hover { color: var(--amb-color-brand-text); }
+
+@media print { .doc-ancora, .doc-indice { display: none; } }

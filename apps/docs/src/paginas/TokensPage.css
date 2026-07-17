@@ -1,0 +1,373 @@
+/**
+ * Estilo do visualizador de tokens.
+ *
+ * Regra da casa, e aqui ela é literal: nenhum valor cru. A página que ensina a usar token
+ * seria a pior página do site para ter um `#64748b` escondido — e a mais fácil de flagrar,
+ * porque o leitor tem a lista de tokens do lado.
+ */
+
+/* ── Busca e contador ──────────────────────────────────────────────────────────── */
+
+.tok-barra-topo {
+  display: flex;
+  align-items: center;
+  gap: var(--amb-espaco-4);
+  margin-bottom: var(--amb-espaco-6);
+  flex-wrap: wrap;
+}
+
+/* A busca cresce, o contador não: o número muda de largura a cada tecla e arrastaria o
+   campo junto se os dois disputassem o espaço. */
+.tok-busca {
+  flex: 1 1 20rem;
+  min-width: 0;
+}
+
+.tok-contador {
+  flex: 0 0 auto;
+  font-size: var(--amb-texto-sm);
+  color: var(--amb-color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.tok-contador strong {
+  color: var(--amb-color-text-primary);
+  font-weight: var(--amb-peso-bold);
+}
+
+/* ── Grupos ────────────────────────────────────────────────────────────────────── */
+
+.tok-grupo {
+  margin-top: var(--amb-espaco-8);
+}
+
+/* Vive na linha de ajuda, não no título: ver o comentário no .tsx (a âncora do H3 sai do
+   texto, e um número lá dentro trocaria o id a cada tecla da busca). */
+.tok-grupo__n {
+  display: inline-block;
+  margin-right: var(--amb-espaco-2);
+  padding: 0 var(--amb-espaco-2);
+  border-radius: var(--amb-raio-full);
+  background: var(--amb-color-surfaceSunken);
+  color: var(--amb-color-text-primary);
+  font-size: var(--amb-texto-xs);
+  font-weight: var(--amb-peso-semibold);
+  font-variant-numeric: tabular-nums;
+}
+
+.tok-grupo__ajuda {
+  margin: calc(var(--amb-espaco-2) * -1) 0 var(--amb-espaco-3);
+  color: var(--amb-color-text-secondary);
+  font-size: var(--amb-texto-sm);
+  line-height: var(--amb-leading-normal);
+  max-width: 62ch;
+}
+
+.tok-lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--amb-espaco-1);
+}
+
+/* ── Linha ─────────────────────────────────────────────────────────────────────── */
+
+.tok-linha {
+  display: grid;
+  /* amostra · nome+valor · wcag · copiar. A coluna do meio é a única que cede — as outras
+     têm conteúdo de largura conhecida e encolher só faz o texto pular. */
+  grid-template-columns: 3.5rem minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: var(--amb-espaco-3);
+  width: 100%;
+  padding: var(--amb-espaco-2) var(--amb-espaco-3);
+  border: 1px solid transparent;
+  border-radius: var(--amb-raio-md);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  transition:
+    background-color var(--amb-duracao-fast) var(--amb-easing-standard),
+    border-color var(--amb-duracao-fast) var(--amb-easing-standard);
+}
+
+.tok-linha:hover {
+  background: var(--amb-color-surfaceSunken);
+  border-color: var(--amb-color-border-default);
+}
+
+.tok-linha:focus-visible {
+  outline: 2px solid var(--amb-color-border-focus);
+  outline-offset: 2px;
+}
+
+.tok-linha__am {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2rem;
+}
+
+.tok-linha__txt {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.tok-nome {
+  font-family: var(--amb-fonte-mono);
+  font-size: var(--amb-texto-sm);
+  font-weight: var(--amb-peso-semibold);
+  color: var(--amb-color-text-primary);
+}
+
+.tok-valor {
+  font-family: var(--amb-fonte-mono);
+  font-size: var(--amb-texto-xs);
+  color: var(--amb-color-text-muted);
+  /* Valor de sombra é longo e não pode quebrar a linha em duas alturas diferentes. */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Contraste ─────────────────────────────────────────────────────────────────── */
+
+.tok-linha__wcag {
+  display: flex;
+  align-items: center;
+  gap: var(--amb-espaco-2);
+}
+
+.tok-razao {
+  font-family: var(--amb-fonte-mono);
+  font-size: var(--amb-texto-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--amb-color-text-secondary);
+}
+
+.tok-razao--falha {
+  color: var(--amb-color-danger-text);
+  font-weight: var(--amb-peso-bold);
+}
+
+.tok-papel {
+  font-size: var(--amb-texto-xs);
+  color: var(--amb-color-text-muted);
+  padding: 0 var(--amb-espaco-2);
+  border-radius: var(--amb-raio-full);
+  background: var(--amb-color-surfaceSunken);
+}
+
+/* Aviso informativo: cinza de propósito. Um fundo que não serve para texto está certo —
+   pintar isso de vermelho ensinaria a ignorar o vermelho de verdade, logo abaixo. */
+.tok-flag {
+  font-size: var(--amb-texto-xs);
+  color: var(--amb-color-text-muted);
+  border: 1px dashed var(--amb-color-border-strong);
+  border-radius: var(--amb-raio-sm);
+  padding: 0 var(--amb-espaco-2);
+  white-space: nowrap;
+}
+
+.tok-flag--falha {
+  color: var(--amb-color-danger-text);
+  background: var(--amb-color-danger-subtle);
+  border: 1px solid var(--amb-color-danger-border);
+  border-style: solid;
+  font-weight: var(--amb-peso-semibold);
+}
+
+/* ── Copiar ────────────────────────────────────────────────────────────────────── */
+
+.tok-copia {
+  font-size: var(--amb-texto-xs);
+  color: var(--amb-color-text-muted);
+  font-variant-numeric: tabular-nums;
+  /* Largura fixa: "copiar" e "✓ copiado" têm tamanhos diferentes e a linha inteira
+     tremeria no clique. */
+  min-width: 5.5rem;
+  text-align: right;
+  opacity: 0;
+  transition: opacity var(--amb-duracao-fast) var(--amb-easing-standard);
+}
+
+/* Some até o mouse chegar — 91 linhas com "copiar" repetido é ruído. Mas volta no foco
+   de teclado, senão a ação só existiria para quem tem mouse. */
+.tok-linha:hover .tok-copia,
+.tok-linha:focus-visible .tok-copia {
+  opacity: 1;
+}
+
+.tok-copia--on {
+  opacity: 1;
+  color: var(--amb-color-success-text);
+  font-weight: var(--amb-peso-semibold);
+}
+
+/* ── Amostras ──────────────────────────────────────────────────────────────────── */
+
+.tok-am {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 3.5rem;
+  height: 2rem;
+  color: var(--amb-color-text-primary);
+}
+
+/* O xadrez atrás do quadrado de cor: sem ele, um token translúcido (`*-subtle` no tema
+   escuro) fica idêntico a um opaco de cor parecida, e a página esconderia justamente a
+   propriedade que muda como a cor se comporta. */
+.tok-am--cor {
+  width: 2rem;
+  border-radius: var(--amb-raio-sm);
+  border: 1px solid var(--amb-color-border-default);
+  background-image:
+    linear-gradient(45deg, var(--amb-color-surfaceSunken) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--amb-color-surfaceSunken) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--amb-color-surfaceSunken) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--amb-color-surfaceSunken) 75%);
+  background-size: 8px 8px;
+  background-position: 0 0, 0 4px, 4px -4px, -4px 0;
+}
+
+/* Sem `overflow: hidden` de propósito. Cortar a amostra é o mesmo que falsificá-la: a
+   sombra `xl` se espalha 40px e sairia sem penumbra, e a barra de `espaco-24` (6rem)
+   pararia na borda da caixa junto com a de 16 e a de 20 — três degraus diferentes
+   desenhados do mesmo tamanho. As caixas abaixo são dimensionadas para caber a medida
+   real; nada precisa ser cortado. */
+.tok-lista--espaco .tok-linha {
+  grid-template-columns: 7rem minmax(0, 1fr) auto auto;
+}
+
+.tok-lista--espaco .tok-am {
+  width: 6.5rem;
+}
+
+/* altura vai a 3.25rem e a sombra precisa de folga para a penumbra aparecer. */
+.tok-lista--altura .tok-linha__am,
+.tok-lista--shadow .tok-linha__am,
+.tok-lista--altura .tok-am,
+.tok-lista--shadow .tok-am {
+  height: 4rem;
+}
+
+.tok-barra {
+  display: block;
+  height: 0.5rem;
+  min-width: 1px;
+  border-radius: var(--amb-raio-full);
+  background: var(--amb-color-brand-solid);
+}
+
+.tok-am--raio {
+  width: 2rem;
+  height: 2rem;
+  background: var(--amb-color-brand-subtle);
+  border: 2px solid var(--amb-color-brand-solid);
+}
+
+.tok-caixa-altura {
+  display: block;
+  width: 1.25rem;
+  border-radius: var(--amb-raio-sm);
+  background: var(--amb-color-brand-subtle);
+  border: 1px solid var(--amb-color-brand-solid);
+}
+
+.tok-sombra {
+  display: block;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: var(--amb-raio-sm);
+  background: var(--amb-color-surface);
+}
+
+.tok-am--tipo {
+  font-size: var(--amb-texto-md);
+  line-height: 1;
+  overflow: hidden;
+}
+
+.tok-am--leading {
+  display: block;
+  font-size: var(--amb-texto-xs);
+  color: var(--amb-color-text-secondary);
+  white-space: nowrap;
+}
+
+.tok-am--camada {
+  font-family: var(--amb-fonte-mono);
+  font-size: var(--amb-texto-xs);
+  color: var(--amb-color-text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* A barrinha que anda. É a única forma de comparar 80ms com 300ms — o número sozinho
+   não dá noção nenhuma. `alternate` evita o salto de volta ao início. */
+.tok-corrida {
+  display: block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: var(--amb-raio-full);
+  background: var(--amb-color-brand-solid);
+  animation-name: tok-anda;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-timing-function: var(--amb-easing-standard);
+}
+
+@keyframes tok-anda {
+  from { transform: translateX(0); }
+  to { transform: translateX(3rem); }
+}
+
+/* Quem pediu menos movimento no sistema não quer doze bolinhas correndo em laço. Os
+   tokens de duração já zeram sozinhos nesse modo; a animação em si precisa parar aqui. */
+@media (prefers-reduced-motion: reduce) {
+  .tok-corrida {
+    animation: none;
+    transform: translateX(1.5rem);
+  }
+}
+
+/* Nota de rodapé, não alarme: informa a limitação da varredura sem competir com o
+   conteúdo. Ver o comentário em descobrirNomes() no .tsx. */
+.tok-rodape {
+  margin-top: var(--amb-espaco-6);
+  padding-top: var(--amb-espaco-3);
+  border-top: 1px solid var(--amb-color-border-default);
+  color: var(--amb-color-text-muted);
+  font-size: var(--amb-texto-xs);
+  line-height: var(--amb-leading-snug);
+  max-width: 72ch;
+}
+
+.tok-vazio {
+  border: 1px dashed var(--amb-color-border-default);
+  border-radius: var(--amb-raio-lg);
+  background: var(--amb-color-surface);
+}
+
+/* ── Estreito ──────────────────────────────────────────────────────────────────── */
+
+/* No celular a coluna do contraste sai da linha em vez de espremer o nome do token — o
+   nome é a razão de a pessoa estar aqui; o número é apoio. */
+@media (max-width: 40rem) {
+  .tok-linha {
+    grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+  }
+
+  .tok-linha__wcag {
+    grid-column: 2 / -1;
+    grid-row: 2;
+  }
+
+  .tok-copia {
+    min-width: 0;
+    opacity: 1;
+  }
+}

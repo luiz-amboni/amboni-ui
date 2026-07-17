@@ -26,9 +26,46 @@ body {
 
 .doc-shell { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
 
+/* A terceira coluna (índice da página) só existe quando sobra largura de verdade.
+   Espremer o texto para caber um índice troca o que se lê pelo mapa do que se lê. */
+@media (min-width: 1280px) {
+  .doc-shell { grid-template-columns: 260px 1fr 240px; }
+}
+
 @media (max-width: 900px) {
   .doc-shell { grid-template-columns: 1fr; }
-  .doc-side { display: none; }
+  /* O menu vira gaveta: fica fora da tela e entra por cima. `display: none` mataria o
+     menu no celular inteiro — 30 páginas inalcançáveis. */
+  .doc-side {
+    position: fixed;
+    top: 60px; left: 0; bottom: 0;
+    width: 280px;
+    z-index: var(--amb-camada-dropdown);
+    background: var(--amb-color-surface);
+    transform: translateX(-100%);
+    transition: transform var(--amb-duracao-normal) var(--amb-easing-standard);
+    overflow-y: auto;
+  }
+  .doc-side.is-aberto { transform: none; box-shadow: var(--amb-shadow-xl); }
+}
+
+@media (max-width: 900px) and (prefers-reduced-motion: reduce) {
+  .doc-side { transition: none; }
+}
+
+/* O botão do menu só existe onde o menu se esconde. */
+.doc-menu-btn { display: none; }
+@media (max-width: 900px) {
+  .doc-menu-btn {
+    display: grid; place-items: center;
+    appearance: none; cursor: pointer;
+    width: 32px; height: 32px;
+    background: transparent;
+    border: 1px solid var(--amb-color-border-default);
+    border-radius: var(--amb-raio-md);
+    color: var(--amb-color-text-secondary);
+    font-size: 14px;
+  }
 }
 
 /* ── Topo ─────────────────────────────────────────────────────────────────── */
@@ -145,13 +182,37 @@ body {
 .doc-side__group + .doc-side__group { margin-top: var(--amb-espaco-6); }
 
 .doc-side__title {
+  /* É um <button> de verdade (recolhe o grupo): precisa perder o estilo de botão do
+     navegador, não ganhar aparência de botão. */
+  appearance: none;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--amb-espaco-1);
+  font-family: inherit;
   font-size: var(--amb-texto-xs);
   font-weight: var(--amb-peso-bold);
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--amb-color-text-muted);
-  padding: 0 var(--amb-espaco-3);
-  margin-bottom: var(--amb-espaco-2);
+  padding: var(--amb-espaco-1) var(--amb-espaco-3);
+  margin-bottom: var(--amb-espaco-1);
+  border-radius: var(--amb-raio-sm);
+}
+.doc-side__title:hover { color: var(--amb-color-text-primary); }
+
+.doc-side__chevron {
+  display: inline-block;
+  transition: transform var(--amb-duracao-fast) var(--amb-easing-standard);
+  font-size: 13px;
+}
+.doc-side__chevron.is-aberto { transform: rotate(90deg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .doc-side__chevron { transition: none; }
 }
 
 .doc-side__link {

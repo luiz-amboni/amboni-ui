@@ -50,7 +50,17 @@ function baseCss(): string {
 
 function temaCss(marca: Marca, modo: 'light' | 'dark'): string {
   const t: TokensSemanticos = construirTema(marca, modo)
-  // Seletor duplo: `data-theme` explícito OU a preferência do sistema.
+  /**
+   * Só o seletor explícito. O comentário aqui dizia "seletor duplo: `data-theme`
+   * explícito OU a preferência do sistema" — e era mentira: `prefers-color-scheme` nunca
+   * saiu deste arquivo. Alguém leria e concluiria que o tema do sistema funciona sozinho;
+   * não funciona, e o sintoma é a tela sem cor nenhuma, sem pista da causa.
+   *
+   * E o explícito é o certo: a preferência do sistema é um PADRÃO, não uma ordem — quem
+   * escolheu claro num sistema escuro quer claro. Ler a preferência é papel do produto,
+   * que decide o valor inicial de `data-amb-theme` e lembra da escolha. A biblioteca não
+   * sequestra essa decisão de dentro do CSS.
+   */
   return `[data-amb-brand="${marca}"][data-amb-theme="${modo}"] {\n${vars(t)}\n}`
 }
 

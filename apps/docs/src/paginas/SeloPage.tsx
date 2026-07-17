@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Selo, Etiqueta } from '@amboni/ui'
 import { Secao, P, Demo, Titulo, H3, Aviso, TabelaProps, FacaNaoFaca, Bloco } from '../lib/blocos'
+import { Playground } from '../lib/Playground'
 
 const TONS = ['neutro', 'marca', 'sucesso', 'aviso', 'perigo', 'info'] as const
 
@@ -32,6 +33,26 @@ export default function SeloPage() {
       >
         Selo e Etiqueta
       </Titulo>
+
+      <Secao titulo="Experimente">
+        <Playground
+          componente="Selo"
+          variante="centro"
+          controles={[
+            { prop: 'tom', tipo: 'select', opcoes: ['neutro', 'marca', 'sucesso', 'aviso', 'perigo', 'info'], padrao: 'neutro' },
+            { prop: 'variante', tipo: 'select', opcoes: ['suave', 'solido', 'contorno'], padrao: 'suave' },
+            { prop: 'size', tipo: 'select', opcoes: ['sm', 'md'], padrao: 'md' },
+            { prop: 'pontinho', tipo: 'bool', padrao: false },
+            { prop: 'children', tipo: 'texto', padrao: 'Entregue' },
+          ]}
+          render={p => <Selo {...p}>{p.children}</Selo>}
+        />
+        <P>
+          Apague o texto e olhe o que sobra: uma pílula colorida que não informa nada. É
+          exatamente o que 1 em cada 12 homens vê quando o tom é o único sinal — e é por isso
+          que o <code>children</code> do Selo é obrigatório no TypeScript.
+        </P>
+      </Secao>
 
       <Secao>
         <Bloco lang="jsx">{`import { Selo, Etiqueta } from '@amboni/ui'`}</Bloco>

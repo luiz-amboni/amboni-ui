@@ -99,7 +99,11 @@ export function CardHeader({
 }
 
 export interface CardBodyProps extends HTMLAttributes<HTMLDivElement> {
-  /** Sem respiro interno — para tabela, que precisa encostar na borda do card. */
+  /**
+   * Sem respiro interno — para tabela, que precisa encostar na borda do card. Com
+   * padding, a linha do cabeçalho fica flutuando e o alinhamento das colunas some.
+   * @default false
+   */
   flush?: boolean
 }
 
@@ -107,6 +111,14 @@ export function CardBody({ flush, className, ...rest }: CardBodyProps) {
   return <div className={cx('amb-card__body', flush && 'amb-card__body--flush', className)} {...rest} />
 }
 
-export function CardFooter({ className, ...rest }: HTMLAttributes<HTMLDivElement>) {
+/**
+ * Existe como interface própria, mesmo sem acrescentar nada a `HTMLAttributes`, porque a
+ * referência de API é gerada a partir dos tipos: um componente tipado direto com
+ * `HTMLAttributes` simplesmente NÃO APARECE na documentação. Some em silêncio — e some do
+ * jeito pior, parecendo que não existe em vez de parecer quebrado.
+ */
+export type CardFooterProps = HTMLAttributes<HTMLDivElement>
+
+export function CardFooter({ className, ...rest }: CardFooterProps) {
   return <div className={cx('amb-card__footer', className)} {...rest} />
 }

@@ -4,7 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "node scripts/gerar-busca.mjs && vite",
+    "prebuild": "node scripts/gerar-api.mjs && node scripts/gerar-busca.mjs",
     "build": "vite build",
     "preview": "vite preview",
     "test": "tsc -p tsconfig.json --noEmit && vitest run"

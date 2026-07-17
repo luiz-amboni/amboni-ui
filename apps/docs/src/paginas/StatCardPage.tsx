@@ -1,5 +1,6 @@
 import { StatCard } from '@amboni/ui'
 import { Secao, P, Demo, Titulo, H3, Aviso, TabelaProps, FacaNaoFaca, Bloco } from '../lib/blocos'
+import { Playground } from '../lib/Playground'
 
 export default function StatCardPage() {
   return (
@@ -10,6 +11,29 @@ export default function StatCardPage() {
       >
         StatCard
       </Titulo>
+
+      <Secao titulo="Experimente">
+        <Playground
+          componente="StatCard"
+          variante="centro"
+          controles={[
+            // label e value são obrigatórios no componente: `sempre` os mantém no código
+            // mesmo parados, porque um <StatCard /> sem eles não existe.
+            { prop: 'label', tipo: 'texto', padrao: 'Investido', sempre: true },
+            { prop: 'value', tipo: 'texto', padrao: 'R$ 1.994,31', sempre: true },
+            { prop: 'tone', tipo: 'select', opcoes: ['brand', 'success', 'warning', 'danger', 'neutral'], padrao: 'brand' },
+            { prop: 'sub', tipo: 'texto', padrao: '', placeholder: 'ex.: 159.111 exibições' },
+            { prop: 'emptyReason', tipo: 'texto', padrao: '', placeholder: 'ex.: sem vendas atribuídas' },
+          ]}
+          render={p => <StatCard {...p} />}
+        />
+        <P>
+          Escreva <code>—</code> no <code>value</code>: o card entra no estado vazio e passa a
+          mostrar o <code>emptyReason</code>. Deixe o motivo em branco e você vê o que a
+          pessoa vê quando ninguém preencheu — um traço sozinho, que não diz se quebrou ou se
+          é zero mesmo.
+        </P>
+      </Secao>
 
       <Secao>
         <Bloco lang="jsx">{`import { StatCard } from '@amboni/ui'`}</Bloco>

@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { PAGINAS, type Pagina } from './rotas'
+import { Busca } from './lib/Busca'
+import { IndicePagina } from './lib/IndicePagina'
 import './docs.css'
 
 type Marca = 'isafe' | 'vear'
@@ -27,6 +29,7 @@ function rotaAtual(): string {
 export default function App() {
   const [{ marca, tema }, setCfg] = useState(lerUrl)
   const [rota, setRota] = useState(rotaAtual)
+  const [menuAberto, setMenuAberto] = useState(false)
 
   useEffect(() => {
     const r = document.documentElement
@@ -42,6 +45,7 @@ export default function App() {
   useEffect(() => {
     const onHash = () => {
       setRota(rotaAtual())
+      setMenuAberto(false) // no celular, navegar tem que fechar o menu
       window.scrollTo(0, 0) // sem isso, trocar de página mantém a rolagem no meio do texto
     }
     addEventListener('hashchange', onHash)
@@ -55,11 +59,35 @@ export default function App() {
     document.title = `${pagina.titulo} — @amboni/ui`
   }, [pagina])
 
+  /**
+   * `?secao=xxx` é o link de âncora (ver `Cabecalho` em lib/blocos.tsx): o hash já é a
+   * rota, então a seção viaja na busca. Rolar até ela precisa esperar a página montar —
+   * daí os dois quadros. Um só não basta: o primeiro entrega o DOM da rota anterior.
+   */
+  useEffect(() => {
+    const alvo = new URLSearchParams(location.search).get('secao')
+    if (!alvo) return
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() =>
+        document.getElementById(alvo)?.scrollIntoView({ block: 'start' }),
+      ),
+    )
+  }, [rota])
+
   const grupos = [...new Set(PAGINAS.map(p => p.grupo))]
 
   return (
     <div className="doc-shell">
       <header className="doc-top">
+        <button
+          className="doc-menu-btn"
+          aria-label={menuAberto ? 'Fechar menu' : 'Abrir menu'}
+          aria-expanded={menuAberto}
+          onClick={() => setMenuAberto(v => !v)}
+        >
+          <span aria-hidden>{menuAberto ? '✕' : '☰'}</span>
+        </button>
+
         <a className="doc-logo" href="#/inicio">
           <span className="doc-logo__mark">A</span>
           @amboni/ui
@@ -67,6 +95,8 @@ export default function App() {
         <span className="doc-tag">v0.1</span>
 
         <div className="doc-top__spacer" />
+
+        <Busca />
 
         <div className="doc-switch">
           <span className="doc-switch__label">Marca</span>
@@ -86,24 +116,14 @@ export default function App() {
         </div>
       </header>
 
-      <nav className="doc-side" aria-label="Seções da documentação">
+      <nav
+        className={`doc-side${menuAberto ? ' is-aberto' : ''}`}
+        aria-label="Seções da documentação"
+      >
         <div className="doc-side__inner">
-        {grupos.map(g => (
-          <div className="doc-side__group" key={g}>
-            <div className="doc-side__title">{g}</div>
-            {PAGINAS.filter(p => p.grupo === g).map(p => (
-              <a
-                key={p.slug}
-                className="doc-side__link"
-                href={`#/${p.slug}`}
-                aria-current={p.slug === pagina.slug ? 'page' : undefined}
-              >
-                {p.titulo}
-                {p.selo && <span className="doc-side__badge">{p.selo}</span>}
-              </a>
-            ))}
-          </div>
-        ))}
+          {grupos.map(g => (
+            <GrupoMenu key={g} titulo={g} paginas={PAGINAS.filter(p => p.grupo === g)} atual={pagina.slug} />
+          ))}
         </div>
       </nav>
 
@@ -116,6 +136,60 @@ export default function App() {
           </footer>
         </div>
       </main>
+
+      {/* `key` na rota força o índice a remontar: sem isso ele guardaria os títulos da
+          página anterior e apontaria para âncoras que já não existem no DOM. */}
+      <IndicePagina key={pagina.slug} rota={pagina.slug} />
+    </div>
+  )
+}
+
+/**
+ * Grupo do menu, recolhível.
+ *
+ * Com 9 grupos e 30 páginas, a lista aberta inteira não cabe numa tela de notebook — e
+ * uma barra que sempre precisa de rolagem esconde o que existe. Recolher devolve o mapa.
+ *
+ * O grupo da página atual começa aberto: chegar por link e não ver onde você está na
+ * árvore é pior que qualquer economia de espaço.
+ */
+function GrupoMenu({ titulo, paginas, atual }: { titulo: string; paginas: Pagina[]; atual: string }) {
+  const contemAtual = paginas.some(p => p.slug === atual)
+  const [aberto, setAberto] = useState(contemAtual)
+
+  // Navegar para outro grupo (pela busca, por exemplo) tem que abrir o grupo de destino.
+  useEffect(() => {
+    if (contemAtual) setAberto(true)
+  }, [contemAtual])
+
+  const id = `menu-${titulo.replace(/\s+/g, '-').toLowerCase()}`
+
+  return (
+    <div className="doc-side__group">
+      <button
+        className="doc-side__title"
+        aria-expanded={aberto}
+        aria-controls={id}
+        onClick={() => setAberto(v => !v)}
+      >
+        <span className={`doc-side__chevron${aberto ? ' is-aberto' : ''}`} aria-hidden>›</span>
+        {titulo}
+      </button>
+      {/* `hidden` de verdade, não altura zero: senão o Tab entra num grupo fechado e o
+          foco some da tela — bug invisível para quem testa só com mouse. */}
+      <div id={id} hidden={!aberto}>
+        {paginas.map(p => (
+          <a
+            key={p.slug}
+            className="doc-side__link"
+            href={`#/${p.slug}`}
+            aria-current={p.slug === atual ? 'page' : undefined}
+          >
+            {p.titulo}
+            {p.selo && <span className="doc-side__badge">{p.selo}</span>}
+          </a>
+        ))}
+      </div>
     </div>
   )
 }

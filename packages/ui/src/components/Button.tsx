@@ -16,15 +16,36 @@ export interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement
    * @default 'secondary'
    */
   variant?: ButtonVariant
-  /** @default 'md' */
+  /**
+   * Altura: 36 (`sm`), 44 (`md`) ou 52px (`lg`), vinda do token `--amb-altura-*` — o
+   * mesmo que o `<Campo>` usa. É o que faz botão e campo baterem no milímetro lado a
+   * lado; quando cada um decide a própria altura, divergem por 2px na primeira vez que
+   * alguém mexe em um só, e ninguém abre chamado para "formulário meio torto".
+   * @default 'md'
+   */
   size?: ButtonSize
-  /** Ocupa a largura toda (comum em formulário no celular). */
+  /**
+   * Ocupa a largura toda (comum em formulário no celular).
+   * @default false
+   */
   block?: boolean
   /**
    * Mostra giro e bloqueia o clique. O rótulo some visualmente mas continua ocupando
    * espaço — assim o botão não encolhe e "foge" do dedo no meio do clique.
+   * @default false
    */
   loading?: boolean
+  /**
+   * O padrão é `button`, invertendo o do HTML — que é `submit` e faz um botão
+   * "Adicionar item" enviar o formulário inteiro sem querer. Quem quer enviar pede.
+   *
+   * Redeclarado aqui, mesmo já vindo de `ButtonHTMLAttributes`, porque o padrão é
+   * aplicado no destructuring: sem esta linha, a documentação GERADA a partir do código
+   * não teria como enxergar a inversão, e a decisão mais importante do componente ficaria
+   * invisível para quem lê a referência.
+   * @default 'button'
+   */
+  type?: 'button' | 'submit' | 'reset'
   /** Ícone antes do rótulo. Decorativo — quem narra o botão é o texto. */
   iconLeft?: ReactNode
   /** Ícone depois do rótulo. */

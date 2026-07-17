@@ -1,0 +1,52 @@
+/* Só o que a tabela gerada precisa a mais. A tabela em si é a `.doc-table` do docs.css —
+   duas tabelas de props com visual diferente no mesmo site seria a primeira coisa
+   inconsistente da documentação de um design system. */
+
+/* União longa é o caso comum ('neutro' | 'marca' | 'sucesso' | 'aviso' | 'perigo' | 'info').
+   Sem um teto ela empurra a coluna "O que faz" para fora e a tabela inteira vira rolagem
+   horizontal. Com o teto, ela quebra nos `|` (que já têm espaço em volta) e continua legível.
+   inline-block porque `max-width` em <td> é ignorado no layout automático de tabela. */
+.apiref-tipo {
+  display: inline-block;
+  max-width: 34ch;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  color: var(--amb-color-text-primary);
+}
+
+.apiref-obrig {
+  display: inline-block;
+  margin-left: var(--amb-espaco-2);
+  padding: 1px var(--amb-espaco-2);
+  border-radius: var(--amb-raio-full);
+  background: var(--amb-color-warning-subtle);
+  color: var(--amb-color-warning-text);
+  font-size: 9px;
+  font-weight: var(--amb-peso-extrabold);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.apiref-vazio { opacity: 0.4; }
+
+.apiref-nota {
+  margin-top: var(--amb-espaco-3);
+  font-size: var(--amb-texto-sm);
+  color: var(--amb-color-text-muted);
+  line-height: var(--amb-leading-normal);
+}
+.apiref-nota code { font-family: var(--amb-fonte-mono); font-size: 11px; }
+
+/* Só aparece em desenvolvimento. Feia de propósito: é um erro de quem escreve a doc. */
+.apiref-falta {
+  border: 1px solid var(--amb-color-danger-solid);
+  background: var(--amb-color-danger-subtle);
+  color: var(--amb-color-danger-text);
+  border-radius: var(--amb-raio-md);
+  padding: var(--amb-espaco-4);
+  font-size: var(--amb-texto-sm);
+}
+.apiref-falta p { margin: var(--amb-espaco-2) 0 0; }
+.apiref-falta code { font-family: var(--amb-fonte-mono); font-size: 11px; }

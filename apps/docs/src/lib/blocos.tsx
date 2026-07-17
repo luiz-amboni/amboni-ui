@@ -1,5 +1,6 @@
 import { useState, type ReactNode } from 'react'
 import { Codigo, type Linguagem } from '../highlight'
+import { idDaAncora } from './Busca'
 
 /**
  * As peças do site. Existem pelo mesmo motivo que a biblioteca existe: sem elas, cada
@@ -7,12 +8,63 @@ import { Codigo, type Linguagem } from '../highlight'
  * seria a primeira coisa inconsistente do projeto.
  */
 
+/**
+ * O id sai do TÍTULO, não é escrito à mão em cada página.
+ *
+ * Três coisas precisam concordar sobre ele: o índice da direita, o resultado da busca e a
+ * âncora que a pessoa copia. Se cada uma derivasse o id do seu jeito, o link levaria para
+ * o topo da página em silêncio — ninguém abre chamado de âncora quebrada, só conclui que
+ * "o site é estranho". Todas chamam `idDaAncora`, então não têm como divergir.
+ */
 export function Secao({ id, titulo, children }: { id?: string; titulo?: string; children: ReactNode }) {
+  const anc = titulo ? (id ?? idDaAncora(titulo)) : id
   return (
-    <section className="doc-section" id={id}>
-      {titulo && <h2 className="doc-h2">{titulo}</h2>}
+    <section className="doc-section">
+      {titulo && anc && <Cabecalho nivel={2} id={anc}>{titulo}</Cabecalho>}
       {children}
     </section>
+  )
+}
+
+/**
+ * O link de âncora — o "#" que aparece ao passar o mouse.
+ *
+ * Ele NÃO pode ser um `href="#id"` comum, e essa é a decisão do arquivo: este site roteia
+ * por hash (`#/button`), então um segundo hash na URL não existe — `#variantes`
+ * SUBSTITUIRIA a rota, e a página cairia no fallback. Uma URL só tem um hash.
+ *
+ * A seção vai no parâmetro de busca: `?secao=variantes#/button`. Continua sendo um
+ * endereço compartilhável (que é o ponto inteiro da âncora), e o App o lê ao montar para
+ * rolar até lá. O clique aqui atualiza a URL sem recarregar — mudar `search` num link de
+ * verdade recarregaria a página e a rolagem suave viraria um salto branco.
+ */
+function Cabecalho({ nivel, id, children }: { nivel: 2 | 3; id: string; children: ReactNode }) {
+  const H = nivel === 2 ? 'h2' : 'h3'
+  const classe = nivel === 2 ? 'doc-h2' : 'doc-h3'
+
+  function fixar(e: React.MouseEvent) {
+    e.preventDefault()
+    const url = new URL(location.href)
+    url.searchParams.set('secao', id)
+    history.replaceState(null, '', url) // replace: fixar âncora não é navegar
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
+  const href = (() => {
+    const u = new URL(location.href)
+    u.searchParams.set('secao', id)
+    return u.pathname + u.search + u.hash
+  })()
+
+  return (
+    <H className={classe} id={id}>
+      {children}
+      {/* Não é aria-hidden: quem navega por teclado também copia link de seção. O rótulo
+          diz de QUAL seção, senão o leitor de tela anuncia vinte "link para a seção". */}
+      <a className="doc-ancora" href={href} onClick={fixar} aria-label={`Link para a seção ${String(children)}`}>
+        #
+      </a>
+    </H>
   )
 }
 
@@ -137,6 +189,25 @@ export function Titulo({ eyebrow, children, lead }: { eyebrow: string; children:
   )
 }
 
+/**
+ * Achata um título em texto puro para virar id de âncora.
+ *
+ * Precisa existir porque títulos reais têm marcação dentro — `<H3>O <code>flush</code>
+ * existe por causa de tabela</H3>`. Minha primeira versão exigia `children: string` e
+ * quebrou onze títulos legítimos: era a regra que estava errada, não os títulos.
+ *
+ * O resultado bate com o que o `gerar-busca.mjs` extrai (ele tira as tags por regex e
+ * sobra o mesmo texto), então a âncora do índice e a da busca apontam para o mesmo id.
+ */
+function textoDe(no: ReactNode): string {
+  if (typeof no === 'string' || typeof no === 'number') return String(no)
+  if (Array.isArray(no)) return no.map(textoDe).join('')
+  if (no && typeof no === 'object' && 'props' in no) {
+    return textoDe((no as { props: { children?: ReactNode } }).props.children)
+  }
+  return ''
+}
+
 export function H3({ children }: { children: ReactNode }) {
-  return <h3 className="doc-h3">{children}</h3>
+  return <Cabecalho nivel={3} id={idDaAncora(textoDe(children))}>{children}</Cabecalho>
 }

@@ -5,6 +5,12 @@ import Cores from './paginas/Cores'
 import Tipografia from './paginas/Tipografia'
 import Espacamento from './paginas/Espacamento'
 import Acessibilidade from './paginas/Acessibilidade'
+import TokensPage from './paginas/TokensPage'
+
+import GuiaTypeScriptPage from './paginas/GuiaTypeScriptPage'
+import GuiaFormulariosPage from './paginas/GuiaFormulariosPage'
+import GuiaTestesPage from './paginas/GuiaTestesPage'
+import GuiaSSRPage from './paginas/GuiaSSRPage'
 
 import ButtonPage from './paginas/ButtonPage'
 import MenuPage from './paginas/MenuPage'
@@ -35,6 +41,11 @@ import AcordeaoPage from './paginas/AcordeaoPage'
 import TrilhaPage from './paginas/TrilhaPage'
 import PaginacaoPage from './paginas/PaginacaoPage'
 
+import ExemploLoginPage from './paginas/ExemploLoginPage'
+import ExemploDashboardPage from './paginas/ExemploDashboardPage'
+import ExemploCrmPage from './paginas/ExemploCrmPage'
+import ExemploFormularioPage from './paginas/ExemploFormularioPage'
+
 export interface Pagina {
   slug: string
   titulo: string
@@ -59,6 +70,19 @@ export const PAGINAS: Pagina[] = [
   { slug: 'tipografia', titulo: 'Tipografia', grupo: 'Fundamentos', componente: Tipografia },
   { slug: 'espacamento', titulo: 'Espaço e forma', grupo: 'Fundamentos', componente: Espacamento },
   { slug: 'acessibilidade', titulo: 'Acessibilidade', grupo: 'Fundamentos', selo: 'testado', componente: Acessibilidade },
+  { slug: 'tokens', titulo: 'Todos os tokens', grupo: 'Fundamentos', componente: TokensPage },
+
+  // Exemplos vêm cedo de propósito: componente isolado não prova nada. Quem está
+  // decidindo se adota a biblioteca quer ver uma tela inteira, não um botão.
+  { slug: 'exemplo-login', titulo: 'Tela de acesso', grupo: 'Exemplos', componente: ExemploLoginPage },
+  { slug: 'exemplo-dashboard', titulo: 'Painel', grupo: 'Exemplos', componente: ExemploDashboardPage },
+  { slug: 'exemplo-crm', titulo: 'Lista de clientes', grupo: 'Exemplos', componente: ExemploCrmPage },
+  { slug: 'exemplo-formulario', titulo: 'Cadastro de cliente', grupo: 'Exemplos', componente: ExemploFormularioPage },
+
+  { slug: 'guia-typescript', titulo: 'TypeScript', grupo: 'Guias', componente: GuiaTypeScriptPage },
+  { slug: 'guia-formularios', titulo: 'Formulários', grupo: 'Guias', componente: GuiaFormulariosPage },
+  { slug: 'guia-testes', titulo: 'Testes', grupo: 'Guias', componente: GuiaTestesPage },
+  { slug: 'guia-ssr', titulo: 'Next.js e SSR', grupo: 'Guias', componente: GuiaSSRPage },
 
   { slug: 'button', titulo: 'Button', grupo: 'Ação', componente: ButtonPage },
   { slug: 'menu', titulo: 'Menu', grupo: 'Ação', componente: MenuPage },

@@ -1,0 +1,1885 @@
+{
+  "_aviso": "Gerado por apps/docs/scripts/gerar-api.mjs a partir do código. Não edite à mão.",
+  "componentes": {
+    "Aba": {
+      "nome": "Aba",
+      "tipo": "AbaProps",
+      "arquivo": "packages/ui/src/components/Abas.tsx",
+      "heranca": [
+        "ButtonHTMLAttributes<HTMLButtonElement>"
+      ],
+      "props": [
+        {
+          "nome": "valor",
+          "tipo": "string",
+          "obrigatoria": true,
+          "descricao": "Casa com o `valor` de um <PainelAba>."
+        },
+        {
+          "nome": "icone",
+          "tipo": "ReactNode",
+          "obrigatoria": false,
+          "descricao": "Decorativo — quem narra a aba é o texto."
+        },
+        {
+          "nome": "contador",
+          "tipo": "number",
+          "obrigatoria": false,
+          "descricao": "Número ao lado do rótulo (12 pedidos). Entra no nome acessível de propósito."
+        },
+        {
+          "nome": "disabled",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "descricao": "Vira `aria-disabled`, não `disabled`. Veja o comentário no componente."
+        },
+        {
+          "nome": "children",
+          "tipo": "ReactNode",
+          "obrigatoria": false
+        }
+      ]
+    },
+    "Abas": {
+      "nome": "Abas",
+      "tipo": "AbasProps",
+      "arquivo": "packages/ui/src/components/Abas.tsx",
+      "heranca": [],
+      "props": [
+        {
+          "nome": "valor",
+          "tipo": "string",
+          "obrigatoria": true,
+          "descricao": "A aba ativa. Componente controlado — quem manda é o produto."
+        },
+        {
+          "nome": "onChange",
+          "tipo": "(valor: string) => void",
+          "obrigatoria": true
+        },
+        {
+          "nome": "variante",
+          "tipo": "'linha' | 'pilula'",
+          "obrigatoria": false,
+          "padrao": "'linha'",
+          "descricao": "`linha` (padrão) — sublinhado na cor da marca. Para navegação de seção, dentro da página. `pilula` — pastilha sólida. Para alternar visão do MESMO dado (dia/semana/mês)."
+        },
+        {
+          "nome": "children",
+          "tipo": "ReactNode",
+          "obrigatoria": false
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false
+        }
+      ],
+      "descricao": "Abas. O teclado é o componente inteiro: sem ele, sobra um `<div onClick>` bonito. Implementa o padrão ARIA Tabs — roving tabindex, setas circulando, Home/End, e pula as desabilitadas."
+    },
+    "Acordeao": {
+      "nome": "Acordeao",
+      "tipo": "AcordeaoProps",
+      "arquivo": "packages/ui/src/components/Acordeao.tsx",
+      "heranca": [],
+      "props": [
+        {
+          "nome": "children",
+          "tipo": "ReactNode",
+          "obrigatoria": true
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false
+        },
+        {
+          "nome": "tipo",
+          "tipo": "'unico'",
+          "obrigatoria": false
+        },
+        {
+          "nome": "valor",
+          "tipo": "string | null",
+          "obrigatoria": false,
+          "descricao": "Controlado: o `valor` do item aberto, ou `null`. Exige `onChange`."
+        },
+        {
+          "nome": "valorPadrao",
+          "tipo": "string | null",
+          "obrigatoria": false,
+          "descricao": "Não controlado: quem começa aberto."
+        },
+        {
+          "nome": "onChange",
+          "tipo": "(valor: string | null) => void",
+          "obrigatoria": false
+        },
+        {
+          "nome": "tipo",
+          "tipo": "'multiplo'",
+          "obrigatoria": true
+        },
+        {
+          "nome": "valor",
+          "tipo": "string[]",
+          "obrigatoria": false,
+          "descricao": "Controlado: os `valor` dos itens abertos. Exige `onChange`."
+        },
+        {
+          "nome": "valorPadrao",
+          "tipo": "string[]",
+          "obrigatoria": false,
+          "descricao": "Não controlado: quem começa aberto."
+        },
+        {
+          "nome": "onChange",
+          "tipo": "(valor: string[]) => void",
+          "obrigatoria": false
+        }
+      ],
+      "variantes": true,
+      "descricao": "Acordeão — seções que abrem e fecham. ## Por que o gatilho mora dentro de um heading Cada seção é um `<h3><button>…</button></h3>`. Sem o heading o acordeão vira uma pilha de botões: quem usa leitor de tela navega a página **pulando de heading em heading** (é o atalho mais usado que existe) e, sem eles, a única forma de achar a seção certa é ouvir todas em ordem. O heading não tem estilo próprio — o tamanho e o peso vêm do botão. Ele existe para a estrutura, não para o olho. ## Setas do teclado Não implementadas, por decisão. A APG trata setas em acordeão como **opcional**, e Tab já alcança todos os gatilhos. Meia implementação (que rouba as setas de dentro do painel, onde pode haver um campo de texto ou uma lista) é pior que nenhuma."
+    },
+    "Alerta": {
+      "nome": "Alerta",
+      "tipo": "AlertaProps",
+      "arquivo": "packages/ui/src/components/Alerta.tsx",
+      "heranca": [
+        "Omit<HTMLAttributes<HTMLDivElement>, 'title' | 'role'>"
+      ],
+      "props": [
+        {
+          "nome": "tom",
+          "tipo": "'info' | 'sucesso' | 'aviso' | 'perigo'",
+          "obrigatoria": false,
+          "padrao": "'info'",
+          "descricao": "`info` — contexto, nada a fazer. `sucesso` — deu certo. `aviso` — deu certo mas tem ressalva, ou vai dar errado se continuar assim. `perigo` — falhou, ou vai falhar. **Só este interrompe o leitor de tela** (ver abaixo)."
+        },
+        {
+          "nome": "titulo",
+          "tipo": "ReactNode",
+          "obrigatoria": false,
+          "descricao": "Uma linha que resume tudo. Quem lê rápido lê só isto."
+        },
+        {
+          "nome": "children",
+          "tipo": "ReactNode",
+          "obrigatoria": false,
+          "descricao": "O detalhe: o que aconteceu e o que fazer."
+        },
+        {
+          "nome": "icone",
+          "tipo": "ReactNode",
+          "obrigatoria": false,
+          "descricao": "Troca o ícone padrão do tom. **Pense duas vezes**: o ícone padrão é o que diferencia os tons para quem não enxerga cor. Trocando os quatro por variações do mesmo desenho, o alerta volta a depender só do vermelho/verde."
+        },
+        {
+          "nome": "dispensavel",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "descricao": "Mostra o X de fechar. Exige `onDispensar` para fazer algo."
+        },
+        {
+          "nome": "onDispensar",
+          "tipo": "() => void",
+          "obrigatoria": false
+        },
+        {
+          "nome": "acao",
+          "tipo": "ReactNode",
+          "obrigatoria": false,
+          "descricao": "Um botão — \"Tentar de novo\", \"Ver detalhes\". Um só: duas saídas viram nenhuma."
+        }
+      ],
+      "descricao": "Alerta — o sistema falando com quem usa. ## A decisão que define este componente: quem interrompe e quem espera Um alerta que só existe na tela não existe para quem usa leitor de tela. Quem resolve isso é o `role`, e a escolha não é estética: · `role=\"alert\"` (= `aria-live=\"assertive\"`) **corta a frase que está sendo lida** e anuncia na hora. É o certo para `perigo`: o pagamento falhou, o formulário não enviou — a pessoa precisa saber ANTES de continuar digitando. · `role=\"status\"` (= `aria-live=\"polite\"`) espera a leitura atual terminar. É o certo para `info`, `sucesso` e `aviso`: são importantes, não urgentes. Marcar tudo como `alert` é como gritar toda frase — a pessoa desliga o recurso, e aí nem o erro de verdade chega. Por isso só `perigo` interrompe."
+    },
+    "ApiAvisos": {
+      "nome": "ApiAvisos",
+      "tipo": "ApiAvisos",
+      "arquivo": "packages/ui/src/components/Aviso.tsx",
+      "heranca": [],
+      "props": [
+        {
+          "nome": "mostrar",
+          "tipo": "(opcoes: AvisoOpcoes) => string",
+          "obrigatoria": true,
+          "descricao": "Forma completa. Devolve o `id` — guarde se precisar fechar na mão depois."
+        },
+        {
+          "nome": "sucesso",
+          "tipo": "(titulo: string, opcoes?: Omit<AvisoOpcoes, 'titulo' | 'tom'>) => string",
+          "obrigatoria": true
+        },
+        {
+          "nome": "erro",
+          "tipo": "(titulo: string, opcoes?: Omit<AvisoOpcoes, 'titulo' | 'tom'>) => string",
+          "obrigatoria": true
+        },
+        {
+          "nome": "aviso",
+          "tipo": "(titulo: string, opcoes?: Omit<AvisoOpcoes, 'titulo' | 'tom'>) => string",
+          "obrigatoria": true
+        },
+        {
+          "nome": "info",
+          "tipo": "(titulo: string, opcoes?: Omit<AvisoOpcoes, 'titulo' | 'tom'>) => string",
+          "obrigatoria": true
+        },
+        {
+          "nome": "fechar",
+          "tipo": "(id: string) => void",
+          "obrigatoria": true,
+          "descricao": "Fecha na mão. Ex.: o upload terminou, o aviso de \"enviando...\" não serve mais."
+        }
+      ],
+      "descricao": "O que `useAviso()` devolve."
+    },
+    "AreaTexto": {
+      "nome": "AreaTexto",
+      "tipo": "AreaTextoProps",
+      "arquivo": "packages/ui/src/components/AreaTexto.tsx",
+      "heranca": [
+        "TextareaHTMLAttributes<HTMLTextAreaElement>"
+      ],
+      "props": [
+        {
+          "nome": "autoResize",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "descricao": "A caixa cresce conforme o texto, sem barra de rolagem interna. Desliga o \"puxador\" de redimensionar do navegador — os dois brigam pela altura."
+        },
+        {
+          "nome": "contador",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "descricao": "Mostra a contagem embaixo. Com `maxLength`, vira \"120/500\"; sem ele, \"120 caracteres\". O porquê de contar sem limite: ver o comentário no componente."
+        },
+        {
+          "nome": "maxLength",
+          "tipo": "number",
+          "obrigatoria": false,
+          "descricao": "Limite de caracteres. **Atenção:** o navegador bloqueia a digitação no limite EM SILÊNCIO e corta texto colado sem avisar. É por isso que o `contador` existe."
+        },
+        {
+          "nome": "erro",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "descricao": "Pinta a moldura de erro. Como no `Campo`, não precisa passar se estiver dentro de um `<CampoForm erro=\"...\">` — o `aria-invalid` do wrapper já faz isso."
+        }
+      ],
+      "descricao": "Área de texto (textarea)."
+    },
+    "Avatar": {
+      "nome": "Avatar",
+      "tipo": "AvatarProps",
+      "arquivo": "packages/ui/src/components/Avatar.tsx",
+      "heranca": [
+        "Omit<HTMLAttributes<HTMLSpanElement>, 'children'>"
+      ],
+      "props": [
+        {
+          "nome": "src",
+          "tipo": "string",
+          "obrigatoria": false,
+          "descricao": "Foto. Se faltar — ou se o link quebrar — cai nas iniciais sozinho."
+        },
+        {
+          "nome": "nome",
+          "tipo": "string",
+          "obrigatoria": true,
+          "descricao": "Nome completo. Vira as iniciais, a cor e o rótulo acessível."
+        },
+        {
+          "nome": "size",
+          "tipo": "'xs' | 'sm' | 'md' | 'lg'",
+          "obrigatoria": false,
+          "padrao": "'md'"
+        },
+        {
+          "nome": "formato",
+          "tipo": "'circulo' | 'quadrado'",
+          "obrigatoria": false,
+          "padrao": "'circulo'"
+        },
+        {
+          "nome": "status",
+          "tipo": "'online' | 'ausente' | 'offline'",
+          "obrigatoria": false,
+          "descricao": "Presença. Vem com texto para leitor de tela — a bolinha não é o único sinal."
+        },
+        {
+          "nome": "decorativo",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "O avatar está ao lado do nome já escrito na tela (linha de tabela, item de lista). Some para o leitor de tela (`alt=\"\"`, sem texto oculto). Sem isto a pessoa ouve **\"Maria Silva, Maria Silva\"** em cada uma das 40 linhas — é o defeito mais comum de tabela com avatar. Se o avatar aparece sozinho (barra de topo, pilha de participantes), deixe `false`: aí ele é a única pista de quem é."
+        }
+      ],
+      "descricao": "Avatar — a pessoa. Foto quando dá, iniciais quando não dá, e nunca um ícone quebrado."
+    },
+    "AvisoAcao": {
+      "nome": "AvisoAcao",
+      "tipo": "AvisoAcao",
+      "arquivo": "packages/ui/src/components/Aviso.tsx",
+      "heranca": [],
+      "props": [
+        {
+          "nome": "rotulo",
+          "tipo": "string",
+          "obrigatoria": true,
+          "descricao": "O verbo. \"Desfazer\", \"Tentar de novo\", \"Ver pedido\"."
+        },
+        {
+          "nome": "onClick",
+          "tipo": "() => void",
+          "obrigatoria": true
+        }
+      ]
+    },
+    "AvisoOpcoes": {
+      "nome": "AvisoOpcoes",
+      "tipo": "AvisoOpcoes",
+      "arquivo": "packages/ui/src/components/Aviso.tsx",
+      "heranca": [],
+      "props": [
+        {
+          "nome": "titulo",
+          "tipo": "string",
+          "obrigatoria": true,
+          "descricao": "Uma linha que resolve sozinha. Quem só passou o olho lê apenas isto."
+        },
+        {
+          "nome": "descricao",
+          "tipo": "ReactNode",
+          "obrigatoria": false,
+          "descricao": "O detalhe. Opcional de propósito: aviso é interrupção, não documentação."
+        },
+        {
+          "nome": "tom",
+          "tipo": "'sucesso' | 'erro' | 'aviso' | 'info'",
+          "obrigatoria": false,
+          "padrao": "'info'",
+          "descricao": "`sucesso` / `info` — esperam a leitura atual terminar (`role=\"status\"`). `aviso` — idem: importante, não urgente. `erro` — **interrompe** o leitor de tela (`role=\"alert\"`) e **não some sozinho**."
+        },
+        {
+          "nome": "duracao",
+          "tipo": "number",
+          "obrigatoria": false,
+          "descricao": "Tempo de tela, em ms. **Passe só quando souber por quê** — sem isto o componente calcula pelo tamanho do texto (ver `duracaoPorTexto`), o que acerta mais do que um número redondo escolhido no olho. Passar `duracao` explicitamente **vence as regras automáticas** (inclusive as de `erro` e `acao` não sumirem). É a saída de emergência de quem tem um caso que a biblioteca não previu — e assume a decisão."
+        },
+        {
+          "nome": "acao",
+          "tipo": "AvisoAcao",
+          "obrigatoria": false,
+          "descricao": "Um botão dentro do aviso. Um só: duas saídas viram nenhuma. Clicar executa e **fecha** o aviso — a ação já foi tomada, manter na tela vira dúvida (\"cliquei mesmo?\")."
+        },
+        {
+          "nome": "fixo",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "descricao": "Fica até fecharem na mão. Use quando a mensagem exige decisão."
+        }
+      ]
+    },
+    "Button": {
+      "nome": "Button",
+      "tipo": "ButtonProps",
+      "arquivo": "packages/ui/src/components/Button.tsx",
+      "heranca": [
+        "Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'>"
+      ],
+      "props": [
+        {
+          "nome": "variant",
+          "tipo": "'primary' | 'secondary' | 'ghost' | 'danger'",
+          "obrigatoria": false,
+          "padrao": "'secondary'",
+          "descricao": "`primary` — a ação principal da tela. **Uma só por tela.** Duas ações primárias competindo é o mesmo que nenhuma. `secondary` — a alternativa (Cancelar, Voltar). `ghost` — ação terciária, sem peso visual. `danger` — destrutivo e irreversível. Sempre com rótulo explícito (\"Excluir\"), nunca só a cor: parte das pessoas não distingue vermelho."
+        },
+        {
+          "nome": "size",
+          "tipo": "'sm' | 'md' | 'lg'",
+          "obrigatoria": false,
+          "padrao": "'md'",
+          "descricao": "Altura: 36 (`sm`), 44 (`md`) ou 52px (`lg`), vinda do token `--amb-altura-*` — o mesmo que o `<Campo>` usa. É o que faz botão e campo baterem no milímetro lado a lado; quando cada um decide a própria altura, divergem por 2px na primeira vez que alguém mexe em um só, e ninguém abre chamado para \"formulário meio torto\"."
+        },
+        {
+          "nome": "block",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Ocupa a largura toda (comum em formulário no celular)."
+        },
+        {
+          "nome": "loading",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Mostra giro e bloqueia o clique. O rótulo some visualmente mas continua ocupando espaço — assim o botão não encolhe e \"foge\" do dedo no meio do clique."
+        },
+        {
+          "nome": "type",
+          "tipo": "'button' | 'submit' | 'reset'",
+          "obrigatoria": false,
+          "padrao": "'button'",
+          "descricao": "O padrão é `button`, invertendo o do HTML — que é `submit` e faz um botão \"Adicionar item\" enviar o formulário inteiro sem querer. Quem quer enviar pede. Redeclarado aqui, mesmo já vindo de `ButtonHTMLAttributes`, porque o padrão é aplicado no destructuring: sem esta linha, a documentação GERADA a partir do código não teria como enxergar a inversão, e a decisão mais importante do componente ficaria invisível para quem lê a referência."
+        },
+        {
+          "nome": "iconLeft",
+          "tipo": "ReactNode",
+          "obrigatoria": false,
+          "descricao": "Ícone antes do rótulo. Decorativo — quem narra o botão é o texto."
+        },
+        {
+          "nome": "iconRight",
+          "tipo": "ReactNode",
+          "obrigatoria": false,
+          "descricao": "Ícone depois do rótulo."
+        },
+        {
+          "nome": "children",
+          "tipo": "ReactNode",
+          "obrigatoria": false
+        }
+      ],
+      "descricao": "Botão. As cores vêm do tema e já passaram no teste de contraste (@amboni/tokens), então ele é legível em iSafe/VEAR × claro/escuro sem nenhum ajuste no produto."
+    },
+    "Caixa": {
+      "nome": "Caixa",
+      "tipo": "CaixaProps",
+      "arquivo": "packages/ui/src/components/Caixa.tsx",
+      "heranca": [
+        "Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'size'>"
+      ],
+      "props": [
+        {
+          "nome": "label",
+          "tipo": "ReactNode",
+          "obrigatoria": true,
+          "descricao": "O que está sendo marcado. Clicar nele marca a caixa — é o que todo mundo espera."
+        },
+        {
+          "nome": "descricao",
+          "tipo": "ReactNode",
+          "obrigatoria": false,
+          "descricao": "Linha de apoio abaixo do rótulo: a consequência da escolha, não a repetição dela. Ruim: \"Receber e-mails\". Bom: \"no máximo um por semana, dá para sair quando quiser\"."
+        },
+        {
+          "nome": "indeterminado",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "descricao": "Parcialmente marcada — o caso do \"selecionar todos\" com alguns filhos marcados. **Não é um terceiro valor de `checked`**: visualmente e para o leitor de tela é \"misto\", mas o `checked` por baixo continua sendo o que vai no `<form>`."
+        },
+        {
+          "nome": "erro",
+          "tipo": "string",
+          "obrigatoria": false,
+          "descricao": "A mensagem do erro, não um booleano: `erro` pintado de vermelho sem texto obriga a pessoa a adivinhar o que fez de errado. O texto é lido pelo leitor de tela via `aria-describedby`, então a cor nunca é o único sinal."
+        }
+      ],
+      "descricao": "Caixa de seleção. **Caixa ou Interruptor?** A caixa faz parte de um formulário: a escolha só vale depois do \"Salvar\", e dá para desistir. O `<Interruptor>` aplica na hora, sem confirmação. Trocar um pelo outro é o erro de uso mais comum — a pessoa marca a caixa achando que já ligou algo, ou aciona o interruptor achando que ainda pode voltar atrás."
+    },
+    "Campo": {
+      "nome": "Campo",
+      "tipo": "CampoProps",
+      "arquivo": "packages/ui/src/components/Campo.tsx",
+      "heranca": [
+        "Omit<InputHTMLAttributes<HTMLInputElement>, 'size'>"
+      ],
+      "props": [
+        {
+          "nome": "size",
+          "tipo": "'sm' | 'md' | 'lg'",
+          "obrigatoria": false,
+          "padrao": "'md'",
+          "descricao": "Altura do controle."
+        },
+        {
+          "nome": "iconeEsq",
+          "tipo": "ReactNode",
+          "obrigatoria": false,
+          "descricao": "Ícone antes do texto (lupa, calendário). Decorativo — quem narra o campo é o label."
+        },
+        {
+          "nome": "iconeDir",
+          "tipo": "ReactNode",
+          "obrigatoria": false,
+          "descricao": "Ícone depois do texto."
+        },
+        {
+          "nome": "erro",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "descricao": "Pinta a moldura de erro. **Não precisa passar** se o campo está dentro de um `<CampoForm erro=\"...\">`: o wrapper já manda `aria-invalid` e o campo se pinta sozinho. Use apenas para validação solta, sem CampoForm."
+        },
+        {
+          "nome": "prefixo",
+          "tipo": "ReactNode",
+          "obrigatoria": false,
+          "descricao": "Texto colado na esquerda, dentro da moldura (\"R$\", \"https://\"). **Não é lido pelo leitor de tela** — veja o comentário no JSX."
+        },
+        {
+          "nome": "sufixo",
+          "tipo": "ReactNode",
+          "obrigatoria": false,
+          "descricao": "Texto colado na direita, dentro da moldura (\"kg\", \"%\", \".com.br\")."
+        },
+        {
+          "nome": "limpar",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "descricao": "Mostra um X para esvaziar o campo quando ele tem conteúdo."
+        }
+      ],
+      "descricao": "Campo de texto. As cores vêm do tema e já passaram no teste de contraste (@amboni/tokens), então ele é legível em iSafe/VEAR × claro/escuro sem nenhum ajuste no produto."
+    },
+    "CampoForm": {
+      "nome": "CampoForm",
+      "tipo": "CampoFormProps",
+      "arquivo": "packages/ui/src/components/CampoForm.tsx",
+      "heranca": [],
+      "props": [
+        {
+          "nome": "label",
+          "tipo": "ReactNode",
+          "obrigatoria": true,
+          "descricao": "O rótulo. Obrigatório: campo sem rótulo é campo que o leitor de tela chama de \"editar\"."
+        },
+        {
+          "nome": "ajuda",
+          "tipo": "ReactNode",
+          "obrigatoria": false,
+          "descricao": "Texto de apoio: formato esperado, unidade, limite (\"máximo de 500 caracteres\")."
+        },
+        {
+          "nome": "erro",
+          "tipo": "string",
+          "obrigatoria": false,
+          "descricao": "A mensagem de erro. Presente = campo inválido. `undefined` = campo válido."
+        },
+        {
+          "nome": "obrigatorio",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "descricao": "Marca o campo como obrigatório (asterisco + `aria-required` + a palavra)."
+        },
+        {
+          "nome": "id",
+          "tipo": "string",
+          "obrigatoria": false,
+          "descricao": "Force um id fixo se precisar (âncora, teste E2E). Do contrário um é gerado."
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false
+        },
+        {
+          "nome": "children",
+          "tipo": "ReactNode | ((fiacao: FiacaoCampo) => ReactNode)",
+          "obrigatoria": true,
+          "descricao": "O controle (`<Campo>`, `<AreaTexto>`, ou o seu). Um elemento só — o CampoForm o clona para injetar id e ARIA. Se precisar envolver o controle em outra coisa, passe uma função e ligue os atributos à mão."
+        }
+      ],
+      "descricao": "CampoForm — o rótulo, a ajuda e o erro de um campo, amarrados por ARIA. **A razão de existir.** Um `<label>` solto ao lado de um `<input>` não é um rótulo: sem `htmlFor` apontando para o `id`, quem usa leitor de tela ouve \"campo de edição\" e nada mais — não sabe QUAL campo nem QUAL erro. Este componente gera o id, liga o label, liga a ajuda e o erro por `aria-describedby`, e marca `aria-invalid` — tudo o que ninguém lembra de fazer à mão em 40 campos de um formulário."
+    },
+    "Card": {
+      "nome": "Card",
+      "tipo": "CardProps",
+      "arquivo": "packages/ui/src/components/Card.tsx",
+      "heranca": [
+        "HTMLAttributes<HTMLDivElement>"
+      ],
+      "props": [
+        {
+          "nome": "elevation",
+          "tipo": "'flat' | 'raised' | 'floating'",
+          "obrigatoria": false,
+          "padrao": "'flat'",
+          "descricao": "`flat` (padrão) — numa tela cheia de dados, sombra em tudo vira ruído. Quando tudo está elevado, nada está. `raised` — separa do fundo sem gritar. `floating` — para o que realmente flutua (menu, modal)."
+        },
+        {
+          "nome": "onCardClick",
+          "tipo": "() => void",
+          "obrigatoria": false,
+          "descricao": "Torna o card inteiro clicável. **Vira um `<button>` de verdade** — não uma div com onClick. Isso não é detalhe: uma div não recebe foco, não responde a Enter/Espaço e o leitor de tela não anuncia que dá para clicar."
+        },
+        {
+          "nome": "children",
+          "tipo": "ReactNode",
+          "obrigatoria": false
+        }
+      ],
+      "descricao": "Card — a superfície que agrupa conteúdo relacionado."
+    },
+    "CardBody": {
+      "nome": "CardBody",
+      "tipo": "CardBodyProps",
+      "arquivo": "packages/ui/src/components/Card.tsx",
+      "heranca": [
+        "HTMLAttributes<HTMLDivElement>"
+      ],
+      "props": [
+        {
+          "nome": "flush",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false",
+          "descricao": "Sem respiro interno — para tabela, que precisa encostar na borda do card. Com padding, a linha do cabeçalho fica flutuando e o alinhamento das colunas some."
+        }
+      ]
+    },
+    "CardFooter": {
+      "nome": "CardFooter",
+      "tipo": "CardFooterProps",
+      "arquivo": "packages/ui/src/components/Card.tsx",
+      "heranca": [
+        "HTMLAttributes<HTMLDivElement>"
+      ],
+      "props": []
+    },
+    "CardHeader": {
+      "nome": "CardHeader",
+      "tipo": "CardHeaderProps",
+      "arquivo": "packages/ui/src/components/Card.tsx",
+      "heranca": [
+        "Omit<HTMLAttributes<HTMLDivElement>, 'title'>"
+      ],
+      "props": [
+        {
+          "nome": "title",
+          "tipo": "ReactNode",
+          "obrigatoria": true,
+          "descricao": "O título do card (não confundir com o atributo title do HTML, que é tooltip)."
+        },
+        {
+          "nome": "subtitle",
+          "tipo": "ReactNode",
+          "obrigatoria": false
+        },
+        {
+          "nome": "action",
+          "tipo": "ReactNode",
+          "obrigatoria": false,
+          "descricao": "Canto direito: filtro, botão, menu."
+        },
+        {
+          "nome": "headingLevel",
+          "tipo": "2 | 3 | 4 | 5 | 6",
+          "obrigatoria": false,
+          "padrao": "3",
+          "descricao": "Nível do título no documento (h2, h3…). **Importe-se com isto:** quem usa leitor de tela navega pelos títulos como um índice. Nível pulado (h2 → h4) quebra o índice."
+        }
+      ]
+    },
+    "Dialogo": {
+      "nome": "Dialogo",
+      "tipo": "DialogoProps",
+      "arquivo": "packages/ui/src/components/Dialogo.tsx",
+      "heranca": [],
+      "props": [
+        {
+          "nome": "aberto",
+          "tipo": "boolean",
+          "obrigatoria": true,
+          "descricao": "Fonte única da verdade. O modal NUNCA fecha sozinho por dentro — ver `onFechar`."
+        },
+        {
+          "nome": "onFechar",
+          "tipo": "() => void",
+          "obrigatoria": true,
+          "descricao": "Chamado em TODA tentativa de fechar (X, Esc, clique no fundo). Quem fecha de fato é você, virando o `aberto` para false. Isso é de propósito: dá para segurar o modal aberto (\"há alterações não salvas\") sem lutar contra o componente."
+        },
+        {
+          "nome": "titulo",
+          "tipo": "ReactNode",
+          "obrigatoria": true,
+          "descricao": "Obrigatório: é o nome acessível do modal. Um modal sem nome é \"diálogo\" e nada mais."
+        },
+        {
+          "nome": "descricao",
+          "tipo": "ReactNode",
+          "obrigatoria": false,
+          "descricao": "Uma linha explicando o que está em jogo. Vira `aria-describedby`."
+        },
+        {
+          "nome": "children",
+          "tipo": "ReactNode",
+          "obrigatoria": false
+        },
+        {
+          "nome": "rodape",
+          "tipo": "ReactNode",
+          "obrigatoria": false,
+          "descricao": "Barra de ações. A primária vai à direita, junto do polegar/olhar."
+        },
+        {
+          "nome": "size",
+          "tipo": "'sm' | 'md' | 'lg' | 'full'",
+          "obrigatoria": false,
+          "padrao": "'md'"
+        },
+        {
+          "nome": "fecharNoFundo",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "Clique no fundo escurecido fecha."
+        },
+        {
+          "nome": "fecharNoEsc",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true Desligue só quando perder o que está na tela for caro (formulário longo) — Esc é o jeito que as pessoas esperam sair, e tirar isso surpreende.",
+          "descricao": "Esc fecha."
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false
+        }
+      ],
+      "descricao": "Dialogo — o modal. Usa o `<dialog>` NATIVO com `showModal()`. Essa é a decisão central do componente, e ela é o que faz este arquivo ter 150 linhas em vez de 400. De graça, e certo: · **top layer** — o modal fica acima de QUALQUER z-index da página. A guerra de `z-index: 9999` simplesmente não acontece; · **`::backdrop`** — o fundo escurecido é do navegador, sem div extra; · **Esc** — o navegador já trata (nós só precisamos avisar o React, ver abaixo); · **inertização** — o resto da página para de receber clique, foco e leitor de tela. Reimplementar isso com div + portal + focus trap é o caminho conhecido de 200 linhas com bugs sutis de foco. O `<dialog>` custa alguns cuidados, todos comentados aqui."
+    },
+    "Dica": {
+      "nome": "Dica",
+      "tipo": "DicaProps",
+      "arquivo": "packages/ui/src/components/Dica.tsx",
+      "heranca": [],
+      "props": [
+        {
+          "nome": "conteudo",
+          "tipo": "ReactNode",
+          "obrigatoria": true,
+          "descricao": "Texto curto. Sem link, sem botão — ver a limitação de \"hoverable\" no JSDoc."
+        },
+        {
+          "nome": "lado",
+          "tipo": "'cima' | 'baixo' | 'esq' | 'dir'",
+          "obrigatoria": false,
+          "padrao": "'cima'",
+          "descricao": "Preferência, não garantia: se não couber, a Dica é empurrada para dentro da janela."
+        },
+        {
+          "nome": "atraso",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "500",
+          "descricao": "Espera antes de abrir no hover, em ms. Existe para o mouse poder ATRAVESSAR a tela sem acender uma dica atrás da outra pelo caminho. No foco por teclado o atraso não se aplica — ver JSDoc."
+        },
+        {
+          "nome": "children",
+          "tipo": "ReactElement<{ 'aria-describedby'?: string }>",
+          "obrigatoria": true,
+          "descricao": "UM elemento, e ele precisa receber foco (`<button>`, `<a>`, campo)."
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false
+        }
+      ],
+      "descricao": "Dica — o balão de ajuda. ## Leia antes de usar: a Dica não é um lugar seguro para informação **Nunca ponha na Dica algo que a pessoa PRECISE saber.** Não é conservadorismo, é o que o formato é: · **no celular não existe hover.** Toque não é passar o mouse. Quem está no celular — a maioria — simplesmente nunca vê o conteúdo de uma Dica; · **quem enxerga pouco navega com zoom de 200–400%.** O balão aparece fora do recorte ampliado, ou tampa exatamente o que a pessoa estava lendo; · **quem tem tremor ou usa switch** não consegue segurar o ponteiro parado o tempo todo da leitura. Se a informação é necessária para decidir ou agir, ela vai NA TELA: um rótulo, um texto de apoio embaixo do campo, uma linha no card. A Dica serve para o que é bônus: lembrar o nome inteiro de uma sigla, dizer de onde veio um número. ## O que ela faz certo · abre no **foco** também, não só no hover — senão não existe para o teclado; · **Esc fecha** (WCAG 1.4.13), mesmo com a dica aberta por hover; · liga por **`aria-describedby`**, não por `title` (que é lento, feio, não estilizável e some no celular) nem por um `role=\"tooltip\"` solto, que o leitor de tela ignora quando ninguém aponta para ele."
+    },
+    "Esqueleto": {
+      "nome": "Esqueleto",
+      "tipo": "EsqueletoProps",
+      "arquivo": "packages/ui/src/components/Esqueleto.tsx",
+      "heranca": [
+        "Omit<HTMLAttributes<HTMLDivElement>, 'children'>"
+      ],
+      "props": [
+        {
+          "nome": "variante",
+          "tipo": "'texto' | 'circulo' | 'retangulo'",
+          "obrigatoria": false,
+          "padrao": "'texto'",
+          "descricao": "`texto` — linhas de parágrafo (use `linhas`). `circulo` — avatar, ícone. `retangulo` — imagem, gráfico, card."
+        },
+        {
+          "nome": "largura",
+          "tipo": "number | string",
+          "obrigatoria": false,
+          "descricao": "Número = px. String = CSS ('100%', '12rem')."
+        },
+        {
+          "nome": "altura",
+          "tipo": "number | string",
+          "obrigatoria": false,
+          "descricao": "Número = px. String = CSS. No `circulo`, ignorado: círculo usa `largura` nos dois eixos."
+        },
+        {
+          "nome": "linhas",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "1",
+          "descricao": "Quantas linhas de texto. Só faz sentido em `variante=\"texto\"`."
+        },
+        {
+          "nome": "rotulo",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "'Carregando'",
+          "descricao": "O que está carregando. Vira o anúncio do leitor de tela."
+        },
+        {
+          "nome": "anunciar",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "true",
+          "descricao": "Desliga o anúncio e deixa o bloco 100% decorativo. **Use numa lista**: dez linhas de esqueleto com dez `role=\"status\"` fazem o leitor de tela dizer \"carregando\" dez vezes. Aí o certo é `anunciar={false}` em cada linha e UM anúncio no container da lista."
+        }
+      ],
+      "descricao": "Esqueleto — o formato do conteúdo antes do conteúdo. ## A decisão que quase todo mundo erra: o esqueleto é MUDO O esqueleto é um desenho do que vai chegar. Para quem usa leitor de tela, ele não é nada — e é isso mesmo que tem que ser. Deixar as caixas visíveis à árvore de acessibilidade faz a pessoa ouvir \"grupo, grupo, grupo, grupo\" e tentar navegar por cinco retângulos vazios que somem em 300ms. Então: as formas são `aria-hidden`, e quem fala é **um** `role=\"status\"` no container — o mesmo padrão do StatCard. Uma frase (\"Carregando\"), uma vez, no lugar de um monte de caixas vazias. Numa lista, `anunciar={false}` nos filhos e um anúncio só no topo. `status` e não `alert`: carregar é informação, não emergência — não corta a frase que a pessoa está ouvindo."
+    },
+    "EstadoVazio": {
+      "nome": "EstadoVazio",
+      "tipo": "EstadoVazioProps",
+      "arquivo": "packages/ui/src/components/EstadoVazio.tsx",
+      "heranca": [],
+      "props": [
+        {
+          "nome": "icone",
+          "tipo": "ReactNode",
+          "obrigatoria": false,
+          "descricao": "Ícone. Decorativo — quem informa é o título."
+        },
+        {
+          "nome": "titulo",
+          "tipo": "string",
+          "obrigatoria": true,
+          "descricao": "O que aconteceu, em uma linha. **Não use \"Nenhum resultado\"** — isso a pessoa já viu sozinha, olhando a tela em branco. Diga o que faltou: \"Nenhum cliente com esse filtro\"."
+        },
+        {
+          "nome": "descricao",
+          "tipo": "ReactNode",
+          "obrigatoria": false,
+          "descricao": "Por que está vazio, e o que fazer agora. É aqui que o estado vazio ganha utilidade."
+        },
+        {
+          "nome": "acao",
+          "tipo": "ReactNode",
+          "obrigatoria": false,
+          "descricao": "Um `<Button>`. Limpar o filtro, ou criar o primeiro registro — ver o JSDoc."
+        },
+        {
+          "nome": "size",
+          "tipo": "'sm' | 'md' | 'lg'",
+          "obrigatoria": false,
+          "padrao": "'md'",
+          "descricao": "`sm` — dentro de tabela/card pequeno. `md` (padrão) — dentro de card. `lg` — página inteira vazia."
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false
+        }
+      ],
+      "descricao": "EstadoVazio — a tela em branco que explica a si mesma. \"Nenhum resultado\" não ajuda ninguém: a pessoa está olhando para o nada e não sabe se filtrou demais, se ainda não cadastrou, ou se o sistema quebrou. Um estado vazio bom responde três coisas: **o que aconteceu, por quê, e o que fazer agora.** Mesma tese do `emptyReason` do StatCard. ## Os dois vazios são problemas diferentes — não os trate igual **Vazio por filtro** — existem dados, o filtro é que escondeu. A pessoa fez algo e o sistema respondeu com nada; ela precisa desfazer. A ação é *limpar o filtro*, nunca \"criar\". Oferecer \"Novo cliente\" para quem tem 4.000 clientes e filtrou errado é responder outra pergunta. ```tsx <EstadoVazio titulo=\"Nenhum cliente com esse filtro\" descricao=\"Nenhum cliente comprou nos últimos 7 dias. Tente um período maior.\" acao={<Button onClick={limparFiltros}>Limpar filtros</Button>} /> ``` **Vazio porque é novo** — não existe dado nenhum ainda. Aqui a tela vazia é a primeira aula do produto: diga para que serve a coisa e dê o caminho para começar. A ação é *criar*. ```tsx <EstadoVazio icone={<Megafone />} titulo=\"Nenhuma campanha ainda\" descricao=\"Campanhas reativam quem não compra há mais de 6 meses.\" acao={<Button variant=\"primary\" onClick={criar}>Criar campanha</Button>} size=\"lg\" /> ``` **Vazio por erro é outra coisa** — não use este componente. Erro pede tentar de novo e precisa parecer erro; vazio é um estado normal do sistema."
+    },
+    "Etiqueta": {
+      "nome": "Etiqueta",
+      "tipo": "EtiquetaProps",
+      "arquivo": "packages/ui/src/components/Etiqueta.tsx",
+      "heranca": [
+        "Omit<HTMLAttributes<HTMLElement>, 'children' | 'onClick'>"
+      ],
+      "props": [
+        {
+          "nome": "tom",
+          "tipo": "'neutro' | 'marca' | 'sucesso' | 'aviso' | 'perigo' | 'info'",
+          "obrigatoria": false,
+          "padrao": "'neutro'"
+        },
+        {
+          "nome": "size",
+          "tipo": "'sm' | 'md'",
+          "obrigatoria": false,
+          "padrao": "'md'"
+        },
+        {
+          "nome": "icone",
+          "tipo": "ReactNode",
+          "obrigatoria": false,
+          "descricao": "Ícone antes do texto. Decorativo — o texto é que nomeia a etiqueta."
+        },
+        {
+          "nome": "removivel",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "descricao": "Mostra o X. Só faz sentido junto com `onRemover`."
+        },
+        {
+          "nome": "onRemover",
+          "tipo": "() => void",
+          "obrigatoria": false,
+          "descricao": "Chamado ao clicar no X."
+        },
+        {
+          "nome": "onClick",
+          "tipo": "() => void",
+          "obrigatoria": false,
+          "descricao": "Torna o corpo da etiqueta clicável (ex.: clicar no filtro para editá-lo). Ler a nota sobre alvos aninhados no componente antes de combinar com `removivel`."
+        },
+        {
+          "nome": "rotuloRemover",
+          "tipo": "string",
+          "obrigatoria": false,
+          "descricao": "Rótulo acessível do X, por extenso. Só é necessário quando `children` não é texto puro (tem ícone, `<strong>`, etc.) — aí o componente não consegue adivinhar o nome. Diga O QUE remove: `\"Remover filtro Ativos\"`, não `\"Remover\"`. Numa barra com 8 filtros, 8 botões \"Remover\" idênticos deixam quem usa leitor de tela sem saber qual é qual — é a diferença entre uma lista navegável e um labirinto."
+        },
+        {
+          "nome": "children",
+          "tipo": "ReactNode",
+          "obrigatoria": true,
+          "descricao": "O texto da etiqueta. É ele que a nomeia — para o olho e para o leitor de tela."
+        }
+      ],
+      "descricao": "Etiqueta — uma ENTRADA que você criou e pode tirar. ## Etiqueta não é Selo (o erro mais comum) · **Selo** é ESTADO: o sistema decidiu, você lê. \"Entregue\", \"Falhou\". Read-only. · **Etiqueta** é ENTRADA: você pôs, você tira. Um filtro aplicado, um destinatário escolhido, uma tag num cliente. O teste rápido: **existe um X?** Se a pessoa pode remover aquilo, é Etiqueta. Se ela só está sendo informada, é Selo — e um Selo com X é uma promessa que a tela não pode cumprir (\"posso desentregar a mensagem?\")."
+    },
+    "FiacaoCampo": {
+      "nome": "FiacaoCampo",
+      "tipo": "FiacaoCampo",
+      "arquivo": "packages/ui/src/components/CampoForm.tsx",
+      "heranca": [],
+      "props": [
+        {
+          "nome": "id",
+          "tipo": "string",
+          "obrigatoria": true
+        }
+      ],
+      "descricao": "O que o CampoForm liga no controle. Recebido por quem usa `children` como função."
+    },
+    "Gaveta": {
+      "nome": "Gaveta",
+      "tipo": "GavetaProps",
+      "arquivo": "packages/ui/src/components/Gaveta.tsx",
+      "heranca": [],
+      "props": [
+        {
+          "nome": "aberto",
+          "tipo": "boolean",
+          "obrigatoria": true
+        },
+        {
+          "nome": "onFechar",
+          "tipo": "() => void",
+          "obrigatoria": true,
+          "descricao": "Ver `Dialogo.onFechar` — mesma regra: quem fecha é você, virando o `aberto`."
+        },
+        {
+          "nome": "lado",
+          "tipo": "'esquerda' | 'direita' | 'baixo'",
+          "obrigatoria": false,
+          "padrao": "'direita'",
+          "descricao": "`direita` (padrão) — detalhe, filtro, formulário. O padrão da web ocidental: a ação nasce à direita e é para lá que o olho vai. `esquerda` — navegação (menu do celular), que mora à esquerda. `baixo` — folha do celular, ao alcance do polegar."
+        },
+        {
+          "nome": "titulo",
+          "tipo": "ReactNode",
+          "obrigatoria": true,
+          "descricao": "Obrigatório: é o nome acessível da gaveta."
+        },
+        {
+          "nome": "descricao",
+          "tipo": "ReactNode",
+          "obrigatoria": false
+        },
+        {
+          "nome": "children",
+          "tipo": "ReactNode",
+          "obrigatoria": false
+        },
+        {
+          "nome": "rodape",
+          "tipo": "ReactNode",
+          "obrigatoria": false,
+          "descricao": "Barra de ações fixa no pé — numa gaveta de formulário, é onde mora o \"Aplicar\"."
+        },
+        {
+          "nome": "size",
+          "tipo": "'sm' | 'md' | 'lg' | 'full'",
+          "obrigatoria": false,
+          "padrao": "'md'",
+          "descricao": "Largura (esquerda/direita) ou altura (baixo)."
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false
+        }
+      ],
+      "descricao": "Gaveta — o painel que entra pela lateral. É o **Dialogo por dentro**, só que ancorado numa borda em vez de centralizado. Não é economia de digitação: modal e gaveta têm exatamente os mesmos seis problemas difíceis (top layer, Esc avisando o React, foco de volta em quem abriu, trava da rolagem contada, clique no fundo por geometria, inertizar o resto da página). Duplicar isso significaria consertar cada bug duas vezes — e, na prática, esquecer de um lado. Aqui a Gaveta é CSS: posição, tamanho e a animação de deslize. Quando usar em vez do Dialogo: quando a pessoa precisa ver a lista atrás enquanto mexe (filtro, detalhe de um item da tabela). Para decidir algo agora — confirmar, avisar — o modal centralizado é melhor: ele interrompe de propósito."
+    },
+    "Giro": {
+      "nome": "Giro",
+      "tipo": "GiroProps",
+      "arquivo": "packages/ui/src/components/Giro.tsx",
+      "heranca": [
+        "Omit<HTMLAttributes<HTMLDivElement>, 'role' | 'children'>"
+      ],
+      "props": [
+        {
+          "nome": "size",
+          "tipo": "'sm' | 'md' | 'lg'",
+          "obrigatoria": false,
+          "padrao": "'md'",
+          "descricao": "`sm` dentro de botão/linha de tabela, `md` em card, `lg` em tela cheia."
+        },
+        {
+          "nome": "rotulo",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "'Carregando'",
+          "descricao": "O que está carregando. **Vale a pena ser específico**: \"Carregando\" é melhor que nada, mas \"Carregando campanhas\" diz à pessoa qual pedaço da tela está ocupado — ela não precisa adivinhar se travou ou se é outra coisa."
+        },
+        {
+          "nome": "centralizado",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "descricao": "Ocupa a linha inteira e centraliza. Para \"a área toda está carregando\"."
+        }
+      ],
+      "descricao": "Giro — carregando. ## Por que o rótulo é obrigatório (com padrão) Um giro é uma imagem em movimento: para quem usa leitor de tela, é o nada absoluto. A pessoa fica sem saber se a página está trabalhando ou se travou de vez — e a resposta a essas duas situações é oposta (esperar × recarregar). Por isso `rotulo` tem padrão em vez de ser opcional-de-verdade: não existe Giro mudo saindo daqui. ## Por que `role=\"status\"` e não `role=\"alert\"` \"Está carregando\" é informação, não emergência. `status` (= `aria-live=\"polite\"`) espera a pessoa terminar de ouvir a frase atual. Um spinner que corta a leitura a cada requisição tornaria o painel impossível de usar por leitor de tela."
+    },
+    "GrupoAvatar": {
+      "nome": "GrupoAvatar",
+      "tipo": "GrupoAvatarProps",
+      "arquivo": "packages/ui/src/components/Avatar.tsx",
+      "heranca": [
+        "Omit<HTMLAttributes<HTMLSpanElement>, 'children'>"
+      ],
+      "props": [
+        {
+          "nome": "max",
+          "tipo": "number",
+          "obrigatoria": false,
+          "descricao": "Quantos aparecem antes do \"+N\". Sem valor, aparecem todos. 4 ou 5 é o teto útil: a partir daí a pilha vira uma mancha e o \"+N\" informa mais."
+        },
+        {
+          "nome": "size",
+          "tipo": "'xs' | 'sm' | 'md' | 'lg'",
+          "obrigatoria": false,
+          "padrao": "'md'",
+          "descricao": "Precisa bater com o `size` dos avatares — é ele que dimensiona o \"+N\"."
+        },
+        {
+          "nome": "children",
+          "tipo": "ReactNode",
+          "obrigatoria": true,
+          "descricao": "Os `<Avatar>`."
+        }
+      ],
+      "descricao": "GrupoAvatar — pilha de pessoas com sobreposição."
+    },
+    "GrupoRadio": {
+      "nome": "GrupoRadio",
+      "tipo": "GrupoRadioProps",
+      "arquivo": "packages/ui/src/components/Radio.tsx",
+      "heranca": [],
+      "props": [
+        {
+          "nome": "label",
+          "tipo": "ReactNode",
+          "obrigatoria": true,
+          "descricao": "A PERGUNTA (\"Enviar quando?\"), não a resposta. É o que o leitor de tela anuncia ao entrar no grupo."
+        },
+        {
+          "nome": "name",
+          "tipo": "string",
+          "obrigatoria": true,
+          "descricao": "Compartilhado por todos os rádios do grupo. É ele que liga a navegação por setas."
+        },
+        {
+          "nome": "value",
+          "tipo": "string",
+          "obrigatoria": false,
+          "descricao": "Omita para um grupo não-controlado (o DOM guarda a escolha)."
+        },
+        {
+          "nome": "onChange",
+          "tipo": "(value: string) => void",
+          "obrigatoria": false,
+          "descricao": "Recebe o `value` da opção escolhida — não o evento. O evento quase nunca é o que se quer aqui, e `e.target.value` em toda tela é ruído."
+        },
+        {
+          "nome": "orientacao",
+          "tipo": "'vertical' | 'horizontal'",
+          "obrigatoria": false,
+          "padrao": "'vertical'",
+          "descricao": "`horizontal` só para 2–3 opções de rótulo curto. Acima disso a lista vira uma caça ao par certo entre bolinha e texto, e quebra feio no celular."
+        },
+        {
+          "nome": "erro",
+          "tipo": "string",
+          "obrigatoria": false,
+          "descricao": "A mensagem do erro. Lida pelo leitor de tela — a cor não é o aviso."
+        },
+        {
+          "nome": "children",
+          "tipo": "ReactNode",
+          "obrigatoria": true
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false
+        }
+      ],
+      "descricao": "Escolha única entre opções visíveis. O agrupamento não é enfeite: sem ele o leitor de tela anuncia 5 rádios soltos, sem dizer de que pergunta são. Quem chega pelo teclado na terceira opção não faz ideia do que está escolhendo."
+    },
+    "Interruptor": {
+      "nome": "Interruptor",
+      "tipo": "InterruptorProps",
+      "arquivo": "packages/ui/src/components/Interruptor.tsx",
+      "heranca": [
+        "Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'size' | 'role'>"
+      ],
+      "props": [
+        {
+          "nome": "label",
+          "tipo": "ReactNode",
+          "obrigatoria": true,
+          "descricao": "O que liga/desliga. Escreva o ESTADO LIGADO (\"Enviar dicas automáticas\"), nunca a ação (\"Ligar envio\") — o rótulo não muda quando o interruptor muda."
+        },
+        {
+          "nome": "descricao",
+          "tipo": "ReactNode",
+          "obrigatoria": false,
+          "descricao": "Linha de apoio: o efeito de ligar. É onde cabe o aviso de que vale na hora."
+        },
+        {
+          "nome": "size",
+          "tipo": "'sm' | 'md'",
+          "obrigatoria": false,
+          "padrao": "'md'",
+          "descricao": "`sm` para dentro de linha de tabela; `md` para formulário."
+        }
+      ],
+      "descricao": "Interruptor — liga/desliga que vale AGORA. **Interruptor ou Caixa?** É a confusão mais comum do design system, e a diferença é de comportamento, não de aparência: · `<Interruptor>` aplica na hora. Não existe \"Salvar\" depois dele. Ao acionar, algo muda no sistema imediatamente — o envio começa, o robô liga. Se a ação é lenta ou pode falhar, o produto precisa mostrar o resultado (e reverter o estado se der erro), porque a pessoa já foi embora achando que ficou feito. · `<Caixa>` é campo de formulário. A escolha só vale no \"Salvar\" e dá para desistir antes. O leitor de tela também trata os dois de forma diferente: `role=\"switch\"` é anunciado como \"ligado/desligado\", checkbox como \"marcado/desmarcado\". Usar o errado mente sobre o que vai acontecer."
+    },
+    "ItemAcordeao": {
+      "nome": "ItemAcordeao",
+      "tipo": "ItemAcordeaoProps",
+      "arquivo": "packages/ui/src/components/Acordeao.tsx",
+      "heranca": [],
+      "props": [
+        {
+          "nome": "valor",
+          "tipo": "string",
+          "obrigatoria": true,
+          "descricao": "Identidade do item dentro do acordeão. Precisa ser único e estável."
+        },
+        {
+          "nome": "titulo",
+          "tipo": "ReactNode",
+          "obrigatoria": true,
+          "descricao": "O que a pessoa lê para decidir se abre."
+        },
+        {
+          "nome": "icone",
+          "tipo": "ReactNode",
+          "obrigatoria": false,
+          "descricao": "Ícone antes do título. Decorativo — quem narra a seção é o título."
+        },
+        {
+          "nome": "disabled",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "descricao": "Sem conteúdo para mostrar (ainda). O gatilho continua visível: sumir com a seção faz a pessoa procurar o que \"estava ali ontem\"."
+        },
+        {
+          "nome": "nivelTitulo",
+          "tipo": "2 | 3 | 4 | 5 | 6",
+          "obrigatoria": false,
+          "padrao": "3",
+          "descricao": "Nível do heading que embrulha o gatilho. **Mexa quando a página exigir** — um h3 dentro de uma seção h4 quebra o índice que o leitor de tela monta."
+        },
+        {
+          "nome": "children",
+          "tipo": "ReactNode",
+          "obrigatoria": true
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false
+        }
+      ],
+      "descricao": "Uma seção do acordeão. ## O painel fechado precisa sumir de verdade \"Fechado\" aqui é o atributo `hidden` (= `display: none`), não altura zero. A diferença é invisível para quem testa com mouse e é a razão deste componente existir: um painel com `height: 0` e `overflow: hidden` continua **alcançável pelo Tab**. A pessoa tecleja, o foco entra num painel fechado, o anel de foco desaparece da tela — e não há nada para clicar, nem para onde voltar. O foco \"sumiu\". ## E a animação, então? `height: auto` não anima (o navegador não sabe para qual número ir), e `display: none` corta qualquer transição. A saída é uma máquina de dois estados: · `visivel` — manda no `hidden`. Entra ANTES da animação de abrir, sai DEPOIS da de fechar. É a garantia de acessibilidade. · `expandido` — manda no `grid-template-rows: 0fr → 1fr`. É a animação. `grid-template-rows` em vez de medir `scrollHeight`: medir obriga a ler o layout a cada abertura (custo e travada), quebra quando o conteúdo muda de tamanho sozinho (imagem que carrega, lista que cresce) e trava a altura num número que envelhece. O grid deixa o navegador continuar decidindo a altura — anima do zero até \"o que for\"."
+    },
+    "ItemMenu": {
+      "nome": "ItemMenu",
+      "tipo": "ItemMenuProps",
+      "arquivo": "packages/ui/src/components/Menu.tsx",
+      "heranca": [
+        "Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'disabled' | 'children' | 'onClick'>"
+      ],
+      "props": [
+        {
+          "nome": "icone",
+          "tipo": "ReactNode",
+          "obrigatoria": false,
+          "descricao": "Ícone à esquerda. Decorativo — quem nomeia a ação é o texto."
+        },
+        {
+          "nome": "onClick",
+          "tipo": "(e: MouseEvent<HTMLButtonElement>) => void",
+          "obrigatoria": false
+        },
+        {
+          "nome": "perigo",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "descricao": "Ação destrutiva. Pinta de vermelho — mas **o rótulo precisa dizer a palavra** (\"Excluir\"), porque parte das pessoas não distingue vermelho e para elas a cor não existe. Cor é reforço, nunca o aviso."
+        },
+        {
+          "nome": "disabled",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "descricao": "Indisponível agora. As setas pulam por cima — ver a nota em `itensFocaveis`."
+        },
+        {
+          "nome": "atalho",
+          "tipo": "string",
+          "obrigatoria": false,
+          "descricao": "Atalho de teclado, à direita (ex.: \"⌘E\"). Só a dica visual — não registra nada."
+        },
+        {
+          "nome": "children",
+          "tipo": "ReactNode",
+          "obrigatoria": true
+        }
+      ],
+      "descricao": "Um item do Menu. É um `<button>` de verdade: Enter e Espaço vêm do navegador."
+    },
+    "ItemTrilha": {
+      "nome": "ItemTrilha",
+      "tipo": "ItemTrilhaProps",
+      "arquivo": "packages/ui/src/components/Trilha.tsx",
+      "heranca": [],
+      "props": [
+        {
+          "nome": "href",
+          "tipo": "string",
+          "obrigatoria": false,
+          "descricao": "Link de verdade. Sem href e sem onClick, o item vira texto."
+        },
+        {
+          "nome": "onClick",
+          "tipo": "() => void",
+          "obrigatoria": false,
+          "descricao": "Para navegação por router (sem recarregar a página)."
+        },
+        {
+          "nome": "icone",
+          "tipo": "ReactNode",
+          "obrigatoria": false,
+          "descricao": "Decorativo — quem narra o item é o texto."
+        },
+        {
+          "nome": "children",
+          "tipo": "ReactNode",
+          "obrigatoria": false
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false
+        }
+      ]
+    },
+    "ListaAbas": {
+      "nome": "ListaAbas",
+      "tipo": "ListaAbasProps",
+      "arquivo": "packages/ui/src/components/Abas.tsx",
+      "heranca": [
+        "HTMLAttributes<HTMLDivElement>"
+      ],
+      "props": [],
+      "descricao": "A régua das abas. Precisa de `aria-label`: numa página com duas listas, \"abas\" e \"abas\" não distingue nada."
+    },
+    "Menu": {
+      "nome": "Menu",
+      "tipo": "MenuProps",
+      "arquivo": "packages/ui/src/components/Menu.tsx",
+      "heranca": [],
+      "props": [
+        {
+          "nome": "gatilho",
+          "tipo": "ReactElement",
+          "obrigatoria": true,
+          "descricao": "O botão que abre. Recebe `aria-haspopup`, `aria-expanded` e o ref por clonagem — então precisa ser **um elemento que aceite ref e repasse props para o DOM** (`<Button>` da casa, ou um `<button>`). Um componente que engole props não funciona."
+        },
+        {
+          "nome": "alinhamento",
+          "tipo": "'inicio' | 'fim'",
+          "obrigatoria": false,
+          "padrao": "'inicio'",
+          "descricao": "De que lado o painel cresce. `fim` = alinhado à direita do gatilho — é o certo para menu de ação no fim de uma linha de tabela, senão ele cresce para fora da tela."
+        },
+        {
+          "nome": "children",
+          "tipo": "ReactNode",
+          "obrigatoria": true
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false
+        }
+      ],
+      "descricao": "Menu — uma lista de **ações**. ## Menu ou Selecao? **Menu é AÇÃO. Selecao é VALOR.** A diferença não é visual, é de natureza: - `Menu` — \"Editar\", \"Duplicar\", \"Excluir\". Clicar **faz algo agora**. Não guarda estado, não entra em formulário, não tem \"escolhido\". - `Selecao` — \"Categoria: Fones\". Clicar **guarda um dado** que vai ser enviado depois. Usar Menu para escolher valor quebra o formulário (não há valor para submeter, e o padrão ARIA de menu não tem como dizer \"este está escolhido\"). Usar Selecao para ações confunde: a pessoa escolhe \"Excluir\" na lista e fica esperando um botão de confirmar que não existe. ## Foco: o oposto do combobox Ao abrir, o foco **vai para o primeiro item**. No `Selecao buscavel` o foco **fica no campo** e só uma marca virtual (`aria-activedescendant`) anda pela lista. Essa é a confusão mais comum entre os dois padrões — e é proposital: no menu não há nada para digitar, então o foco real pode (e deve) ir para os itens; no combobox, tirar o foco do campo mataria a digitação."
+    },
+    "OpcaoSelecao": {
+      "nome": "OpcaoSelecao",
+      "tipo": "OpcaoSelecao",
+      "arquivo": "packages/ui/src/components/Selecao.tsx",
+      "heranca": [],
+      "props": [
+        {
+          "nome": "valor",
+          "tipo": "string",
+          "obrigatoria": true,
+          "descricao": "O que vai para o `onChange` e para o banco."
+        },
+        {
+          "nome": "rotulo",
+          "tipo": "string",
+          "obrigatoria": true,
+          "descricao": "O que a pessoa lê."
+        },
+        {
+          "nome": "desabilitada",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "descricao": "Existe, mas não pode ser escolhida agora. **Não é o mesmo que sumir da lista**: some quando não faz sentido; desabilita quando faz sentido mas está bloqueada (e aí a pessoa entende que a opção existe)."
+        },
+        {
+          "nome": "grupo",
+          "tipo": "string",
+          "obrigatoria": false,
+          "descricao": "Agrupa visualmente. Vira `<optgroup>` no nativo e `role=\"group\"` no buscável."
+        }
+      ]
+    },
+    "Ordem": {
+      "nome": "Ordem",
+      "tipo": "Ordem",
+      "arquivo": "packages/ui/src/components/Tabela.tsx",
+      "heranca": [],
+      "props": [
+        {
+          "nome": "coluna",
+          "tipo": "string",
+          "obrigatoria": true,
+          "descricao": "O `chave` da coluna ordenada. String, não `keyof T`: coluna calculada tem id próprio."
+        },
+        {
+          "nome": "direcao",
+          "tipo": "'asc' | 'desc'",
+          "obrigatoria": true
+        }
+      ]
+    },
+    "Paginacao": {
+      "nome": "Paginacao",
+      "tipo": "PaginacaoProps",
+      "arquivo": "packages/ui/src/components/Paginacao.tsx",
+      "heranca": [],
+      "props": [
+        {
+          "nome": "pagina",
+          "tipo": "number",
+          "obrigatoria": true
+        },
+        {
+          "nome": "totalPaginas",
+          "tipo": "number",
+          "obrigatoria": true
+        },
+        {
+          "nome": "onChange",
+          "tipo": "(pagina: number) => void",
+          "obrigatoria": true
+        },
+        {
+          "nome": "totalItens",
+          "tipo": "number",
+          "obrigatoria": false,
+          "descricao": "Total de registros. Com `porPagina`, mostra o resumo \"1–20 de 137\"."
+        },
+        {
+          "nome": "porPagina",
+          "tipo": "number",
+          "obrigatoria": false,
+          "descricao": "Tamanho da página. Precisa vir junto com `totalItens` para o resumo aparecer."
+        },
+        {
+          "nome": "onPorPaginaChange",
+          "tipo": "(porPagina: number) => void",
+          "obrigatoria": false,
+          "descricao": "Habilita o seletor de itens por página. **Volte para a página 1 ao trocar**: quem estava na página 9 de 10 com 10 itens fica fora da faixa ao pular para 100 por página. O componente não faz isso sozinho — um `onChange` disparado por baixo do pano é pior que o problema que resolve."
+        },
+        {
+          "nome": "size",
+          "tipo": "'sm' | 'md'",
+          "obrigatoria": false,
+          "padrao": "'md'"
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false
+        }
+      ],
+      "descricao": "Paginação."
+    },
+    "PainelAba": {
+      "nome": "PainelAba",
+      "tipo": "PainelAbaProps",
+      "arquivo": "packages/ui/src/components/Abas.tsx",
+      "heranca": [
+        "HTMLAttributes<HTMLDivElement>"
+      ],
+      "props": [
+        {
+          "nome": "valor",
+          "tipo": "string",
+          "obrigatoria": true,
+          "descricao": "Casa com o `valor` de uma <Aba>."
+        },
+        {
+          "nome": "children",
+          "tipo": "ReactNode",
+          "obrigatoria": false
+        }
+      ]
+    },
+    "Progresso": {
+      "nome": "Progresso",
+      "tipo": "ProgressoProps",
+      "arquivo": "packages/ui/src/components/Progresso.tsx",
+      "heranca": [
+        "Omit<HTMLAttributes<HTMLDivElement>, 'role' | 'children'>"
+      ],
+      "props": [
+        {
+          "nome": "valor",
+          "tipo": "number",
+          "obrigatoria": false,
+          "descricao": "Quanto já foi, de 0 a `max`. Fora da faixa é grampeado — ver `normalizar`."
+        },
+        {
+          "nome": "max",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "100"
+        },
+        {
+          "nome": "rotulo",
+          "tipo": "string",
+          "obrigatoria": false,
+          "descricao": "O que está progredindo. Vira texto visível E o nome acessível da barra."
+        },
+        {
+          "nome": "mostrarValor",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "descricao": "Mostra \"42%\" ao lado do rótulo."
+        },
+        {
+          "nome": "tom",
+          "tipo": "'brand' | 'success' | 'warning' | 'danger'",
+          "obrigatoria": false,
+          "padrao": "'brand'"
+        },
+        {
+          "nome": "size",
+          "tipo": "'sm' | 'md' | 'lg'",
+          "obrigatoria": false,
+          "padrao": "'md'"
+        },
+        {
+          "nome": "indeterminado",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "descricao": "Está acontecendo, mas não dá para saber quanto falta. **Ignora `valor`** — e é assim que tem que ser: barra indeterminada com número é mentira."
+        }
+      ],
+      "descricao": "Progresso — quanto falta. ## A decisão que quase todo mundo erra: `aria-valuenow` ausente ≠ zero Quando `indeterminado`, `aria-valuenow` é **omitido**, não zerado. A norma ARIA trata os dois como coisas diferentes, e o leitor de tela também: · `aria-valuenow=\"0\"` → \"0 por cento\". A pessoa entende que a tarefa está PARADA no começo, e fica esperando um número que nunca vem. · sem `aria-valuenow` → \"ocupado\". A pessoa entende que está andando e que ninguém sabe quanto falta — que é a verdade. Zerar por comodidade (o atributo \"sempre presente\" é mais fácil de escrever) troca uma informação correta por uma mentira precisa. ## Por que a barra não é `role=\"alert\"` `progressbar` já carrega o estado por conta própria. Quem quiser anunciar o começo do carregamento usa o `role=\"status\"` do Esqueleto ou do Giro — assertivo aqui faria o leitor de tela interromper a pessoa a cada tique da barra."
+    },
+    "ProvedorAvisos": {
+      "nome": "ProvedorAvisos",
+      "tipo": "ProvedorAvisosProps",
+      "arquivo": "packages/ui/src/components/Aviso.tsx",
+      "heranca": [],
+      "props": [
+        {
+          "nome": "children",
+          "tipo": "ReactNode",
+          "obrigatoria": false
+        },
+        {
+          "nome": "limite",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "3",
+          "descricao": "Quantos aparecem ao mesmo tempo. O excedente **espera na fila** (ver o bloco \"A fila\" abaixo) — não é descartado."
+        }
+      ],
+      "descricao": "ProvedorAvisos — a região onde os avisos aparecem. Um por app, no topo da árvore. ## A região existe desde sempre, vazia É o ponto central deste componente e o bug que a maioria das bibliotecas de toast tem: **criar o container junto com o primeiro aviso não anuncia nada.** O leitor de tela monta a lista de regiões vivas quando a página carrega e observa as que já existiam; uma região `aria-live` que nasce com conteúdo dentro tipicamente não dispara — o conteúdo já estava lá quando ela passou a ser observada. O sintoma é cruel: funciona perfeitamente no olho, passa em todo teste visual, e quem depende de leitor de tela simplesmente nunca é avisado de nada. Por isso a `<div aria-live>` abaixo é renderizada sempre, mesmo sem nenhum aviso. ## A fila Só `limite` (3) aparecem juntos — 20 avisos empilhados viram uma parede que tampa a tela e ninguém lê. O excedente **espera a vez**, não é descartado: descartar perde informação, e empurrar o mais antigo para fora arranca da tela justamente o que a pessoa pode estar lendo agora (e se for erro, arranca o erro). O preço, assumido: três erros fixos na tela seguram a fila até alguém fechá-los. É o caso em que empilhar mais cinco avisos por cima seria pior — o erro é que precisa de atenção, não o aviso de \"copiado!\"."
+    },
+    "Radio": {
+      "nome": "Radio",
+      "tipo": "RadioProps",
+      "arquivo": "packages/ui/src/components/Radio.tsx",
+      "heranca": [
+        "Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'size' | 'value'>"
+      ],
+      "props": [
+        {
+          "nome": "label",
+          "tipo": "ReactNode",
+          "obrigatoria": true,
+          "descricao": "A opção. Clicar nele seleciona — como no rótulo de qualquer controle nativo."
+        },
+        {
+          "nome": "descricao",
+          "tipo": "ReactNode",
+          "obrigatoria": false,
+          "descricao": "Linha de apoio: a consequência de escolher esta opção, não a repetição do rótulo."
+        },
+        {
+          "nome": "value",
+          "tipo": "string",
+          "obrigatoria": true,
+          "descricao": "O valor que vai no formulário quando esta opção estiver escolhida."
+        }
+      ],
+      "descricao": "Uma opção de escolha única. Quase sempre dentro de um `<GrupoRadio>` — sozinho ele existe, mas um rádio único é um beco sem saída: não dá para desmarcar. Escolha entre \"sim/não\" é `<Caixa>` ou `<Interruptor>`, não um rádio."
+    },
+    "Selecao": {
+      "nome": "Selecao",
+      "tipo": "SelecaoProps",
+      "arquivo": "packages/ui/src/components/Selecao.tsx",
+      "heranca": [
+        "Omit<HTMLAttributes<HTMLElement>, 'onChange' | 'children' | 'defaultValue'>"
+      ],
+      "props": [
+        {
+          "nome": "opcoes",
+          "tipo": "OpcaoSelecao[]",
+          "obrigatoria": true
+        },
+        {
+          "nome": "valor",
+          "tipo": "string",
+          "obrigatoria": true,
+          "descricao": "Controlado, sempre. `''` = nada escolhido (mostra o `placeholder`)."
+        },
+        {
+          "nome": "onChange",
+          "tipo": "(valor: string) => void",
+          "obrigatoria": true,
+          "descricao": "Recebe o `valor` da opção — não o evento. Quem chama quer o dado, não o DOM."
+        },
+        {
+          "nome": "placeholder",
+          "tipo": "string",
+          "obrigatoria": false,
+          "descricao": "Texto de quando nada foi escolhido. Diga a escolha (\"Escolha a categoria\"), não \"Selecione…\"."
+        },
+        {
+          "nome": "size",
+          "tipo": "'sm' | 'md' | 'lg'",
+          "obrigatoria": false,
+          "padrao": "'md'"
+        },
+        {
+          "nome": "erro",
+          "tipo": "string",
+          "obrigatoria": false,
+          "descricao": "A mensagem do erro. **É texto, não booleano, de propósito**: pintar a borda de vermelho sem dizer o que está errado não conserta nada — e quem não distingue vermelho não vê nem o aviso. Liga `aria-invalid` e amarra a mensagem por `aria-describedby`."
+        },
+        {
+          "nome": "disabled",
+          "tipo": "boolean",
+          "obrigatoria": false
+        },
+        {
+          "nome": "buscavel",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "descricao": "Troca o `<select>` nativo por um combobox com filtro por digitação. **Só ligue com lista longa** (30+). Ver a nota de decisão no JSDoc do componente: isto custa a roda nativa do celular."
+        },
+        {
+          "nome": "limpavel",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "descricao": "Mostra um X para voltar ao estado \"nada escolhido\". Só quando vazio é um valor válido."
+        },
+        {
+          "nome": "name",
+          "tipo": "string",
+          "obrigatoria": false,
+          "descricao": "Nome no formulário. Só o modo nativo participa de um submit — ver a nota sobre `buscavel`."
+        },
+        {
+          "nome": "required",
+          "tipo": "boolean",
+          "obrigatoria": false
+        }
+      ],
+      "descricao": "Selecao — escolher **um valor** de uma lista. ## A decisão: nativo por padrão, customizado só com `buscavel` Este componente entrega um `<select>` de verdade, e isso é deliberado. O nativo dá de graça o que um combobox customizado leva meses para imitar mal: teclado completo, busca por digitação, e — o que mais pesa — **a roda nativa do celular**, aquela lista grande e confortável do iOS/Android. Nenhum select customizado ganha dela no toque. O preço é honesto: **a lista aberta do `<select>` é desenhada pelo sistema operacional, não pelo nosso CSS.** Não dá para pôr ícone na opção, nem alinhar a fonte da lista com a do resto do painel. O `appearance: base-select` resolve isso (Chrome 135+, Safari 27), mas o Firefox ainda não tem — então não dependemos dele. O que estilizamos é o campo fechado, que é o que fica na tela o tempo todo. Com `buscavel`, aí sim viramos um combobox `role=\"combobox\"` completo (setas, Enter, Esc, Home/End, `aria-activedescendant`, foco preso no campo de busca). Ligue só quando a lista for longa o bastante para justificar perder a roda do celular. **O rótulo é obrigação de quem usa**: passe `aria-label` ou um `<label htmlFor>` apontando para o `id`. Um select sem rótulo é um campo mudo no leitor de tela."
+    },
+    "Selo": {
+      "nome": "Selo",
+      "tipo": "SeloProps",
+      "arquivo": "packages/ui/src/components/Selo.tsx",
+      "heranca": [
+        "Omit<HTMLAttributes<HTMLSpanElement>, 'children'>"
+      ],
+      "props": [
+        {
+          "nome": "tom",
+          "tipo": "'neutro' | 'marca' | 'sucesso' | 'aviso' | 'perigo' | 'info'",
+          "obrigatoria": false,
+          "padrao": "'neutro'",
+          "descricao": "O tom REFORÇA o texto — nunca substitui. Ver o aviso no componente."
+        },
+        {
+          "nome": "variante",
+          "tipo": "'suave' | 'solido' | 'contorno'",
+          "obrigatoria": false,
+          "padrao": "'suave'",
+          "descricao": "`suave` — o padrão. Fundo tingido, discreto o bastante para conviver com dezenas deles numa tabela sem virar árvore de natal. `solido` — para o selo que precisa saltar (um \"Falhou\" no meio de \"Entregue\"). Use com parcimônia: se tudo salta, nada salta. `contorno` — só borda. Para quando o fundo já é tingido e um segundo tingido some."
+        },
+        {
+          "nome": "size",
+          "tipo": "'sm' | 'md'",
+          "obrigatoria": false,
+          "padrao": "'md'"
+        },
+        {
+          "nome": "pontinho",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "descricao": "Bolinha de status antes do texto. Decorativa — quem informa continua sendo o texto. Serve para o olho achar a linha na tabela, não para dizer o que aconteceu."
+        },
+        {
+          "nome": "children",
+          "tipo": "ReactNode",
+          "obrigatoria": true,
+          "descricao": "O rótulo. **Obrigatório e não pode ser vazio** — é ele que carrega o significado. Um selo sem texto é uma bolinha colorida que só parte das pessoas consegue ler."
+        }
+      ],
+      "descricao": "Selo — o ESTADO de alguma coisa. Read-only. \"Entregue\", \"Falhou\", \"Pendente\". Você lê, não mexe. Se dá para remover, clicar ou filtrar, o componente é a `<Etiqueta>` — não este. ## A regra de ouro desta biblioteca: a cor nunca é o único sinal Um selo verde \"Entregue\" e um vermelho \"Falhou\" são **o mesmo selo** para cerca de 1 em cada 12 homens (daltonismo vermelho-verde) e para qualquer um lendo em preto e branco, no sol, ou por leitor de tela. Por isso o `children` é obrigatório: o texto carrega o significado, a cor só ajuda a achar mais rápido. É também por isso que o `pontinho` é `aria-hidden` — ele é enfeite de varredura visual, não informação. Todas as combinações de cor saem dos tokens já testados em contraste (@amboni/tokens), então o selo é legível em iSafe/VEAR × claro/escuro sem ajuste no produto."
+    },
+    "StatCard": {
+      "nome": "StatCard",
+      "tipo": "StatCardProps",
+      "arquivo": "packages/ui/src/components/StatCard.tsx",
+      "heranca": [],
+      "props": [
+        {
+          "nome": "label",
+          "tipo": "string",
+          "obrigatoria": true,
+          "descricao": "O que o número significa. Curto — vira versalete."
+        },
+        {
+          "nome": "value",
+          "tipo": "string | null",
+          "obrigatoria": true,
+          "descricao": "O valor JÁ FORMATADO (\"R$ 1.994,31\", \"91%\", \"140\"). `null` = carregando (mostra esqueleto). `'—'` ou `''` = vazio (mostra o `emptyReason`)."
+        },
+        {
+          "nome": "icon",
+          "tipo": "ReactNode",
+          "obrigatoria": false,
+          "descricao": "Ícone. Decorativo — o rótulo é que informa."
+        },
+        {
+          "nome": "sub",
+          "tipo": "ReactNode",
+          "obrigatoria": false,
+          "descricao": "Linha de apoio: de onde vem o número, ou o cálculo."
+        },
+        {
+          "nome": "emptyReason",
+          "tipo": "string",
+          "obrigatoria": false,
+          "descricao": "Por que está vazio. **Um traço solto não informa nada** — a pessoa fica sem saber se quebrou ou se é zero mesmo."
+        },
+        {
+          "nome": "tone",
+          "tipo": "'brand' | 'success' | 'warning' | 'danger' | 'neutral'",
+          "obrigatoria": false,
+          "padrao": "'brand'"
+        },
+        {
+          "nome": "delta",
+          "tipo": "StatDelta",
+          "obrigatoria": false,
+          "descricao": "Variação vs. período anterior. Um número sozinho não diz se está bom."
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false
+        }
+      ],
+      "descricao": "StatCard — um número que importa. O padrão mais copiado dos painéis: hoje existe reescrito em 3 páginas do iSafe e em 4 do VEAR, todos ligeiramente diferentes. Este é o único."
+    },
+    "StatDelta": {
+      "nome": "StatDelta",
+      "tipo": "StatDelta",
+      "arquivo": "packages/ui/src/components/StatCard.tsx",
+      "heranca": [],
+      "props": [
+        {
+          "nome": "percent",
+          "tipo": "number",
+          "obrigatoria": true,
+          "descricao": "Variação em %. Negativo = caiu. Abaixo de 1% (em módulo) vira \"estável\", não \"0%\": um \"0%\" com seta para cima é contraditório, e \"estável\" é o que a pessoa queria saber."
+        },
+        {
+          "nome": "betterWhenUp",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "descricao": "Se subir é bom. **Omita quando não há julgamento** — gastar menos não é bom nem ruim por si só, e pintar de verde uma queda de investimento mente para quem lê."
+        },
+        {
+          "nome": "suffix",
+          "tipo": "string",
+          "obrigatoria": false,
+          "padrao": "'vs. anterior'",
+          "descricao": "Texto após o número."
+        }
+      ]
+    },
+    "Tabela": {
+      "nome": "Tabela",
+      "tipo": "TabelaProps",
+      "arquivo": "packages/ui/src/components/Tabela.tsx",
+      "heranca": [],
+      "props": [
+        {
+          "nome": "colunas",
+          "tipo": "ReadonlyArray<Coluna<T>>",
+          "obrigatoria": true
+        },
+        {
+          "nome": "linhas",
+          "tipo": "readonly T[]",
+          "obrigatoria": true
+        },
+        {
+          "nome": "chaveLinha",
+          "tipo": "(linha: T) => ChaveDeLinha",
+          "obrigatoria": true,
+          "descricao": "Identidade da linha. **Obrigatório de propósito** — o índice do array não serve. Ao reordenar, o React reaproveita o DOM pela key: com índice, a linha 3 continua sendo \"3\" mesmo com outro cliente dentro, e o estado preso à posição (o checkbox marcado, o foco, a linha aberta) fica na linha errada. Já aconteceu de o usuário ordenar a lista e apagar o cliente errado por causa disso."
+        },
+        {
+          "nome": "rotulo",
+          "tipo": "string",
+          "obrigatoria": false,
+          "descricao": "Nome acessível da tabela (vira `<caption>` invisível). Numa tela com 3 tabelas, é o que diferencia \"tabela\" de \"tabela\" na lista do leitor de tela."
+        },
+        {
+          "nome": "ordem",
+          "tipo": "Ordem",
+          "obrigatoria": false,
+          "descricao": "Por onde está ordenada. Só marca o cabeçalho — quem ordena os dados é você."
+        },
+        {
+          "nome": "onOrdenar",
+          "tipo": "(coluna: string, direcao: Direcao) => void",
+          "obrigatoria": false,
+          "descricao": "A tabela não reordena nada sozinha: em CRM a ordenação quase sempre é do servidor."
+        },
+        {
+          "nome": "carregando",
+          "tipo": "boolean",
+          "obrigatoria": false
+        },
+        {
+          "nome": "linhasEsqueleto",
+          "tipo": "number",
+          "obrigatoria": false,
+          "padrao": "5",
+          "descricao": "Quantas linhas de esqueleto. Aproxime da página real para o layout não pular."
+        },
+        {
+          "nome": "vazio",
+          "tipo": "ReactNode",
+          "obrigatoria": false,
+          "descricao": "O que mostrar sem dados. Passe um `<EstadoVazio>` que EXPLIQUE o motivo."
+        },
+        {
+          "nome": "onLinhaClick",
+          "tipo": "(linha: T) => void",
+          "obrigatoria": false,
+          "descricao": "Clique na linha inteira. Leia o JSDoc do componente antes de usar."
+        },
+        {
+          "nome": "selecionaveis",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "descricao": "Liga a coluna de caixas de seleção."
+        },
+        {
+          "nome": "selecionadas",
+          "tipo": "readonly ChaveDeLinha[]",
+          "obrigatoria": false
+        },
+        {
+          "nome": "onSelecionar",
+          "tipo": "(chaves: ChaveDeLinha[]) => void",
+          "obrigatoria": false
+        },
+        {
+          "nome": "colunaFixa",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "descricao": "Prende a primeira coluna ao rolar na horizontal — o nome não some da vista."
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false
+        }
+      ],
+      "descricao": "Tabela — a tela de trabalho de um CRM. É um `<table>` de verdade. Isso não é purismo: quem usa leitor de tela navega tabela célula a célula (Ctrl+Alt+setas no VoiceOver) e ouve \"Valor, coluna 3 de 5, R$ 1.200, linha 7\" — e isso vem do navegador, de graça, só com a marcação certa. Divs com `role=\"table\"` perdem tudo isso: cada célula vira um texto solto sem coordenada. Não ordena, não pagina e não filtra sozinha. Em CRM esses três moram no servidor — uma tabela que ordena só a página atual mente para quem olha."
+    },
+    "Trilha": {
+      "nome": "Trilha",
+      "tipo": "TrilhaProps",
+      "arquivo": "packages/ui/src/components/Trilha.tsx",
+      "heranca": [
+        "Omit<HTMLAttributes<HTMLElement>, 'children'>"
+      ],
+      "props": [
+        {
+          "nome": "children",
+          "tipo": "ReactNode",
+          "obrigatoria": false
+        },
+        {
+          "nome": "max",
+          "tipo": "number",
+          "obrigatoria": false,
+          "descricao": "Máximo de itens visíveis antes de colapsar o meio em \"…\". O primeiro e o último SEMPRE aparecem — são a origem e o lugar onde a pessoa está. Sem `max`, mostra tudo."
+        },
+        {
+          "nome": "className",
+          "tipo": "string",
+          "obrigatoria": false
+        }
+      ],
+      "descricao": "Trilha (breadcrumb) — o caminho até aqui. O último item é o lugar atual: vira `aria-current=\"page\"` e deixa de ser link."
+    }
+  }
+}

@@ -1,5 +1,6 @@
 import { Button } from '@amboni/ui'
 import { Secao, P, Demo, Titulo, H3, Aviso, TabelaProps, FacaNaoFaca, Bloco } from '../lib/blocos'
+import { Playground } from '../lib/Playground'
 
 export default function ButtonPage() {
   return (
@@ -7,6 +8,25 @@ export default function ButtonPage() {
       <Titulo eyebrow="Componentes" lead="O componente mais simples da biblioteca é onde mais gente escorrega.">
         Button
       </Titulo>
+
+      <Secao titulo="Experimente">
+        <Playground
+          componente="Button"
+          controles={[
+            { prop: 'variant', tipo: 'select', opcoes: ['primary', 'secondary', 'ghost', 'danger'], padrao: 'secondary' },
+            { prop: 'size', tipo: 'select', opcoes: ['sm', 'md', 'lg'], padrao: 'md' },
+            { prop: 'loading', tipo: 'bool', padrao: false },
+            { prop: 'block', tipo: 'bool', padrao: false },
+            { prop: 'children', tipo: 'texto', padrao: 'Salvar' },
+          ]}
+          render={p => <Button {...p}>{p.children}</Button>}
+        />
+        <P>
+          Repare no código: ele só cresce quando você pede alguma coisa. Um
+          <code> &lt;Button&gt;</code> sem prop nenhuma já é o botão secundário, médio e
+          parado — e é assim que ele deve aparecer no seu produto.
+        </P>
+      </Secao>
 
       <Secao>
         <Bloco lang="jsx">{`import { Button } from '@amboni/ui'`}</Bloco>

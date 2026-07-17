@@ -1,5 +1,6 @@
 import { Campo, CampoForm } from '@amboni/ui'
 import { Secao, P, Demo, Titulo, H3, Aviso, TabelaProps, FacaNaoFaca, Bloco } from '../lib/blocos'
+import { Playground } from '../lib/Playground'
 
 export default function CampoPage() {
   return (
@@ -10,6 +11,30 @@ export default function CampoPage() {
       >
         Campo
       </Titulo>
+
+      <Secao titulo="Experimente">
+        <Playground
+          componente="Campo"
+          controles={[
+            { prop: 'size', tipo: 'select', opcoes: ['sm', 'md', 'lg'], padrao: 'md' },
+            { prop: 'placeholder', tipo: 'texto', padrao: '', placeholder: 'ex.: Buscar cliente' },
+            { prop: 'prefixo', tipo: 'texto', padrao: '', placeholder: 'ex.: R$' },
+            { prop: 'sufixo', tipo: 'texto', padrao: '', placeholder: 'ex.: kg' },
+            { prop: 'limpar', tipo: 'bool', padrao: false },
+            { prop: 'erro', tipo: 'bool', padrao: false },
+            { prop: 'disabled', tipo: 'bool', padrao: false },
+          ]}
+          // aria-label aqui e não como controle: solto no palco, o campo não tem rótulo, e
+          // um exemplo mudo para leitor de tela é o oposto do que esta página defende. No
+          // seu produto quem faz isto é o <CampoForm> — por isso ele não sai no código.
+          render={p => <Campo {...p} aria-label={p.placeholder || 'Campo de exemplo'} />}
+        />
+        <P>
+          Ligue o <code>erro</code> sozinho e repare no que acontece: a moldura fica vermelha
+          e mais nada. Nenhuma palavra, nenhum motivo. É por isso que o erro de verdade mora
+          no <code>CampoForm</code>, que exige a mensagem junto.
+        </P>
+      </Secao>
 
       <Secao>
         <Bloco lang="jsx">{`import { Campo } from '@amboni/ui'`}</Bloco>

@@ -14,16 +14,16 @@
  */
 
 /**
- * `js` e `ts` são apelidos de `jsx`: as regras já cobrem os três, e forçar quem escreve
- * a documentação a lembrar que "um trecho de TypeScript se marca como jsx" é atrito sem
- * ganho. `text` desliga o realce — para saída de terminal e mensagem de erro, onde
+ * `tsx`, `js` e `ts` são apelidos de `jsx`: as mesmas regras cobrem os quatro, e forçar
+ * quem escreve a documentação a lembrar que "um trecho de TypeScript se marca como jsx"
+ * é atrito sem ganho — três pessoas tentaram `lang="ts"` antes de o apelido existir. `text` desliga o realce — para saída de terminal e mensagem de erro, onde
  * colorir palavra solta ("const" no meio de uma frase) inventa sintaxe que não existe.
  */
-export type Linguagem = 'jsx' | 'js' | 'ts' | 'css' | 'text'
+export type Linguagem = 'jsx' | 'tsx' | 'js' | 'ts' | 'css' | 'text'
 
 type Dialeto = 'jsx' | 'css'
 const APELIDO: Record<Exclude<Linguagem, 'text'>, Dialeto> = {
-  jsx: 'jsx', js: 'jsx', ts: 'jsx', css: 'css',
+  jsx: 'jsx', tsx: 'jsx', js: 'jsx', ts: 'jsx', css: 'css',
 }
 
 /** Grupos NOMEADOS: o nome do grupo que casou É a classe CSS. */

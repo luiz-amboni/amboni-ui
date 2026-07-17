@@ -1,0 +1,267 @@
+/**
+ * O layout das telas de exemplo — e só isso.
+ *
+ * Regra desta folha: ela desenha PALCO e GRADE, nunca componente. Se aparecer aqui um
+ * `padding` de botão ou uma cor de selo, é sinal de que a biblioteca ficou devendo e o
+ * exemplo está mentindo — o que se pretende provar é justamente que a tela sai em pé
+ * sem retoque em cima das peças.
+ *
+ * Nenhum hex: tudo sai de var(--amb-*), então as quatro telas trocam de marca e de tema
+ * junto com o resto do site, sem uma linha a mais.
+ */
+
+/* ── Palco ──────────────────────────────────────────────────────────────────── */
+/* A moldura que diz "daqui para dentro é produto, não documentação". */
+.ex-palco {
+  background: var(--amb-color-bg);
+  border: 1px solid var(--amb-color-border-default);
+  border-radius: var(--amb-raio-lg);
+  overflow: hidden;
+}
+
+/* Barra de topo falsa: a tela precisa de um lugar onde ela "começa". */
+.ex-topo {
+  display: flex;
+  align-items: center;
+  gap: var(--amb-espaco-3);
+  padding: var(--amb-espaco-3) var(--amb-espaco-4);
+  border-bottom: 1px solid var(--amb-color-border-default);
+  background: var(--amb-color-surface);
+}
+
+.ex-topo__nome {
+  font-family: var(--amb-fonte-display);
+  font-weight: var(--amb-peso-bold);
+  font-size: var(--amb-texto-sm);
+  color: var(--amb-color-text-primary);
+}
+
+.ex-topo__spacer { margin-left: auto; }
+
+.ex-corpo {
+  padding: var(--amb-espaco-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--amb-espaco-5);
+}
+
+.ex-corpo__titulo {
+  font-family: var(--amb-fonte-display);
+  font-size: var(--amb-texto-xl);
+  font-weight: var(--amb-peso-bold);
+  color: var(--amb-color-text-primary);
+  margin: 0;
+}
+
+.ex-corpo__sub {
+  font-size: var(--amb-texto-sm);
+  color: var(--amb-color-text-secondary);
+  margin: var(--amb-espaco-1) 0 0;
+}
+
+/* ── Login ──────────────────────────────────────────────────────────────────── */
+.ex-login {
+  display: grid;
+  place-items: center;
+  padding: var(--amb-espaco-10) var(--amb-espaco-4);
+  min-height: 30rem;
+}
+
+.ex-login__card {
+  width: 100%;
+  max-width: 23rem;
+}
+
+/* A marca. Um quadrado com a inicial: o exemplo não vem com o logo de ninguém. */
+.ex-login__marca {
+  display: flex;
+  align-items: center;
+  gap: var(--amb-espaco-2);
+  margin-bottom: var(--amb-espaco-6);
+}
+
+.ex-login__mark {
+  width: 2rem;
+  height: 2rem;
+  display: grid;
+  place-items: center;
+  border-radius: var(--amb-raio-md);
+  background: var(--amb-color-brand-solid);
+  color: var(--amb-color-text-on);
+  font-family: var(--amb-fonte-display);
+  font-weight: var(--amb-peso-extrabold);
+  font-size: var(--amb-texto-sm);
+}
+
+.ex-login__titulo {
+  font-family: var(--amb-fonte-display);
+  font-size: var(--amb-texto-lg);
+  font-weight: var(--amb-peso-bold);
+  color: var(--amb-color-text-primary);
+  margin: 0;
+}
+
+.ex-login__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--amb-espaco-4);
+}
+
+/* "Lembrar de mim" e "Esqueci a senha" na mesma linha: são a mesma decisão de acesso. */
+.ex-login__linha {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--amb-espaco-3);
+  flex-wrap: wrap;
+}
+
+.ex-link {
+  font-size: var(--amb-texto-sm);
+  color: var(--amb-color-brand-text);
+  text-decoration: none;
+  border-radius: var(--amb-raio-sm);
+}
+.ex-link:hover { text-decoration: underline; }
+
+.ex-login__rodape {
+  margin-top: var(--amb-espaco-5);
+  text-align: center;
+  font-size: var(--amb-texto-xs);
+  color: var(--amb-color-text-muted);
+}
+
+.ex-login__rodape code {
+  font-family: var(--amb-fonte-mono);
+  color: var(--amb-color-text-secondary);
+}
+
+/* ── Grades ─────────────────────────────────────────────────────────────────── */
+/* auto-fit + minmax: os StatCards se viram sozinhos do celular ao desktop. */
+.ex-stats {
+  display: grid;
+  gap: var(--amb-espaco-4);
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+}
+
+/* ── Barra de filtro ────────────────────────────────────────────────────────── */
+.ex-barra {
+  display: flex;
+  gap: var(--amb-espaco-3);
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.ex-barra__busca {
+  flex: 1 1 16rem;
+  min-width: 12rem;
+}
+
+.ex-barra__filtro { flex: 0 1 11rem; }
+
+/* Os filtros aplicados. Linha própria: eles são resultado da barra, não parte dela. */
+.ex-etiquetas {
+  display: flex;
+  align-items: center;
+  gap: var(--amb-espaco-2);
+  flex-wrap: wrap;
+  min-height: var(--amb-altura-sm);
+}
+
+.ex-etiquetas__rotulo {
+  font-size: var(--amb-texto-xs);
+  color: var(--amb-color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: var(--amb-peso-semibold);
+}
+
+/* Barra de seleção — some quando nada está marcado, então não pode empurrar a tabela. */
+.ex-selecao {
+  display: flex;
+  align-items: center;
+  gap: var(--amb-espaco-3);
+  padding: var(--amb-espaco-2) var(--amb-espaco-3);
+  border-radius: var(--amb-raio-md);
+  background: var(--amb-color-brand-subtle);
+  color: var(--amb-color-brand-text);
+  font-size: var(--amb-texto-sm);
+  font-weight: var(--amb-peso-medium);
+}
+
+.ex-selecao__spacer { margin-left: auto; }
+
+/* ── Célula de nome (avatar + duas linhas) ─────────────────────────────────── */
+.ex-pessoa {
+  display: flex;
+  align-items: center;
+  gap: var(--amb-espaco-3);
+  min-width: 0;
+}
+
+.ex-pessoa__nome {
+  font-weight: var(--amb-peso-medium);
+  color: var(--amb-color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ex-pessoa__sub {
+  font-size: var(--amb-texto-xs);
+  color: var(--amb-color-text-muted);
+  white-space: nowrap;
+}
+
+/* ── Formulário ─────────────────────────────────────────────────────────────── */
+.ex-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--amb-espaco-4);
+}
+
+/* Dois campos por linha no desktop, um só no celular. */
+.ex-form__par {
+  display: grid;
+  gap: var(--amb-espaco-4);
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+}
+
+/* CEP curto, cidade larga: campo com largura de gente é campo que já diz o que espera. */
+.ex-form__cep { grid-template-columns: minmax(7rem, 0.4fr) minmax(13rem, 1fr); }
+
+@media (max-width: 40rem) {
+  .ex-form__cep { grid-template-columns: 1fr; }
+}
+
+/* Rodapé grudado: num formulário longo, "Salvar" no fim da rolagem é "Salvar" que
+   ninguém acha. */
+.ex-form__rodape {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--amb-espaco-3);
+  padding: var(--amb-espaco-4) var(--amb-espaco-5);
+  border-top: 1px solid var(--amb-color-border-default);
+  background: var(--amb-color-surface);
+}
+
+.ex-pilha {
+  display: flex;
+  flex-direction: column;
+  gap: var(--amb-espaco-4);
+}
+
+/* Nome de template do WhatsApp na tabela — é identificador, não prosa. */
+.ex-mono {
+  font-family: var(--amb-fonte-mono);
+  font-size: var(--amb-texto-xs);
+  color: var(--amb-color-text-secondary);
+}
+
+/* Respiro entre a régua de abas e o conteúdo do painel. */
+.ex-painel { margin-top: var(--amb-espaco-4); }
+
+/* min-width:0 para o nome longo poder cortar com "…" em vez de esticar a coluna. */
+.ex-pessoa__texto { min-width: 0; }

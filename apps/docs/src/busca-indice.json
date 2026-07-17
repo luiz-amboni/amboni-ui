@@ -1,0 +1,1709 @@
+[
+ {
+  "slug": "inicio",
+  "titulo": "Visão geral",
+  "grupo": "Começar",
+  "secoes": [
+   {
+    "texto": "Por que ela existe",
+    "nivel": 2
+   },
+   {
+    "texto": "O que ela resolve de verdade",
+    "nivel": 2
+   },
+   {
+    "texto": "Um exemplo real",
+    "nivel": 2
+   },
+   {
+    "texto": "Comece por aqui",
+    "nivel": 2
+   },
+   {
+    "texto": "Acessibilidade que reprova o build",
+    "nivel": 3
+   },
+   {
+    "texto": "Um tema é um parâmetro, não um fork",
+    "nivel": 3
+   }
+  ]
+ },
+ {
+  "slug": "instalacao",
+  "titulo": "Instalação",
+  "grupo": "Começar",
+  "secoes": [
+   {
+    "texto": "1. Instale",
+    "nivel": 2
+   },
+   {
+    "texto": "2. Importe o CSS uma vez",
+    "nivel": 2
+   },
+   {
+    "texto": "3. Declare a marca e o tema no <html>",
+    "nivel": 2
+   },
+   {
+    "texto": "Usando junto com o que você já tem",
+    "nivel": 2
+   },
+   {
+    "texto": "Trocando o tema em tempo de execução",
+    "nivel": 3
+   },
+   {
+    "texto": "Com MUI",
+    "nivel": 3
+   },
+   {
+    "texto": "Com Tailwind",
+    "nivel": 3
+   },
+   {
+    "texto": "Com CSS puro",
+    "nivel": 3
+   }
+  ]
+ },
+ {
+  "slug": "cores",
+  "titulo": "Cores",
+  "grupo": "Fundamentos",
+  "secoes": [
+   {
+    "texto": "As três camadas",
+    "nivel": 2
+   },
+   {
+    "texto": "A regra que quase ninguém aplica",
+    "nivel": 2
+   },
+   {
+    "texto": "O contraste é testado, não estimado",
+    "nivel": 2
+   },
+   {
+    "texto": "A paleta completa",
+    "nivel": 2
+   },
+   {
+    "texto": "Quem é quem",
+    "nivel": 3
+   }
+  ]
+ },
+ {
+  "slug": "tipografia",
+  "titulo": "Tipografia",
+  "grupo": "Fundamentos",
+  "secoes": [
+   {
+    "texto": "As famílias",
+    "nivel": 2
+   },
+   {
+    "texto": "A escala",
+    "nivel": 2
+   },
+   {
+    "texto": "Os pesos",
+    "nivel": 2
+   },
+   {
+    "texto": "Comprimento de linha",
+    "nivel": 2
+   },
+   {
+    "texto": "Altura de linha",
+    "nivel": 3
+   }
+  ]
+ },
+ {
+  "slug": "espacamento",
+  "titulo": "Espaço e forma",
+  "grupo": "Fundamentos",
+  "secoes": [
+   {
+    "texto": "A grade de 4px",
+    "nivel": 2
+   },
+   {
+    "texto": "Cantos",
+    "nivel": 2
+   },
+   {
+    "texto": "Altura dos controles",
+    "nivel": 2
+   },
+   {
+    "texto": "Sombras",
+    "nivel": 2
+   },
+   {
+    "texto": "Sombra é hierarquia, não enfeite",
+    "nivel": 3
+   }
+  ]
+ },
+ {
+  "slug": "acessibilidade",
+  "titulo": "Acessibilidade",
+  "grupo": "Fundamentos",
+  "secoes": [
+   {
+    "texto": "A tese",
+    "nivel": 2
+   },
+   {
+    "texto": "O que esse teste encontrou no primeiro dia",
+    "nivel": 2
+   },
+   {
+    "texto": "A verificação, agora, nesta página",
+    "nivel": 2
+   },
+   {
+    "texto": "Além da cor",
+    "nivel": 2
+   },
+   {
+    "texto": "A marca não morreu",
+    "nivel": 3
+   },
+   {
+    "texto": "Foco visível",
+    "nivel": 3
+   },
+   {
+    "texto": "Movimento",
+    "nivel": 3
+   },
+   {
+    "texto": "A cor nunca sozinha",
+    "nivel": 3
+   },
+   {
+    "texto": "Semântica de verdade",
+    "nivel": 3
+   }
+  ]
+ },
+ {
+  "slug": "tokens",
+  "titulo": "Todos os tokens",
+  "grupo": "Fundamentos",
+  "secoes": [
+   {
+    "texto": "Por que existe um nome no lugar do valor",
+    "nivel": 2
+   },
+   {
+    "texto": "O contraste é medido aqui, agora",
+    "nivel": 2
+   },
+   {
+    "texto": "Todos os tokens",
+    "nivel": 2
+   },
+   {
+    "texto": "Como usar",
+    "nivel": 2
+   },
+   {
+    "texto": "Sem família",
+    "nivel": 3
+   }
+  ]
+ },
+ {
+  "slug": "exemplo-login",
+  "titulo": "Tela de acesso",
+  "grupo": "Exemplos",
+  "secoes": [
+   {
+    "texto": "A tela",
+    "nivel": 2
+   },
+   {
+    "texto": "As decisões desta tela",
+    "nivel": 2
+   },
+   {
+    "texto": "Erro de credencial é Alerta, nunca Aviso",
+    "nivel": 3
+   },
+   {
+    "texto": "Erro de campo fica no campo",
+    "nivel": 3
+   },
+   {
+    "texto": "O botão carrega no lugar",
+    "nivel": 3
+   },
+   {
+    "texto": "noValidate no form",
+    "nivel": 3
+   }
+  ]
+ },
+ {
+  "slug": "exemplo-dashboard",
+  "titulo": "Painel",
+  "grupo": "Exemplos",
+  "secoes": [
+   {
+    "texto": "A tela",
+    "nivel": 2
+   },
+   {
+    "texto": "As decisões desta tela",
+    "nivel": 2
+   },
+   {
+    "texto": "O delta de \"Investido\" não tem betterWhenUp — de propósito",
+    "nivel": 3
+   },
+   {
+    "texto": "Os três estados do StatCard aparecem juntos",
+    "nivel": 3
+   },
+   {
+    "texto": "A tabela vazia diz o que fazer",
+    "nivel": 3
+   },
+   {
+    "texto": "Selo com texto, sempre",
+    "nivel": 3
+   },
+   {
+    "texto": "CardBody flush para a tabela",
+    "nivel": 3
+   }
+  ]
+ },
+ {
+  "slug": "exemplo-crm",
+  "titulo": "Lista de clientes",
+  "grupo": "Exemplos",
+  "secoes": [
+   {
+    "texto": "A tela",
+    "nivel": 2
+   },
+   {
+    "texto": "As decisões desta tela",
+    "nivel": 2
+   },
+   {
+    "texto": "Selo é estado. Etiqueta é entrada.",
+    "nivel": 3
+   },
+   {
+    "texto": "A confirmação de exclusão existe porque o desfazer não basta sozinho",
+    "nivel": 3
+   },
+   {
+    "texto": "O toast de \"Desfazer\" não some sozinho — e isso vem de graça",
+    "nivel": 3
+   },
+   {
+    "texto": "Filtrar sempre volta para a página 1",
+    "nivel": 3
+   },
+   {
+    "texto": "Avatar decorativo na coluna do nome",
+    "nivel": 3
+   },
+   {
+    "texto": "chaveLinha não aceita o índice — e ainda bem",
+    "nivel": 3
+   }
+  ]
+ },
+ {
+  "slug": "exemplo-formulario",
+  "titulo": "Cadastro de cliente",
+  "grupo": "Exemplos",
+  "secoes": [
+   {
+    "texto": "A tela",
+    "nivel": 2
+   },
+   {
+    "texto": "As decisões desta tela",
+    "nivel": 2
+   },
+   {
+    "texto": "Erro em seção fechada é erro que não existe",
+    "nivel": 3
+   },
+   {
+    "texto": "Acordeao múltiplo, não único",
+    "nivel": 3
+   },
+   {
+    "texto": "O Estado usa a forma de função do CampoForm",
+    "nivel": 3
+   },
+   {
+    "texto": "27 estados não pedem buscavel",
+    "nivel": 3
+   },
+   {
+    "texto": "O contador da AreaTexto não é enfeite",
+    "nivel": 3
+   },
+   {
+    "texto": "Rodapé grudado",
+    "nivel": 3
+   }
+  ]
+ },
+ {
+  "slug": "guia-typescript",
+  "titulo": "TypeScript",
+  "grupo": "Guias",
+  "secoes": [
+   {
+    "texto": "Os tipos moram junto do componente",
+    "nivel": 2
+   },
+   {
+    "texto": "Coluna<T>: a união que não deixa você pedir campo que não existe",
+    "nivel": 2
+   },
+   {
+    "texto": "SelecaoRef é uma união — porque são dois elementos",
+    "nivel": 2
+   },
+   {
+    "texto": "Estender um componente nosso",
+    "nivel": 2
+   },
+   {
+    "texto": "Omit: quando o HTML já usou o nome",
+    "nivel": 2
+   },
+   {
+    "texto": "cx e o mistério do zero",
+    "nivel": 2
+   },
+   {
+    "texto": "Os que você vai importar de verdade",
+    "nivel": 3
+   },
+   {
+    "texto": "Caso 1 — coluna de campo real. O typo não compila.",
+    "nivel": 3
+   },
+   {
+    "texto": "Caso 2 — coluna calculada. Aí a chave relaxa.",
+    "nivel": 3
+   },
+   {
+    "texto": "CardHeader: Omit&lt;…, 'title'&gt;",
+    "nivel": 3
+   },
+   {
+    "texto": "Campo: Omit&lt;…, 'size'&gt;",
+    "nivel": 3
+   }
+  ]
+ },
+ {
+  "slug": "guia-formularios",
+  "titulo": "Formulários",
+  "grupo": "Guias",
+  "secoes": [
+   {
+    "texto": "O formulário completo",
+    "nivel": 2
+   },
+   {
+    "texto": "A regra: o erro é declarado UMA vez",
+    "nivel": 2
+   },
+   {
+    "texto": "Com react-hook-form",
+    "nivel": 2
+   },
+   {
+    "texto": "Interruptor ou Caixa? A pergunta é quando vale",
+    "nivel": 2
+   },
+   {
+    "texto": "aria-required, não required",
+    "nivel": 2
+   },
+   {
+    "texto": "O botão de enviar: type=&quot;submit&quot; é obrigatório",
+    "nivel": 2
+   },
+   {
+    "texto": "Carregando não é desabilitado",
+    "nivel": 2
+   },
+   {
+    "texto": "Quando o erro é local, sem wrapper",
+    "nivel": 3
+   },
+   {
+    "texto": "Um controle envolvido em outra coisa",
+    "nivel": 3
+   }
+  ]
+ },
+ {
+  "slug": "guia-testes",
+  "titulo": "Testes",
+  "grupo": "Guias",
+  "secoes": [
+   {
+    "texto": "A filosofia da casa, em uma linha",
+    "nivel": 2
+   },
+   {
+    "texto": "O que testar: o contrato, não a implementação",
+    "nivel": 2
+   },
+   {
+    "texto": "A armadilha: userEvent + fake timers travam o Vitest",
+    "nivel": 2
+   },
+   {
+    "texto": "Mutation testing: o teste que passava com o bug dentro",
+    "nivel": 2
+   },
+   {
+    "texto": "Componente com <dialog>: o jsdom não tem um",
+    "nivel": 2
+   },
+   {
+    "texto": "Testar o ProvedorAvisos",
+    "nivel": 2
+   },
+   {
+    "texto": "Resumo operacional",
+    "nivel": 2
+   },
+   {
+    "texto": "Quando a classe CSS é a única testemunha",
+    "nivel": 3
+   },
+   {
+    "texto": "A causa",
+    "nivel": 3
+   },
+   {
+    "texto": "O remendo (já está em test-setup.ts)",
+    "nivel": 3
+   },
+   {
+    "texto": "Por que não shouldAdvanceTime: true",
+    "nivel": 3
+   },
+   {
+    "texto": "E o avancar() dentro do act()",
+    "nivel": 3
+   },
+   {
+    "texto": "A reescrita: estado que só vive no DOM",
+    "nivel": 3
+   },
+   {
+    "texto": "O outro buraco: o jsdom não faz layout",
+    "nivel": 3
+   },
+   {
+    "texto": "O teste que quase ninguém escreve",
+    "nivel": 3
+   },
+   {
+    "texto": "Uso errado também é contrato",
+    "nivel": 3
+   }
+  ]
+ },
+ {
+  "slug": "guia-ssr",
+  "titulo": "Next.js e SSR",
+  "grupo": "Guias",
+  "secoes": [
+   {
+    "texto": "O problema que você não vai ter: FOUC",
+    "nivel": 2
+   },
+   {
+    "texto": "Passo 1 — os dois CSS no layout raiz",
+    "nivel": 2
+   },
+   {
+    "texto": "Passo 2 — ",
+    "nivel": 2
+   },
+   {
+    "texto": "Passo 3 — o tema, e o piscar que ele causa",
+    "nivel": 2
+   },
+   {
+    "texto": "prefers-color-scheme: você precisa traduzir",
+    "nivel": 2
+   },
+   {
+    "texto": "Checklist",
+    "nivel": 2
+   },
+   {
+    "texto": "Quais componentes são puros, de verdade",
+    "nivel": 3
+   },
+   {
+    "texto": "O que dá errado",
+    "nivel": 3
+   },
+   {
+    "texto": "Solução A — script inline antes da hidratação",
+    "nivel": 3
+   },
+   {
+    "texto": "Solução B — cookie, lido no servidor",
+    "nivel": 3
+   },
+   {
+    "texto": "Trocar em tempo de execução",
+    "nivel": 3
+   }
+  ]
+ },
+ {
+  "slug": "button",
+  "titulo": "Button",
+  "grupo": "Ação",
+  "secoes": [
+   {
+    "texto": "Experimente",
+    "nivel": 2
+   },
+   {
+    "texto": "Variantes",
+    "nivel": 2
+   },
+   {
+    "texto": "Tamanhos",
+    "nivel": 2
+   },
+   {
+    "texto": "Carregando",
+    "nivel": 2
+   },
+   {
+    "texto": "Com ícone",
+    "nivel": 2
+   },
+   {
+    "texto": "Navegar não é executar",
+    "nivel": 2
+   },
+   {
+    "texto": "Props",
+    "nivel": 2
+   },
+   {
+    "texto": "Três decisões escondidas aqui",
+    "nivel": 3
+   }
+  ]
+ },
+ {
+  "slug": "menu",
+  "titulo": "Menu",
+  "grupo": "Ação",
+  "secoes": [
+   {
+    "texto": "Menu ou Selecao? — leia antes de tudo",
+    "nivel": 2
+   },
+   {
+    "texto": "Uso",
+    "nivel": 2
+   },
+   {
+    "texto": "Foco: o oposto do combobox",
+    "nivel": 2
+   },
+   {
+    "texto": "pointerdown, não click — o bug clássico",
+    "nivel": 2
+   },
+   {
+    "texto": "Item desabilitado",
+    "nivel": 2
+   },
+   {
+    "texto": "Alinhamento — e a limitação da borda",
+    "nivel": 2
+   },
+   {
+    "texto": "perigo e atalho",
+    "nivel": 2
+   },
+   {
+    "texto": "Props",
+    "nivel": 2
+   },
+   {
+    "texto": "Menu",
+    "nivel": 3
+   },
+   {
+    "texto": "ItemMenu",
+    "nivel": 3
+   },
+   {
+    "texto": "SeparadorMenu e RotuloMenu",
+    "nivel": 3
+   }
+  ]
+ },
+ {
+  "slug": "campoform",
+  "titulo": "CampoForm",
+  "grupo": "Formulário",
+  "secoes": [
+   {
+    "texto": "A razão de existir",
+    "nivel": 2
+   },
+   {
+    "texto": "Erro e ajuda: os dois, erro primeiro",
+    "nivel": 2
+   },
+   {
+    "texto": "Obrigatório",
+    "nivel": 2
+   },
+   {
+    "texto": "O id: uma variável só",
+    "nivel": 2
+   },
+   {
+    "texto": "Quem vence o quê",
+    "nivel": 2
+   },
+   {
+    "texto": "children como função",
+    "nivel": 2
+   },
+   {
+    "texto": "Funciona com qualquer controle",
+    "nivel": 2
+   },
+   {
+    "texto": "Props",
+    "nivel": 2
+   },
+   {
+    "texto": "O erro é montado, não escondido",
+    "nivel": 3
+   },
+   {
+    "texto": "Por que aria-required e não required",
+    "nivel": 3
+   },
+   {
+    "texto": "FiacaoCampo",
+    "nivel": 3
+   }
+  ]
+ },
+ {
+  "slug": "campo",
+  "titulo": "Campo",
+  "grupo": "Formulário",
+  "secoes": [
+   {
+    "texto": "Experimente",
+    "nivel": 2
+   },
+   {
+    "texto": "Tamanhos",
+    "nivel": 2
+   },
+   {
+    "texto": "Ícones e afixos",
+    "nivel": 2
+   },
+   {
+    "texto": "Limpar",
+    "nivel": 2
+   },
+   {
+    "texto": "Erro: declarado uma vez só",
+    "nivel": 2
+   },
+   {
+    "texto": "O anel de foco é a exceção documentada da biblioteca",
+    "nivel": 2
+   },
+   {
+    "texto": "Desabilitado não é lavado",
+    "nivel": 2
+   },
+   {
+    "texto": "Props",
+    "nivel": 2
+   },
+   {
+    "texto": "A armadilha que este botão evita",
+    "nivel": 3
+   }
+  ]
+ },
+ {
+  "slug": "areatexto",
+  "titulo": "AreaTexto",
+  "grupo": "Formulário",
+  "secoes": [
+   {
+    "texto": "O básico",
+    "nivel": 2
+   },
+   {
+    "texto": "autoResize",
+    "nivel": 2
+   },
+   {
+    "texto": "Contador",
+    "nivel": 2
+   },
+   {
+    "texto": "O contador não é uma live region",
+    "nivel": 2
+   },
+   {
+    "texto": "Erro",
+    "nivel": 2
+   },
+   {
+    "texto": "Props",
+    "nivel": 2
+   },
+   {
+    "texto": "A linha que parece redundante e não é",
+    "nivel": 3
+   },
+   {
+    "texto": "Por que o contador existe",
+    "nivel": 3
+   }
+  ]
+ },
+ {
+  "slug": "selecao",
+  "titulo": "Seleção",
+  "grupo": "Formulário",
+  "secoes": [
+   {
+    "texto": "A decisão: nativo por padrão",
+    "nivel": 2
+   },
+   {
+    "texto": "Buscável: quando o custo se paga",
+    "nivel": 2
+   },
+   {
+    "texto": "Placeholder e limpável",
+    "nivel": 2
+   },
+   {
+    "texto": "Grupos e opções bloqueadas",
+    "nivel": 2
+   },
+   {
+    "texto": "Erro é texto, não booleano",
+    "nivel": 2
+   },
+   {
+    "texto": "Tamanhos",
+    "nivel": 2
+   },
+   {
+    "texto": "Props",
+    "nivel": 2
+   },
+   {
+    "texto": "O preço, honestamente",
+    "nivel": 3
+   },
+   {
+    "texto": "Três limitações que vêm junto",
+    "nivel": 3
+   },
+   {
+    "texto": "OpcaoSelecao",
+    "nivel": 3
+   }
+  ]
+ },
+ {
+  "slug": "caixa",
+  "titulo": "Caixa, Rádio e Interruptor",
+  "grupo": "Formulário",
+  "secoes": [
+   {
+    "texto": "Qual dos três?",
+    "nivel": 2
+   },
+   {
+    "texto": "A técnica que sustenta os três",
+    "nivel": 2
+   },
+   {
+    "texto": "Caixa",
+    "nivel": 2
+   },
+   {
+    "texto": "Radio e GrupoRadio",
+    "nivel": 2
+   },
+   {
+    "texto": "Interruptor",
+    "nivel": 2
+   },
+   {
+    "texto": "Props — Caixa",
+    "nivel": 2
+   },
+   {
+    "texto": "Por que appearance: none e não opacity: 0",
+    "nivel": 3
+   },
+   {
+    "texto": "Indeterminado — a armadilha",
+    "nivel": 3
+   },
+   {
+    "texto": "Zero onKeyDown — de propósito",
+    "nivel": 3
+   },
+   {
+    "texto": "Contexto, não cloneElement",
+    "nivel": 3
+   },
+   {
+    "texto": "Interruptor ou Caixa? A pergunta é \"quando vale?\"",
+    "nivel": 3
+   },
+   {
+    "texto": "Props — Radio",
+    "nivel": 3
+   },
+   {
+    "texto": "Props — GrupoRadio",
+    "nivel": 3
+   },
+   {
+    "texto": "Props — Interruptor",
+    "nivel": 3
+   }
+  ]
+ },
+ {
+  "slug": "card",
+  "titulo": "Card",
+  "grupo": "Dados",
+  "secoes": [
+   {
+    "texto": "Estrutura",
+    "nivel": 2
+   },
+   {
+    "texto": "Elevação",
+    "nivel": 2
+   },
+   {
+    "texto": "Card clicável",
+    "nivel": 2
+   },
+   {
+    "texto": "O nível do título importa",
+    "nivel": 2
+   },
+   {
+    "texto": "Tabela dentro do card",
+    "nivel": 2
+   },
+   {
+    "texto": "Props",
+    "nivel": 2
+   },
+   {
+    "texto": "Isso não é detalhe de implementação",
+    "nivel": 3
+   },
+   {
+    "texto": "Card",
+    "nivel": 3
+   },
+   {
+    "texto": "CardHeader",
+    "nivel": 3
+   },
+   {
+    "texto": "CardBody",
+    "nivel": 3
+   }
+  ]
+ },
+ {
+  "slug": "statcard",
+  "titulo": "StatCard",
+  "grupo": "Dados",
+  "secoes": [
+   {
+    "texto": "Experimente",
+    "nivel": 2
+   },
+   {
+    "texto": "Os três estados",
+    "nivel": 2
+   },
+   {
+    "texto": "Variação (delta)",
+    "nivel": 2
+   },
+   {
+    "texto": "A cor nunca está sozinha",
+    "nivel": 2
+   },
+   {
+    "texto": "Tons",
+    "nivel": 2
+   },
+   {
+    "texto": "Props",
+    "nivel": 2
+   },
+   {
+    "texto": "O estado vazio é o que separa o joio do trigo",
+    "nivel": 3
+   },
+   {
+    "texto": "A prop mais importante é a que você pode omitir",
+    "nivel": 3
+   },
+   {
+    "texto": "StatDelta",
+    "nivel": 3
+   }
+  ]
+ },
+ {
+  "slug": "tabela",
+  "titulo": "Tabela",
+  "grupo": "Dados",
+  "secoes": [
+   {
+    "texto": "É um <table> de verdade",
+    "nivel": 2
+   },
+   {
+    "texto": "Coluna: o tipo trabalha para você",
+    "nivel": 2
+   },
+   {
+    "texto": "Números: a coluna que decide se dá para comparar",
+    "nivel": 2
+   },
+   {
+    "texto": "Ordenação",
+    "nivel": 2
+   },
+   {
+    "texto": "chaveLinha — obrigatório, e não é implicância",
+    "nivel": 2
+   },
+   {
+    "texto": "Carregando",
+    "nivel": 2
+   },
+   {
+    "texto": "Vazia",
+    "nivel": 2
+   },
+   {
+    "texto": "Seleção",
+    "nivel": 2
+   },
+   {
+    "texto": "Clique na linha",
+    "nivel": 2
+   },
+   {
+    "texto": "Rolagem e coluna fixa",
+    "nivel": 2
+   },
+   {
+    "texto": "Dentro de um Card",
+    "nivel": 2
+   },
+   {
+    "texto": "Props",
+    "nivel": 2
+   },
+   {
+    "texto": "O que está escondido no cabeçalho",
+    "nivel": 3
+   },
+   {
+    "texto": "O teste que passava e não protegia nada",
+    "nivel": 3
+   },
+   {
+    "texto": "Marque uma só e olhe a caixa do cabeçalho",
+    "nivel": 3
+   },
+   {
+    "texto": "Coluna&lt;T&gt;",
+    "nivel": 3
+   }
+  ]
+ },
+ {
+  "slug": "estadovazio",
+  "titulo": "EstadoVazio",
+  "grupo": "Dados",
+  "secoes": [
+   {
+    "texto": "Os dois vazios são problemas diferentes",
+    "nivel": 2
+   },
+   {
+    "texto": "O título é um <p>, não um heading",
+    "nivel": 2
+   },
+   {
+    "texto": "Tamanhos",
+    "nivel": 2
+   },
+   {
+    "texto": "Dentro da Tabela",
+    "nivel": 2
+   },
+   {
+    "texto": "Props",
+    "nivel": 2
+   },
+   {
+    "texto": "1. Vazio por filtro — existem dados, o filtro escondeu",
+    "nivel": 3
+   },
+   {
+    "texto": "2. Vazio porque é novo — não existe dado nenhum",
+    "nivel": 3
+   }
+  ]
+ },
+ {
+  "slug": "selo",
+  "titulo": "Selo e Etiqueta",
+  "grupo": "Identidade",
+  "secoes": [
+   {
+    "texto": "Experimente",
+    "nivel": 2
+   },
+   {
+    "texto": "Qual dos dois?",
+    "nivel": 2
+   },
+   {
+    "texto": "Selo — a cor nunca é o único sinal",
+    "nivel": 2
+   },
+   {
+    "texto": "Variantes do Selo",
+    "nivel": 2
+   },
+   {
+    "texto": "Por que o sólido não usa a cor sólida",
+    "nivel": 2
+   },
+   {
+    "texto": "Etiqueta — o X",
+    "nivel": 2
+   },
+   {
+    "texto": "Clicável + removível: dois botões, nunca aninhados",
+    "nivel": 2
+   },
+   {
+    "texto": "Props",
+    "nivel": 2
+   },
+   {
+    "texto": "O teste rápido: existe um X?",
+    "nivel": 3
+   },
+   {
+    "texto": "Selo",
+    "nivel": 3
+   },
+   {
+    "texto": "Etiqueta",
+    "nivel": 3
+   }
+  ]
+ },
+ {
+  "slug": "avatar",
+  "titulo": "Avatar",
+  "grupo": "Identidade",
+  "secoes": [
+   {
+    "texto": "O básico",
+    "nivel": 2
+   },
+   {
+    "texto": "Iniciais: primeira + ÚLTIMA",
+    "nivel": 2
+   },
+   {
+    "texto": "A cor é sorteada pelo nome — e é sempre a mesma",
+    "nivel": 2
+   },
+   {
+    "texto": "Quando a foto quebra",
+    "nivel": 2
+   },
+   {
+    "texto": "decorativo — o avatar que cala a boca",
+    "nivel": 2
+   },
+   {
+    "texto": "Status",
+    "nivel": 2
+   },
+   {
+    "texto": "GrupoAvatar",
+    "nivel": 2
+   },
+   {
+    "texto": "Props",
+    "nivel": 2
+   },
+   {
+    "texto": "O detalhe que quase todo mundo erra",
+    "nivel": 3
+   },
+   {
+    "texto": "Avatar",
+    "nivel": 3
+   },
+   {
+    "texto": "GrupoAvatar",
+    "nivel": 3
+   },
+   {
+    "texto": "As duas funções exportadas",
+    "nivel": 3
+   }
+  ]
+ },
+ {
+  "slug": "alerta",
+  "titulo": "Alerta",
+  "grupo": "Retorno",
+  "secoes": [
+   {
+    "texto": "Os quatro tons",
+    "nivel": 2
+   },
+   {
+    "texto": "Só o perigo interrompe",
+    "nivel": 2
+   },
+   {
+    "texto": "Cada tom tem uma forma, não só uma cor",
+    "nivel": 2
+   },
+   {
+    "texto": "Ação e dispensa",
+    "nivel": 2
+   },
+   {
+    "texto": "Alerta ou Aviso (toast)?",
+    "nivel": 2
+   },
+   {
+    "texto": "Props",
+    "nivel": 2
+   },
+   {
+    "texto": "Uma ação, não duas",
+    "nivel": 3
+   },
+   {
+    "texto": "O X é um botão de verdade",
+    "nivel": 3
+   }
+  ]
+ },
+ {
+  "slug": "aviso",
+  "titulo": "Aviso (toast)",
+  "grupo": "Retorno",
+  "secoes": [
+   {
+    "texto": "Os quatro tons",
+    "nivel": 2
+   },
+   {
+    "texto": "A região existe desde sempre, vazia",
+    "nivel": 2
+   },
+   {
+    "texto": "Quem some sozinho e quem fica",
+    "nivel": 2
+   },
+   {
+    "texto": "Duração pelo tamanho do texto",
+    "nivel": 2
+   },
+   {
+    "texto": "Hover e foco pausam a pilha inteira",
+    "nivel": 2
+   },
+   {
+    "texto": "O excedente espera na fila",
+    "nivel": 2
+   },
+   {
+    "texto": "Fechar na mão",
+    "nivel": 2
+   },
+   {
+    "texto": "Sem provedor, ele explode",
+    "nivel": 2
+   },
+   {
+    "texto": "Detalhes que valem saber",
+    "nivel": 2
+   },
+   {
+    "texto": "Props — ProvedorAvisos",
+    "nivel": 2
+   },
+   {
+    "texto": "API — useAviso()",
+    "nivel": 2
+   },
+   {
+    "texto": "Props — AvisoOpcoes",
+    "nivel": 2
+   },
+   {
+    "texto": "Erro não some sozinho",
+    "nivel": 3
+   },
+   {
+    "texto": "Com ação também não",
+    "nivel": 3
+   }
+  ]
+ },
+ {
+  "slug": "carregando",
+  "titulo": "Giro, Progresso e Esqueleto",
+  "grupo": "Retorno",
+  "secoes": [
+   {
+    "texto": "Qual dos três",
+    "nivel": 2
+   },
+   {
+    "texto": "Giro",
+    "nivel": 2
+   },
+   {
+    "texto": "Progresso",
+    "nivel": 2
+   },
+   {
+    "texto": "Esqueleto",
+    "nivel": 2
+   },
+   {
+    "texto": "Os três param com prefers-reduced-motion",
+    "nivel": 2
+   },
+   {
+    "texto": "Props — Giro",
+    "nivel": 2
+   },
+   {
+    "texto": "Props — Progresso",
+    "nivel": 2
+   },
+   {
+    "texto": "Props — Esqueleto",
+    "nivel": 2
+   },
+   {
+    "texto": "Não existe Giro mudo saindo daqui",
+    "nivel": 3
+   },
+   {
+    "texto": "A decisão que quase todo mundo erra: ausente ≠ zero",
+    "nivel": 3
+   },
+   {
+    "texto": "Menos movimento não pode virar \"terminou\"",
+    "nivel": 3
+   },
+   {
+    "texto": "Produção manda lixo, e a barra aguenta",
+    "nivel": 3
+   },
+   {
+    "texto": "A decisão que quase todo mundo erra: o esqueleto é mudo",
+    "nivel": 3
+   },
+   {
+    "texto": "Numa lista, use anunciar=",
+    "nivel": 3
+   },
+   {
+    "texto": "A última linha é curta de propósito",
+    "nivel": 3
+   }
+  ]
+ },
+ {
+  "slug": "dialogo",
+  "titulo": "Diálogo e Gaveta",
+  "grupo": "Sobreposição",
+  "secoes": [
+   {
+    "texto": "Uso",
+    "nivel": 2
+   },
+   {
+    "texto": "Por que o <dialog> nativo",
+    "nivel": 2
+   },
+   {
+    "texto": "O bug clássico: o Esc que mata o modal",
+    "nivel": 2
+   },
+   {
+    "texto": "Clique no fundo: geometria + mousedown",
+    "nivel": 2
+   },
+   {
+    "texto": "Trava de rolagem contada",
+    "nivel": 2
+   },
+   {
+    "texto": "O foco volta para quem abriu",
+    "nivel": 2
+   },
+   {
+    "texto": "Gaveta",
+    "nivel": 2
+   },
+   {
+    "texto": "Dois bugs que só o navegador real pegou",
+    "nivel": 2
+   },
+   {
+    "texto": "Tamanhos",
+    "nivel": 2
+   },
+   {
+    "texto": "Limitações honestas",
+    "nivel": 2
+   },
+   {
+    "texto": "Props — Dialogo",
+    "nivel": 2
+   },
+   {
+    "texto": "Props — Gaveta",
+    "nivel": 2
+   },
+   {
+    "texto": "1. O &lt;dialog&gt; é content-box",
+    "nivel": 3
+   },
+   {
+    "texto": "2. dialog:modal tem inset: 0",
+    "nivel": 3
+   }
+  ]
+ },
+ {
+  "slug": "dica",
+  "titulo": "Dica",
+  "grupo": "Sobreposição",
+  "secoes": [
+   {
+    "texto": "Leia antes de usar",
+    "nivel": 2
+   },
+   {
+    "texto": "Uso",
+    "nivel": 2
+   },
+   {
+    "texto": "O que ela faz certo",
+    "nivel": 2
+   },
+   {
+    "texto": "Posição é preferência, não garantia",
+    "nivel": 2
+   },
+   {
+    "texto": "Limitações conhecidas",
+    "nivel": 2
+   },
+   {
+    "texto": "Props",
+    "nivel": 2
+   },
+   {
+    "texto": "Abre no foco, não só no hover",
+    "nivel": 3
+   },
+   {
+    "texto": "Esc fecha",
+    "nivel": 3
+   },
+   {
+    "texto": "Liga por aria-describedby, não por title",
+    "nivel": 3
+   }
+  ]
+ },
+ {
+  "slug": "abas",
+  "titulo": "Abas",
+  "grupo": "Navegação",
+  "secoes": [
+   {
+    "texto": "Uso",
+    "nivel": 2
+   },
+   {
+    "texto": "Roving tabindex — o coração do componente",
+    "nivel": 2
+   },
+   {
+    "texto": "Por que aria-disabled, e não o disabled do HTML",
+    "nivel": 2
+   },
+   {
+    "texto": "O teclado lê o DOM, não um registro em estado",
+    "nivel": 2
+   },
+   {
+    "texto": "Variantes",
+    "nivel": 2
+   },
+   {
+    "texto": "Duas decisões que você só nota quando faltam",
+    "nivel": 2
+   },
+   {
+    "texto": "O valor vira id — e por isso é higienizado",
+    "nivel": 2
+   },
+   {
+    "texto": "Props",
+    "nivel": 2
+   },
+   {
+    "texto": "Todas as abas têm o mesmo peso de fonte",
+    "nivel": 3
+   },
+   {
+    "texto": "Só o painel ativo existe no DOM",
+    "nivel": 3
+   },
+   {
+    "texto": "Abas",
+    "nivel": 3
+   },
+   {
+    "texto": "ListaAbas",
+    "nivel": 3
+   },
+   {
+    "texto": "Aba",
+    "nivel": 3
+   },
+   {
+    "texto": "PainelAba",
+    "nivel": 3
+   }
+  ]
+ },
+ {
+  "slug": "acordeao",
+  "titulo": "Acordeão",
+  "grupo": "Navegação",
+  "secoes": [
+   {
+    "texto": "Uso",
+    "nivel": 2
+   },
+   {
+    "texto": "Por que o gatilho mora dentro de um heading",
+    "nivel": 2
+   },
+   {
+    "texto": "unico ou multiplo",
+    "nivel": 2
+   },
+   {
+    "texto": "A linha mais importante do CSS",
+    "nivel": 2
+   },
+   {
+    "texto": "E a animação, então?",
+    "nivel": 2
+   },
+   {
+    "texto": "Setas do teclado: não implementadas, de propósito",
+    "nivel": 2
+   },
+   {
+    "texto": "Props",
+    "nivel": 2
+   },
+   {
+    "texto": "O tipo do onChange acompanha o tipo do acordeão",
+    "nivel": 3
+   },
+   {
+    "texto": "O JS pergunta a duração ao CSS",
+    "nivel": 3
+   },
+   {
+    "texto": "Acordeao",
+    "nivel": 3
+   },
+   {
+    "texto": "ItemAcordeao",
+    "nivel": 3
+   }
+  ]
+ },
+ {
+  "slug": "trilha",
+  "titulo": "Trilha",
+  "grupo": "Navegação",
+  "secoes": [
+   {
+    "texto": "Uso",
+    "nivel": 2
+   },
+   {
+    "texto": "O item atual não é link",
+    "nivel": 2
+   },
+   {
+    "texto": "O separador é decorativo",
+    "nivel": 2
+   },
+   {
+    "texto": "Caminho fundo — max",
+    "nivel": 2
+   },
+   {
+    "texto": "As três formas de um item",
+    "nivel": 2
+   },
+   {
+    "texto": "Props",
+    "nivel": 2
+   },
+   {
+    "texto": "O \"…\" é um botão, não um texto morto",
+    "nivel": 3
+   },
+   {
+    "texto": "Nunca troca UM item por \"…\"",
+    "nivel": 3
+   },
+   {
+    "texto": "Trilha",
+    "nivel": 3
+   },
+   {
+    "texto": "ItemTrilha",
+    "nivel": 3
+   }
+  ]
+ },
+ {
+  "slug": "paginacao",
+  "titulo": "Paginação",
+  "grupo": "Navegação",
+  "secoes": [
+   {
+    "texto": "Uso",
+    "nivel": 2
+   },
+   {
+    "texto": "janelaPaginas é o componente de verdade",
+    "nivel": 2
+   },
+   {
+    "texto": "Entrada suja é entrada esperada",
+    "nivel": 2
+   },
+   {
+    "texto": "A regra fina: um buraco de UMA página mostra o número",
+    "nivel": 2
+   },
+   {
+    "texto": "Reusa o Button",
+    "nivel": 2
+   },
+   {
+    "texto": "Três decisões que parecem detalhe",
+    "nivel": 2
+   },
+   {
+    "texto": "O que o leitor de tela ouve",
+    "nivel": 2
+   },
+   {
+    "texto": "Props",
+    "nivel": 2
+   },
+   {
+    "texto": "A tabela de casos",
+    "nivel": 3
+   },
+   {
+    "texto": "1. O rótulo do seletor é visível",
+    "nivel": 3
+   },
+   {
+    "texto": "2. Com uma página só, os botões somem — o resumo fica",
+    "nivel": 3
+   },
+   {
+    "texto": "3. onPorPaginaChange não volta para a página 1 sozinho",
+    "nivel": 3
+   }
+  ]
+ }
+]

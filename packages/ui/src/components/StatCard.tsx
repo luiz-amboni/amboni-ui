@@ -6,7 +6,12 @@ import './StatCard.css'
 export type StatTone = 'brand' | 'success' | 'warning' | 'danger' | 'neutral'
 
 export interface StatDelta {
-  /** Variação em %. Negativo = caiu. */
+  /**
+   * Variação em %. Negativo = caiu.
+   *
+   * Abaixo de 1% (em módulo) vira "estável", não "0%": um "0%" com seta para cima é
+   * contraditório, e "estável" é o que a pessoa queria saber.
+   */
   percent: number
   /**
    * Se subir é bom. **Omita quando não há julgamento** — gastar menos não é bom nem
