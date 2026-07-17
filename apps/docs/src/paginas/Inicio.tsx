@@ -18,6 +18,14 @@ export default function Inicio() {
         Uma base que não deixa você errar
       </Titulo>
 
+      {/* O comando de instalação vem ANTES de qualquer explicação.
+          A biblioteca está no npm desde hoje, e a home não dizia como instalá-la — quem
+          chega decidido tinha que caçar. Primeira pergunta de todo visitante, primeira
+          resposta da página. */}
+      <Secao>
+        <Bloco lang="jsx">{`npm install @amboni/ui @amboni/tokens`}</Bloco>
+      </Secao>
+
       <Secao>
         <Demo variante="plain">
           <Button variant="primary">Ação principal</Button>
@@ -51,8 +59,8 @@ export default function Inicio() {
             sub="combinações conferidas ao vivo"
             tone="success"
           />
-          <StatCard label="Marcas suportadas" value="2" sub="mesmo código, cores diferentes" />
-          <StatCard label="Hex nos componentes" value="0" sub="tudo lê var(--amb-*)" tone="brand" />
+          <StatCard label="Componentes" value="39" sub="12,7 kB + 7,5 kB de CSS" tone="brand" />
+          <StatCard label="Hex nos componentes" value="0" sub="tudo lê var(--amb-*)" tone="neutral" />
         </Demo>
 
         <H3>Acessibilidade que reprova o build</H3>

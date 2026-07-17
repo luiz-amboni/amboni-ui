@@ -92,7 +92,15 @@ export default function App() {
           <span className="doc-logo__mark">A</span>
           @amboni/ui
         </a>
-        <span className="doc-tag">v0.1</span>
+        {/* Lido do package.json no build — dizia "v0.1" enquanto o npm já tinha a 0.2.1. */}
+        <a
+          className="doc-tag"
+          href="https://www.npmjs.com/package/@amboni/ui"
+          target="_blank"
+          rel="noreferrer"
+        >
+          v{__VERSAO__}
+        </a>
 
         <div className="doc-top__spacer" />
 
