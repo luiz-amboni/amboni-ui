@@ -275,3 +275,70 @@ test('quatro cards num flex têm a mesma largura, apesar de textos diferentes', 
     `larguras: ${larguras.join(', ')} — o card está encolhendo para o tamanho do texto`,
   ).toBeLessThanOrEqual(1)
 })
+
+/**
+ * ── O símbolo dentro da caixa saía do centro ────────────────────────────────
+ *
+ * Achado NO OLHO, por quem usava — não por teste. É o tipo de defeito que a gente
+ * documenta que "não dá para automatizar" até alguém apontar.
+ *
+ * A causa: dentro da marca vivem DOIS desenhos, o ✓ e o tracinho do estado parcial. Só
+ * um aparece por vez; o outro é escondido com `opacity: 0`. Mas **transparente não é
+ * ausente** — como itens de flex, os dois continuavam ocupando espaço lado a lado.
+ *
+ * Medido antes do conserto: o ✓ ENCOLHIA de 12 para 8px e ficava com 1px de folga de um
+ * lado e 9px do outro, numa caixa de 18. O `justify-content: center` estava lá e
+ * funcionava — só que centralizava o PAR, não o símbolo visível. Por isso ninguém achou
+ * lendo o CSS: ele parecia certo.
+ *
+ * Consertado com grid + `grid-area: 1/1` nos dois: empilhados, não enfileirados.
+ *
+ * Este teste é de LAYOUT e não de print de propósito: um print pega a diferença, mas um
+ * número diz o que houve. "esq=1 dir=9" aponta para a causa; uma imagem vermelha, não.
+ */
+test.describe('o símbolo fica no centro da caixa', () => {
+  test('o ✓ da caixa marcada', async ({ page }) => {
+    await abrir(page, { cena: 'formulario' })
+
+    const folgas = await page.evaluate(() => {
+      const marca = document.querySelector('.amb-caixa__input:checked + .amb-caixa__marca')
+      if (!marca) return null
+      const svg = marca.querySelector('.amb-caixa__check')!
+      const d = marca.getBoundingClientRect(), s = svg.getBoundingClientRect()
+      return {
+        esq: +(s.left - d.left).toFixed(1),
+        dir: +(d.right - s.right).toFixed(1),
+        topo: +(s.top - d.top).toFixed(1),
+        baixo: +(d.bottom - s.bottom).toFixed(1),
+        largura: +s.width.toFixed(1),
+      }
+    })
+
+    expect(folgas, 'não achei caixa marcada na cena').not.toBeNull()
+    // Um símbolo espremido denuncia o mesmo bug por outro ângulo: se o ✓ deixar de ser
+    // quadrado, alguma coisa está roubando o espaço dele.
+    expect(folgas!.largura, `o ✓ deveria ter 12px de largura, tem ${folgas!.largura}`).toBe(12)
+    expect(folgas!.esq, `horizontal torto: esq=${folgas!.esq} dir=${folgas!.dir}`).toBe(folgas!.dir)
+    expect(folgas!.topo, `vertical torto: topo=${folgas!.topo} baixo=${folgas!.baixo}`).toBe(folgas!.baixo)
+  })
+
+  test('o tracinho da caixa parcial', async ({ page }) => {
+    // O outro símbolo tem que estar centrado pelo mesmo motivo — e é ele que estava
+    // empurrando o ✓. Testar só o ✓ deixaria metade da causa sem rede.
+    await abrir(page, { cena: 'formulario' })
+
+    const folgas = await page.evaluate(() => {
+      const marca = document.querySelector('.amb-caixa__input:indeterminate + .amb-caixa__marca')
+      if (!marca) return null
+      const svg = marca.querySelector('.amb-caixa__traco')!
+      const d = marca.getBoundingClientRect(), s = svg.getBoundingClientRect()
+      return {
+        esq: +(s.left - d.left).toFixed(1),
+        dir: +(d.right - s.right).toFixed(1),
+      }
+    })
+
+    expect(folgas, 'não achei caixa parcial na cena').not.toBeNull()
+    expect(folgas!.esq, `torto: esq=${folgas!.esq} dir=${folgas!.dir}`).toBe(folgas!.dir)
+  })
+})

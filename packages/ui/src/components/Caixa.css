@@ -49,9 +49,24 @@
 }
 
 .amb-caixa__marca {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  /**
+   * `grid` e não `inline-flex` — conserta um desalinho que se via a olho nu.
+   *
+   * Dentro da marca vivem DOIS desenhos: o ✓ e o tracinho do estado parcial. Só um
+   * aparece por vez; o outro é escondido com `opacity: 0`. Mas **transparente não é
+   * ausente**: como itens de flex, os dois seguiam ocupando espaço, lado a lado.
+   *
+   * Medido: os dois disputavam os 15px internos, o ✓ ENCOLHIA de 12 para 8px e ainda era
+   * empurrado para a esquerda pelo fantasma do tracinho — 1px de folga de um lado e 9px
+   * do outro, numa caixa de 18. O `justify-content: center` estava aqui e funcionava: só
+   * que ele centralizava o PAR, não o símbolo visível.
+   *
+   * Com grid os dois vão para a mesma célula (`grid-area: 1 / 1`, abaixo): empilhados em
+   * vez de enfileirados. Cada um recebe a caixa inteira, e o `place-items: center` centra
+   * o que estiver aparecendo.
+   */
+  display: grid;
+  place-items: center;
   box-sizing: border-box;
   border: 1.5px solid var(--amb-color-border-strong);
   border-radius: var(--amb-raio-sm);
@@ -66,6 +81,10 @@
 
 .amb-caixa__check,
 .amb-caixa__traco {
+  /* Mesma célula do grid: os dois EMPILHADOS, nunca lado a lado. Sem esta linha eles
+     voltam a se enfileirar, cada um encolhe o outro, e o símbolo visível sai do centro —
+     que era o bug. `opacity: 0` esconde do olho, não do layout. */
+  grid-area: 1 / 1;
   width: 0.75rem;
   height: 0.75rem;
   opacity: 0;

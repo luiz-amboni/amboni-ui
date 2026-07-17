@@ -1,5 +1,27 @@
 # @amboni/ui
 
+## 0.2.3
+
+### Patch Changes
+
+- **Caixa**: o ✓ ficava fora do centro e espremido.
+
+  Dentro da marca vivem dois desenhos — o ✓ e o tracinho do estado parcial. Só um aparece por
+  vez; o outro é escondido com `opacity: 0`. Mas **transparente não é ausente**: como itens de
+  flex, os dois seguiam ocupando espaço lado a lado.
+
+  Medido: o ✓ encolhia de 12 para 8px e ficava com 1px de folga de um lado e 9px do outro,
+  numa caixa de 18. O `justify-content: center` estava lá e funcionava — só que centralizava
+  o PAR, não o símbolo visível. Por isso ninguém achou lendo o CSS: ele parecia certo.
+
+  Agora os dois vão para a mesma célula de um grid: empilhados, não enfileirados. Folga de
+  3px nos quatro lados.
+
+  Achado a olho nu por quem estava usando. Rádio e Interruptor foram conferidos e estão
+  limpos — cada um tem um símbolo só, então não havia com quem brigar.
+
+  - @amboni/tokens@0.2.3
+
 ## 0.2.2
 
 ### Patch Changes
