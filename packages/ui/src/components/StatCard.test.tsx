@@ -87,3 +87,31 @@ describe('StatCard — variação (delta)', () => {
     expect(screen.queryByText('50%')).not.toBeInTheDocument()
   })
 })
+
+describe('StatCard — ícone vivo', () => {
+  test('sem iconeVivo, o ícone usa o tingido suave (não a classe --vivo)', () => {
+    const { container } = render(
+      <StatCard label="Atas" value="1.284" tone="brand" icon={<span>i</span>} />,
+    )
+    expect(container.querySelector('.amb-stat__icon--vivo')).toBeNull()
+    expect(container.querySelector('.amb-stat__icon--brand')).toBeTruthy()
+  })
+
+  test('com iconeVivo, ganha a classe --vivo SEM perder o tom', () => {
+    // O --vivo sobrescreve o fundo, mas o --tom precisa continuar lá: é ele que decide
+    // QUAL cor fica cheia. Perder o tom deixaria todos os ícones vivos da mesma cor.
+    const { container } = render(
+      <StatCard label="Vencidas" value="47" tone="danger" iconeVivo icon={<span>i</span>} />,
+    )
+    const icone = container.querySelector('.amb-stat__icon')
+    expect(icone).toHaveClass('amb-stat__icon--vivo')
+    expect(icone).toHaveClass('amb-stat__icon--danger')
+  })
+
+  test('sem ícone, iconeVivo não quebra nada', () => {
+    // iconeVivo só afeta o ícone; sem ícone, é inócuo — não pode lançar nem renderizar
+    // uma caixa vazia.
+    const { container } = render(<StatCard label="X" value="1" iconeVivo />)
+    expect(container.querySelector('.amb-stat__icon')).toBeNull()
+  })
+})

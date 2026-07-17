@@ -1,5 +1,25 @@
 # @amboni/ui
 
+## 0.3.0
+
+### Minor Changes
+
+- **StatCard**: nova prop `iconeVivo` — fundo do ícone cheio da cor do tom, com o ícone em
+  branco, em vez do tingido suave padrão.
+
+  Para dashboards onde o ícone é a identidade da tela. O padrão continua o suave: num painel
+  com muitos cards, ícone cheio em todos vira ruído. Cada tom puxa a própria cor cheia
+  (`brand`, `success`, `danger`, `warning`), então as cores mantêm o significado — vencidas
+  em vermelho, vigentes em verde.
+
+  Branco sobre a cor cheia passa no contraste (já verificado no teste de tokens), então não
+  abre buraco de acessibilidade. Nasceu de uma preferência real: o VEAR usava ícones com
+  gradiente vibrante, e o dono preferiu manter esse brilho ao migrar.
+
+### Patch Changes
+
+- @amboni/tokens@0.3.0
+
 ## 0.2.4
 
 ### Patch Changes

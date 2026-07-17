@@ -33,6 +33,19 @@ export interface StatCardProps {
   value: string | null
   /** Ícone. Decorativo — o rótulo é que informa. */
   icon?: ReactNode
+  /**
+   * Fundo do ícone CHEIO da cor do `tone`, com o ícone em branco — em vez do tingido
+   * suave padrão. Mais vibrante, para painéis que querem os ícones em destaque.
+   *
+   * @default false
+   *
+   * O padrão continua o suave porque, num painel com muitos cards, ícone cheio em todos
+   * vira ruído — quando tudo grita, nada é ouvido. Ligue quando o ícone É a identidade da
+   * tela, como num dashboard de poucos cards. A legibilidade está garantida: branco sobre
+   * a cor cheia passa no contraste (verificado no teste de tokens), então isto não abre um
+   * buraco de acessibilidade.
+   */
+  iconeVivo?: boolean
   /** Linha de apoio: de onde vem o número, ou o cálculo. */
   sub?: ReactNode
   /**
@@ -92,7 +105,7 @@ function Delta({ percent, betterWhenUp, suffix = 'vs. anterior' }: StatDelta) {
  * <StatCard label="Retorno (ROAS)" value="—" emptyReason="precisa de vendas atribuídas" />
  */
 export function StatCard({
-  label, value, icon, sub, emptyReason, tone = 'brand', delta, className,
+  label, value, icon, iconeVivo, sub, emptyReason, tone = 'brand', delta, className,
 }: StatCardProps) {
   const carregando = value === null
   const vazio = !carregando && (value === '' || value === '—')
@@ -100,7 +113,10 @@ export function StatCard({
   return (
     <Card className={cx('amb-stat', className)} style={{ height: '100%' }}>
       {icon && (
-        <div className={cx('amb-stat__icon', `amb-stat__icon--${tone}`)} aria-hidden="true">
+        <div
+          className={cx('amb-stat__icon', `amb-stat__icon--${tone}`, iconeVivo && 'amb-stat__icon--vivo')}
+          aria-hidden="true"
+        >
           {icon}
         </div>
       )}

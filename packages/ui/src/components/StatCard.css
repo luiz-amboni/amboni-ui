@@ -37,6 +37,47 @@
 .amb-stat__icon--danger  { background: color-mix(in srgb, var(--amb-color-danger-solid) 14%, transparent);  color: var(--amb-color-danger-text); }
 .amb-stat__icon--neutral { background: var(--amb-color-surfaceRaised); color: var(--amb-color-text-secondary); }
 
+/* ── Ícone vivo ──────────────────────────────────────────────────────────────
+ * Fundo CHEIO da cor do tom (não o tingido a 14%), com o ícone em branco. Mais vibrante,
+ * para dashboards onde o ícone é a identidade da tela.
+ *
+ * Vem DEPOIS das regras de tom, então sobrescreve o `background` e o `color` delas — o
+ * mesmo `.amb-stat__icon--vivo` serve os cinco tons, cada um puxando o próprio
+ * `-solid`. O branco sobre a cor cheia passa no contraste (teste de tokens), por isso é
+ * seguro cravar `#fff` aqui: é o texto-sobre-cor-sólida que a biblioteca já garante.
+ *
+ * O gradiente dá o brilho que um fundo chapado não tem, e é sutil: a mesma cor, um tom
+ * mais clara na diagonal. `color-mix` com branco mantém tudo derivado do tema. */
+.amb-stat__icon--vivo {
+  color: #fff;
+}
+.amb-stat__icon--vivo.amb-stat__icon--brand {
+  background: linear-gradient(135deg,
+    var(--amb-color-brand-solid),
+    color-mix(in srgb, var(--amb-color-brand-solid) 78%, white));
+}
+.amb-stat__icon--vivo.amb-stat__icon--success {
+  background: linear-gradient(135deg,
+    var(--amb-color-success-solid),
+    color-mix(in srgb, var(--amb-color-success-solid) 78%, white));
+}
+.amb-stat__icon--vivo.amb-stat__icon--warning {
+  background: linear-gradient(135deg,
+    var(--amb-color-warning-solid),
+    color-mix(in srgb, var(--amb-color-warning-solid) 78%, white));
+}
+.amb-stat__icon--vivo.amb-stat__icon--danger {
+  background: linear-gradient(135deg,
+    var(--amb-color-danger-solid),
+    color-mix(in srgb, var(--amb-color-danger-solid) 78%, white));
+}
+/* Neutro vivo não faz sentido (cinza cheio é feio e não comunica nada); cai no brand. */
+.amb-stat__icon--vivo.amb-stat__icon--neutral {
+  background: linear-gradient(135deg,
+    var(--amb-color-brand-solid),
+    color-mix(in srgb, var(--amb-color-brand-solid) 78%, white));
+}
+
 .amb-stat__content { flex: 1; min-width: 0; }
 
 .amb-stat__label {
