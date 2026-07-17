@@ -8,6 +8,7 @@ import {
   useState,
   type ReactNode,
 } from 'react'
+import { createPortal } from 'react-dom'
 import { cx } from '../utils/cx'
 import './Aviso.css'
 
@@ -337,10 +338,28 @@ export function ProvedorAvisos({ children, limite = 3 }: ProvedorAvisosProps) {
   // `limite` são sempre os mais antigos — a fila cai fora de graça, sem estado extra.
   const visiveis = avisos.slice(0, limite)
 
-  return (
-    <AvisosContexto.Provider value={api}>
-      {children}
+  /**
+   * A região dos avisos vai para o <body> por PORTAL.
+   *
+   * Ela é `position: fixed`, e `fixed` deixa de se ancorar na janela quando QUALQUER
+   * ancestral tem `transform`, `filter` ou `backdrop-filter` — esses criam bloco
+   * contedor. Renderizada aqui dentro, ela herda a árvore de quem envolveu o provedor:
+   * basta um cabeçalho com blur, um card com `transform: scale` no hover, um modal
+   * animado, e os avisos aparecem colados num canto qualquer — ou pior, pintam certo e
+   * não recebem clique.
+   *
+   * Não é hipótese: a busca desta documentação caiu exatamente nisso hoje. O painel
+   * ficou preso nos 108px do cabeçalho com `backdrop-filter`, pintou certo e engoliu
+   * todo clique abaixo disso. Chegou como "buscar tá bugado".
+   *
+   * `montado` existe por causa de SSR: `document` não existe no servidor. O atraso de um
+   * efeito é inofensivo aqui — a região só precisa existir antes do PRIMEIRO aviso, e
+   * aviso vem de interação, que só acontece depois da hidratação.
+   */
+  const [montado, setMontado] = useState(false)
+  useEffect(() => setMontado(true), [])
 
+  const regiao = (
       <div
         className="amb-avisos"
         // Ver o bloco acima: esta div existe desde o primeiro render, vazia.
@@ -367,6 +386,12 @@ export function ProvedorAvisos({ children, limite = 3 }: ProvedorAvisosProps) {
           <ItemAviso key={aviso.id} aviso={aviso} pausado={pausado} onFechar={fechar} />
         ))}
       </div>
+  )
+
+  return (
+    <AvisosContexto.Provider value={api}>
+      {children}
+      {montado && createPortal(regiao, document.body)}
     </AvisosContexto.Provider>
   )
 }

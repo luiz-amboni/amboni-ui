@@ -71,13 +71,18 @@ describe('Aviso — o anúncio para quem não vê a tela', () => {
     // conteúdo dentro e tipicamente não anuncia nada. Sintoma cruel: perfeito no olho,
     // mudo para quem depende do leitor. Por isso a região é montada vazia, desde o
     // primeiro render.
-    const { container } = render(
+    render(
       <ProvedorAvisos>
         <p>app</p>
       </ProvedorAvisos>,
     )
 
-    const regiao = container.querySelector('[aria-live]')
+    // Procura no `document.body`, não no `container` do render: a região vai para lá por
+    // PORTAL. Sem o portal, `position: fixed` se ancora no primeiro ancestral com
+    // transform/filter em vez de na janela — os avisos aparecem colados num canto
+    // qualquer, ou pintam certo e não recebem clique. O que este teste protege continua
+    // sendo o mesmo; só o endereço mudou.
+    const regiao = document.body.querySelector('[aria-live]')
     expect(regiao).toBeTruthy()
     expect(regiao).toBeEmptyDOMElement()
   })
@@ -85,8 +90,8 @@ describe('Aviso — o anúncio para quem não vê a tela', () => {
   test('a região só anuncia o que ENTRA (aria-relevant)', () => {
     // Sem isto, fechar um aviso faz o leitor de tela ler a remoção: a pessoa dispensa
     // a mensagem e ouve a mensagem de novo, como prêmio.
-    const { container } = render(<ProvedorAvisos />)
-    expect(container.querySelector('[aria-live]')).toHaveAttribute('aria-relevant', 'additions')
+    render(<ProvedorAvisos />)
+    expect(document.body.querySelector('[aria-live]')).toHaveAttribute('aria-relevant', 'additions')
   })
 
   test('erro INTERROMPE a leitura (role="alert")', async () => {
@@ -454,5 +459,27 @@ describe('Aviso — uso errado', () => {
     }
     expect(() => render(<Solto />)).toThrow(/ProvedorAvisos/)
     silencio.mockRestore()
+  })
+})
+
+
+// ── O portal ────────────────────────────────────────────────────────────────
+describe('Aviso — a região vive no <body>', () => {
+  test('sai da árvore de quem envolveu o provedor', () => {
+    // `position: fixed` deixa de se ancorar na janela quando QUALQUER ancestral tem
+    // `transform`, `filter` ou `backdrop-filter`: eles criam bloco contedor. Renderizada
+    // inline, a região herdaria a árvore do consumidor — basta um cabeçalho com blur, um
+    // card com `scale` no hover, um modal animado.
+    //
+    // Não é hipótese: a busca da documentação caiu nisso. O painel ficou preso nos 108px
+    // de um cabeçalho com backdrop-filter, pintou certo, e engoliu todo clique abaixo.
+    // Chegou como "buscar tá bugado". Este teste é para não repetirmos aqui.
+    const { container } = render(
+      <ProvedorAvisos>
+        <p>app</p>
+      </ProvedorAvisos>,
+    )
+    expect(container.querySelector('[aria-live]')).toBeNull()
+    expect(document.body.querySelector('[aria-live]')).toBeTruthy()
   })
 })

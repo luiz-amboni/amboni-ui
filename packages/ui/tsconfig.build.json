@@ -2,8 +2,16 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "noEmit": false, "allowImportingTsExtensions": false,
-    "emitDeclarationOnly": true, "declaration": true, "outDir": "dist"
+    "emitDeclarationOnly": true, "declaration": true, "outDir": "dist",
+    // Node fica de FORA do build de propósito, mesmo estando no tsconfig de teste.
+    // Isto aqui é uma biblioteca de navegador: com os tipos do Node visíveis, `fs`,
+    // `path` e `Buffer` passam a existir para o compilador, e alguém importa um deles sem
+    // o TypeScript reclamar — o erro só aparece no navegador de quem instala.
+    // O `pacote.test.ts` precisa deles (lê o dist/); o código publicado, nunca.
+    "types": ["vitest/globals", "@testing-library/jest-dom"]
   },
   "include": ["src"],
-  "exclude": ["src/**/*.test.tsx", "src/test-setup.ts"]
+  // `.test.ts` além de `.test.tsx`: o pacote.test.ts é .ts e escapava desta lista,
+  // tentando entrar no build e arrastando `node:fs` junto.
+  "exclude": ["src/**/*.test.tsx", "src/**/*.test.ts", "src/test-setup.ts"]
 }

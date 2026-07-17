@@ -1,0 +1,37 @@
+version: 2
+
+# Sem isto, as dependências apodrecem em silêncio até alguém rodar `npm audit` e achar
+# uma crítica — foi exatamente o que aconteceu aqui: vitest e vite ficaram para trás e o
+# audit acusou 1 crítica e 1 alta. Nenhuma afetava o pacote publicado, mas descobrir isso
+# por acaso, meses depois, é sorte, não processo.
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    # Um PR por semana com tudo agrupado, em vez de doze PRs isolados que ninguém lê.
+    # PR demais é o jeito mais rápido de fazer todo mundo ignorar o Dependabot.
+    groups:
+      dev:
+        dependency-type: development
+        update-types: [minor, patch]
+      producao:
+        dependency-type: production
+        update-types: [minor, patch]
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: 'chore(deps)'
+    # Major é decisão humana: vitest 2→4 quebrou a tipagem de `process` aqui, e isso
+    # precisa de alguém olhando, não de um merge automático.
+    ignore:
+      - dependency-name: '*'
+        update-types: [version-update:semver-major]
+
+  # As Actions também são dependência — e são a mais sensível de todas: elas rodam com
+  # acesso aos segredos do repositório, inclusive o token do npm.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: 'chore(ci)'

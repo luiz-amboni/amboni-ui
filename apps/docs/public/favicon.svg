@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!--
+    Favicon em SVG, com o mesmo "A" do logotipo do topo.
+
+    SVG e não PNG porque ele acompanha o tema do sistema: `prefers-color-scheme` funciona
+    dentro do favicon nos navegadores modernos, então o ícone não some numa aba escura —
+    que é o que acontece com PNG de cor fixa, o sintoma mais comum de favicon amador.
+
+    O ciano aqui é literal e é a única cor cravada do projeto que não vem de token: o
+    favicon é servido como arquivo isolado, sem acesso ao tokens.css. É `cyan[700]`
+    (#106b81), o mesmo que o `brand-solid` do tema claro — copiado à mão porque não há
+    outro jeito, e anotado aqui para quem for mexer saber de onde ele veio.
+  -->
+  <style>
+    .fundo { fill: #106b81; }
+    .letra { fill: #ffffff; }
+    @media (prefers-color-scheme: dark) {
+      /* No escuro, a marca clareia (cyan[400]) e a letra escurece — a mesma regra do
+         tema: fundo escuro pede cor mais clara, não mais forte. */
+      .fundo { fill: #22d3ee; }
+      .letra { fill: #020617; }
+    }
+  </style>
+  <rect class="fundo" width="32" height="32" rx="7" />
+  <path class="letra" d="M16 7.5 L23.5 24.5 H19.8 L18.35 21 H13.65 L12.2 24.5 H8.5 L16 7.5 Z M16 12.8 L14.6 18.2 H17.4 L16 12.8 Z" />
+</svg>

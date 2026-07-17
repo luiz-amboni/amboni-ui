@@ -4,6 +4,13 @@ on:
   push: { branches: [main] }
   pull_request: { branches: [main] }
 
+# Privilégio mínimo, declarado. Sem este bloco o job herda o padrão do repositório —
+# que em repositório antigo costuma ser leitura E ESCRITA. Um CI que só compila e testa
+# não precisa poder escrever no repo: se alguma dependência de build for comprometida,
+# a diferença entre "leu o código" e "empurrou um commit" é esta linha.
+permissions:
+  contents: read
+
 jobs:
   verificar:
     runs-on: ubuntu-latest

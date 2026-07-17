@@ -5,6 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@amboni/ui — design system</title>
     <meta name="description" content="Design system neutro, temável e acessível por prova. Para React, com MUI, Tailwind ou CSS puro." />
+
+    <!-- Favicon em SVG: acompanha o tema do sistema (prefers-color-scheme funciona dentro
+         do próprio arquivo), então o ícone não some numa aba escura — que é o que
+         acontece com PNG de cor fixa. Sem favicon, a aba mostra o ícone genérico de
+         página em branco: é o sinal nº 1 de site inacabado, e ninguém reporta. -->
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <!-- Sem isto, mandar o link no WhatsApp ou no Slack mostra uma caixa cinza vazia.
+         Para uma biblioteca que quer ser adotada, o link é o primeiro contato. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="@amboni/ui" />
+    <meta property="og:title" content="@amboni/ui — design system acessível por prova" />
+    <meta property="og:description" content="28 componentes React que trocam de marca e de tema sem tocar em uma linha de código. O contraste é testado, não prometido: cor ilegível reprova o build." />
+    <meta property="og:url" content="https://luiz-amboni.github.io/amboni-ui/" />
+    <meta property="og:image" content="https://luiz-amboni.github.io/amboni-ui/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="pt_BR" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="@amboni/ui — design system acessível por prova" />
+    <meta name="twitter:description" content="28 componentes React que trocam de marca e de tema sem tocar em uma linha de código. O contraste é testado, não prometido." />
+    <meta name="twitter:image" content="https://luiz-amboni.github.io/amboni-ui/og.png" />
+
+    <meta name="theme-color" content="#106b81" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />

@@ -33,7 +33,19 @@ export default defineConfig({
       },
     },
     cssCodeSplit: false,
-    // o nome do CSS precisa bater com o exports do package.json ('./styles.css')
+    /**
+     * O sourcemap vai publicado, e é uma escolha — ele é 310 kB, quinze vezes o código.
+     *
+     * Vai porque o `dist` é minificado: sem o mapa, quem instalar e abrir o DevTools para
+     * entender por que um componente se comporta de um jeito encontra `function p(e,t)` e
+     * desiste. Com ele, lê `Button.tsx`.
+     *
+     * E o custo é menor do que o número assusta: sourcemap NUNCA é baixado pelo navegador
+     * de quem usa o produto final — só pelo DevTools, quando aberto. Ele pesa no
+     * `npm install`, não no que o usuário carrega. Fosse o contrário, a conta não fechava.
+     *
+     * Não vaza nada: o repositório é MIT e público. O mapa só evita uma viagem ao GitHub.
+     */
     sourcemap: true,
   },
   test: { environment: 'jsdom', globals: true, setupFiles: ['./src/test-setup.ts'] },

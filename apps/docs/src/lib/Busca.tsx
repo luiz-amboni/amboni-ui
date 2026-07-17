@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import indice from '../busca-indice.json'
 import './Busca.css'
 
@@ -149,7 +150,24 @@ export function Busca() {
         <kbd className="doc-busca-abrir__kbd">⌘K</kbd>
       </button>
 
-      {aberto && (
+      {/**
+        * O painel vai para o <body> por PORTAL, e isto não é preferência de arquitetura —
+        * é a correção de um bug que chegou como "buscar tá bugado".
+        *
+        * A `<Busca>` é usada dentro do cabeçalho, e o cabeçalho tem
+        * `backdrop-filter: blur(12px)`. Filtro (como `transform`) cria um BLOCO CONTEDOR:
+        * o `position: fixed` do painel deixa de se ancorar na janela e passa a se ancorar
+        * no cabeçalho. Medido: o fundo que deveria ter 1440x900 tinha **1440x108**.
+        *
+        * O sintoma é traiçoeiro porque o painel PINTA certo (o conteúdo transborda e
+        * aparece): só o alvo do clique fica preso aos 108px. Abaixo disso o clique
+        * atravessa para a página. Teclado funcionava, mouse não — e por isso meu teste,
+        * que usava Enter, passou. Quem usa o site clica.
+        *
+        * O portal tira o painel do subárvore do cabeçalho, então nenhum ancestral pode
+        * mais capturá-lo. É a mesma armadilha que a doc do <Dica> já registrava.
+        */}
+      {aberto && createPortal(
         <div
           className="doc-busca__fundo"
           // mousedown, não click: soltar o mouse fora depois de selecionar texto dentro
@@ -211,7 +229,8 @@ export function Busca() {
               <span><kbd>esc</kbd> fechar</span>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body,
       )}
     </>
   )
