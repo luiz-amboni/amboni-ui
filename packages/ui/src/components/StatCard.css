@@ -49,7 +49,7 @@
  * O gradiente dá o brilho que um fundo chapado não tem, e é sutil: a mesma cor, um tom
  * mais clara na diagonal. `color-mix` com branco mantém tudo derivado do tema. */
 .amb-stat__icon--vivo {
-  color: #fff;
+  color: var(--amb-color-text-onBrand);
 }
 .amb-stat__icon--vivo.amb-stat__icon--brand {
   background: linear-gradient(135deg,
