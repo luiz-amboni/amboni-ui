@@ -237,3 +237,41 @@ test('texto longo demais num card cede a caixa, em vez de estourar o layout', as
   const rolagem = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)
   expect(rolagem, 'a página ganhou rolagem horizontal — algum conteúdo está empurrando o layout').toBe(false)
 })
+
+/**
+ * ── O Card encolhia dentro de um flex ───────────────────────────────────────
+ *
+ * Achado migrando a tela de Métricas do iSafe — uma tela de verdade, não um exemplo.
+ *
+ * Como `<div>`, o card ocupa a linha inteira e o defeito não existe. Dentro de um
+ * container flex, o item vale `width: auto` e ele encolhe até o tamanho do texto: quatro
+ * KPIs com rótulos de comprimentos diferentes viram quatro caixas de larguras diferentes.
+ *
+ * O `.amb-card--interactive` já tinha `width: 100%` — porque virar `<button>` deixa o
+ * encolhimento óbvio na hora. Como `<div>`, o MESMO defeito existia e só aparecia em
+ * flex: mais raro, e por isso pior. Passa no teste e aparece na tela de alguém.
+ *
+ * Quem tropeçou nisso resolveu com `sx={{ display: 'flex' }}` no pai — uma muleta no
+ * produto para um defeito da biblioteca. É esse tipo de contorno que este teste evita.
+ */
+test('quatro cards num flex têm a mesma largura, apesar de textos diferentes', async ({ page }) => {
+  await abrir(page, { cena: 'card-flex' })
+
+  const cards = page.locator('.amb-card')
+  await cards.first().waitFor()
+
+  const larguras: number[] = []
+  for (let i = 0; i < (await cards.count()); i++) {
+    const caixa = await cards.nth(i).boundingBox()
+    larguras.push(Math.round(caixa!.width))
+  }
+
+  // Sem `width: 100%`, o card com "Taxa de entrega no período selecionado" fica MUITO
+  // mais largo que o de "Falhas". Com ela, o flex reparte igual.
+  const menor = Math.min(...larguras)
+  const maior = Math.max(...larguras)
+  expect(
+    maior - menor,
+    `larguras: ${larguras.join(', ')} — o card está encolhendo para o tamanho do texto`,
+  ).toBeLessThanOrEqual(1)
+})

@@ -1,5 +1,25 @@
 # @amboni/ui
 
+## 0.2.2
+
+### Patch Changes
+
+- **Card**: encolhia até o tamanho do texto quando era item de um container `flex`.
+
+  Como `<div>` ele ocupa a linha sozinho, então o defeito não aparecia. Dentro de um flex, o
+  item vale `width: auto`: quatro KPIs com rótulos de comprimentos diferentes viravam quatro
+  caixas de larguras diferentes — medido: 118, 327, 90 e 127 pixels.
+
+  O `.amb-card--interactive` já tinha `width: 100%`, porque virar `<button>` deixa o
+  encolhimento óbvio na hora. Como `<div>` o mesmo defeito existia e só aparecia em flex:
+  mais raro, e por isso pior — passa no teste e aparece na tela de alguém.
+
+  Achado migrando uma tela de VERDADE (Métricas do iSafe), não um exemplo. Quem tropeçou
+  resolveu com um `display: flex` no pai — uma muleta no produto para um defeito da
+  biblioteca. Agora há teste de layout em navegador travando as quatro larguras.
+
+  - @amboni/tokens@0.2.2
+
 ## 0.2.1
 
 ### Patch Changes

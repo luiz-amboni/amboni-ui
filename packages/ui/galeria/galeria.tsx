@@ -700,6 +700,28 @@ function CenaDica() {
  * defeito, e para o dia em que alguém consertar a Dica: aí o teste avisa sozinho.
  * Fora do print de propósito — não se guarda baseline de bug conhecido.
  */
+/**
+ * O Card como ITEM de um flex — o arranjo que expôs um defeito real.
+ *
+ * Como `<div>`, o card ocupa a linha sozinho e tudo parece bem. Dentro de um flex, o item
+ * vale `width: auto` e ele encolhe até o texto: quatro KPIs viram quatro caixas de
+ * larguras diferentes. Achado migrando a tela de Métricas do iSafe de verdade — nenhum
+ * teste de jsdom podia ver, porque jsdom não faz layout.
+ *
+ * Os textos têm comprimentos MUITO diferentes de propósito: com rótulos parecidos o
+ * encolhimento passa despercebido. É a diferença que denuncia.
+ */
+function CenaCardFlex() {
+  return (
+    <div className="gal-cena" style={{ display: 'flex', gap: 16, padding: 40 }}>
+      <StatCard label="Enviados" value="1.284" sub="hoje" tone="brand" />
+      <StatCard label="Taxa de entrega no período selecionado" value="97,3%" sub="1.197 entregues" tone="success" />
+      <StatCard label="Falhas" value="12" tone="danger" />
+      <StatCard label="Fila" value="340" sub="próximos 7 dias" tone="neutral" />
+    </div>
+  )
+}
+
 function CenaDicaFlex() {
   return (
     <div className="gal-cena" style={{ display: 'flex', gap: 40, padding: 120, height: '100vh' }}>
@@ -783,6 +805,7 @@ const CENAS: Record<string, () => ReactNode> = {
   'gaveta-baixo': () => <CenaGaveta lado="baixo" />,
   dica: () => <CenaDica />,
   'dica-flex': () => <CenaDicaFlex />,
+  'card-flex': () => <CenaCardFlex />,
   menu: () => <CenaMenu />,
   popover: () => <CenaPopover />,
   aviso: () => <CenaAviso />,

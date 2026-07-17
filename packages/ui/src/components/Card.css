@@ -4,6 +4,19 @@
   border-radius: var(--amb-raio-lg);
   color: var(--amb-color-text-primary);
   /* Sem overflow:hidden por padrão: quebraria menu/tooltip que precisa "vazar". */
+
+  /* `width: 100%` — atrito achado migrando uma tela de VERDADE (Métricas do iSafe).
+   *
+   * Como `<div>`, o card já ocupa a linha inteira, então esta linha parece não fazer
+   * nada. Ela faz dentro de um container FLEX: ali o item vale `width: auto` e o card
+   * encolhe até o tamanho do texto. Um grid de 4 KPIs vira 4 caixas de larguras
+   * diferentes — e quem tropeça resolve com um `display: flex` no pai, ou seja, uma
+   * muleta no produto para um defeito da biblioteca.
+   *
+   * O `.amb-card--interactive` já tinha a linha porque virar `<button>` deixa o
+   * encolhimento óbvio na hora. Como `<div>` o mesmo defeito existia e só aparecia em
+   * flex — mais raro, e por isso pior: passa no teste e aparece na tela de alguém. */
+  width: 100%;
 }
 
 /* ── Elevação ───────────────────────────────────────────────────────────────
