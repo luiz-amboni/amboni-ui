@@ -2513,6 +2513,13 @@
           "descricao": "Ícone. Decorativo — o rótulo é que informa."
         },
         {
+          "nome": "iconeVivo",
+          "tipo": "boolean",
+          "obrigatoria": false,
+          "padrao": "false O padrão continua o suave porque, num painel com muitos cards, ícone cheio em todos vira ruído — quando tudo grita, nada é ouvido. Ligue quando o ícone É a identidade da tela, como num dashboard de poucos cards. A legibilidade está garantida: branco sobre a cor cheia passa no contraste (verificado no teste de tokens), então isto não abre um buraco de acessibilidade.",
+          "descricao": "Fundo do ícone CHEIO da cor do `tone`, com o ícone em branco — em vez do tingido suave padrão. Mais vibrante, para painéis que querem os ícones em destaque."
+        },
+        {
           "nome": "sub",
           "tipo": "ReactNode",
           "obrigatoria": false,
@@ -2526,7 +2533,7 @@
         },
         {
           "nome": "tone",
-          "tipo": "'brand' | 'success' | 'warning' | 'danger' | 'neutral'",
+          "tipo": "'brand' | 'success' | 'warning' | 'danger' | 'info' | 'neutral'",
           "obrigatoria": false,
           "padrao": "'brand'"
         },
