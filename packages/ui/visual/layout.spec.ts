@@ -420,30 +420,40 @@ test('o valor do StatCard nunca é cortado, por mais estreito que fique o card',
 })
 
 /**
- * O ícone do StatCard fica centrado na vertical, não colado no topo.
+ * Layout EMPILHADO: o ícone e o rótulo ficam na mesma linha no topo (`.amb-stat__head`),
+ * centrados um com o outro, e o número grande ocupa a linha inteira embaixo.
  *
- * Apontado a olho nu por quem usava ("o ícone não tá centralizado no eixo Y, ficou
- * esquisito") — e a medida confirmou: 21px de folga em cima, 55px embaixo, num card de
- * 118px. A causa era `align-items: flex-start`, que colava o ícone no rótulo.
- *
- * O ícone é um bloco pesado; o olho pede que ele fique no centro da linha, não no começo.
- * Este teste garante as folgas de cima e de baixo iguais.
+ * Antes o card era lado-a-lado e o ícone era centrado na altura toda do card. Foi trocado
+ * porque, num grid de 4 colunas, o número dividia a linha horizontal com o ícone e era
+ * obrigado a encolher demais ("o número principal ficou muito pequeno"). Agora o número tem
+ * a largura inteira e o ícone sobe para o topo, alinhado ao rótulo. Este teste garante esse
+ * alinhamento: os centros verticais do ícone e do rótulo coincidem (align-items: center).
  */
-test('o ícone do StatCard fica centrado na vertical do card', async ({ page }) => {
+test('o ícone do StatCard fica alinhado ao rótulo, na linha do topo', async ({ page }) => {
   await abrir(page, { cena: 'dados' })
 
-  const folgas = await page.evaluate(() => {
+  const alinhamento = await page.evaluate(() => {
     const stat = document.querySelector('.amb-stat')
     const icone = stat?.querySelector('.amb-stat__icon')
-    if (!stat || !icone) return null
-    const s = stat.getBoundingClientRect(), i = icone.getBoundingClientRect()
-    return { topo: Math.round(i.top - s.top), baixo: Math.round(s.bottom - i.bottom) }
+    const rotulo = stat?.querySelector('.amb-stat__label')
+    const valor = stat?.querySelector('.amb-stat__value')
+    if (!stat || !icone || !rotulo || !valor) return null
+    const i = icone.getBoundingClientRect()
+    const r = rotulo.getBoundingClientRect()
+    // o valor tem que começar ABAIXO da linha do ícone (empilhado, não ao lado)
+    return {
+      centroIcone: i.top + i.height / 2,
+      centroRotulo: r.top + r.height / 2,
+      valorAbaixoDoIcone: valor.getBoundingClientRect().top >= i.bottom - 1,
+    }
   })
 
-  expect(folgas, 'não achei StatCard com ícone na cena').not.toBeNull()
-  // tolerância de 1px para arredondamento de subpixel
+  expect(alinhamento, 'não achei StatCard com ícone/rótulo/valor na cena').not.toBeNull()
+  // ícone e rótulo centrados um com o outro na linha do topo
   expect(
-    Math.abs(folgas!.topo - folgas!.baixo),
-    `ícone descentrado: ${folgas!.topo}px em cima, ${folgas!.baixo}px embaixo`,
-  ).toBeLessThanOrEqual(1)
+    Math.abs(alinhamento!.centroIcone - alinhamento!.centroRotulo),
+    'ícone e rótulo desalinhados na vertical',
+  ).toBeLessThanOrEqual(2)
+  // e o número fica embaixo, ocupando a linha inteira (não ao lado do ícone)
+  expect(alinhamento!.valorAbaixoDoIcone, 'o valor não está empilhado abaixo do ícone').toBe(true)
 })

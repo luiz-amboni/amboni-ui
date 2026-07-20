@@ -194,7 +194,7 @@ describe('extração dos componentes de verdade', () => {
     // viu cada literal no programa, não pela do arquivo. A ordem é decisão de quem escreveu
     // (o padrão primeiro, o perigoso por último) e a doc não pode reescrevê-la.
     expect(prop(api.StatCard, 'tone').tipo).toBe(
-      "'brand' | 'success' | 'warning' | 'danger' | 'neutral'",
+      "'brand' | 'success' | 'warning' | 'danger' | 'info' | 'neutral'",
     )
   })
 

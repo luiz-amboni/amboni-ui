@@ -3,7 +3,7 @@ import { Card } from './Card'
 import { cx } from '../utils/cx'
 import './StatCard.css'
 
-export type StatTone = 'brand' | 'success' | 'warning' | 'danger' | 'neutral'
+export type StatTone = 'brand' | 'success' | 'warning' | 'danger' | 'info' | 'neutral'
 
 export interface StatDelta {
   /**
@@ -112,38 +112,37 @@ export function StatCard({
 
   return (
     <Card className={cx('amb-stat', className)} style={{ height: '100%' }}>
-      {icon && (
-        <div
-          className={cx('amb-stat__icon', `amb-stat__icon--${tone}`, iconeVivo && 'amb-stat__icon--vivo')}
-          aria-hidden="true"
-        >
-          {icon}
+      <div className="amb-stat__head">
+        {icon && (
+          <div
+            className={cx('amb-stat__icon', `amb-stat__icon--${tone}`, iconeVivo && 'amb-stat__icon--vivo')}
+            aria-hidden="true"
+          >
+            {icon}
+          </div>
+        )}
+        <span className="amb-stat__label">{label}</span>
+      </div>
+
+      {carregando ? (
+        // O leitor de tela anuncia "carregando" em vez de ler um card vazio.
+        <div className="amb-stat__skeleton" role="status" aria-label={`${label}: carregando`} />
+      ) : (
+        <div className={cx('amb-stat__value', vazio && 'amb-stat__value--empty')}>
+          {vazio ? '—' : value}
         </div>
       )}
 
-      <div className="amb-stat__content">
-        <span className="amb-stat__label">{label}</span>
-
-        {carregando ? (
-          // O leitor de tela anuncia "carregando" em vez de ler um card vazio.
-          <div className="amb-stat__skeleton" role="status" aria-label={`${label}: carregando`} />
-        ) : (
-          <div className={cx('amb-stat__value', vazio && 'amb-stat__value--empty')}>
-            {vazio ? '—' : value}
-          </div>
-        )}
-
-        {!carregando && (
-          <div className="amb-stat__foot">
-            {delta && !vazio && <Delta {...delta} />}
-            {vazio && emptyReason ? (
-              <span className="amb-stat__sub amb-stat__sub--empty">{emptyReason}</span>
-            ) : (
-              sub && <span className="amb-stat__sub">{sub}</span>
-            )}
-          </div>
-        )}
-      </div>
+      {!carregando && (
+        <div className="amb-stat__foot">
+          {delta && !vazio && <Delta {...delta} />}
+          {vazio && emptyReason ? (
+            <span className="amb-stat__sub amb-stat__sub--empty">{emptyReason}</span>
+          ) : (
+            sub && <span className="amb-stat__sub">{sub}</span>
+          )}
+        </div>
+      )}
     </Card>
   )
 }

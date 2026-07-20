@@ -13,15 +13,25 @@
  */
 .amb-stat {
   container-type: inline-size;
+  /**
+   * EMPILHADO: ícone + rótulo numa linha no topo, e o NÚMERO grande numa linha só embaixo,
+   * com a largura inteira do card.
+   *
+   * Antes o ícone dividia a linha horizontal com o número. Num card estreito (grid de 4
+   * colunas) sobravam ~130px para um valor de 7 dígitos, e o número era obrigado a encolher
+   * para ~14px — pequeno demais para um KPI. Dando a linha inteira ao número, ele cabe
+   * grande (o clamp/cqi abaixo ainda o ajusta), e o ícone segue colorido e visível no topo.
+   */
   display: flex;
-  gap: var(--amb-espaco-4);
+  flex-direction: column;
+  gap: var(--amb-espaco-2);
   padding: var(--amb-espaco-5);
-  /* `center`, não `flex-start`. Com o topo, o ícone colava no rótulo e sobrava um vão
-     grande embaixo dele — medido, 21px em cima e 55px embaixo num card de 118px. O olho
-     lê isso como "torto", porque o ícone é um bloco pesado e visualmente ele pede o
-     centro da linha, não o começo. Centralizado funciona nos dois casos: card de 2 linhas
-     (rótulo + número) e de 3 (com subtítulo). */
+}
+
+.amb-stat__head {
+  display: flex;
   align-items: center;
+  gap: var(--amb-espaco-3);
 }
 
 .amb-stat__icon {
@@ -40,6 +50,7 @@
 .amb-stat__icon--success { background: color-mix(in srgb, var(--amb-color-success-solid) 14%, transparent); color: var(--amb-color-success-text); }
 .amb-stat__icon--warning { background: color-mix(in srgb, var(--amb-color-warning-solid) 14%, transparent); color: var(--amb-color-warning-text); }
 .amb-stat__icon--danger  { background: color-mix(in srgb, var(--amb-color-danger-solid) 14%, transparent);  color: var(--amb-color-danger-text); }
+.amb-stat__icon--info    { background: color-mix(in srgb, var(--amb-color-info-solid) 14%, transparent);    color: var(--amb-color-info-text); }
 .amb-stat__icon--neutral { background: var(--amb-color-surfaceRaised); color: var(--amb-color-text-secondary); }
 
 /* ── Ícone vivo ──────────────────────────────────────────────────────────────
@@ -76,6 +87,11 @@
     var(--amb-color-danger-solid),
     color-mix(in srgb, var(--amb-color-danger-solid) 78%, white));
 }
+.amb-stat__icon--vivo.amb-stat__icon--info {
+  background: linear-gradient(135deg,
+    var(--amb-color-info-solid),
+    color-mix(in srgb, var(--amb-color-info-solid) 78%, white));
+}
 /* Neutro vivo não faz sentido (cinza cheio é feio e não comunica nada); cai no brand. */
 .amb-stat__icon--vivo.amb-stat__icon--neutral {
   background: linear-gradient(135deg,
@@ -83,65 +99,50 @@
     color-mix(in srgb, var(--amb-color-brand-solid) 78%, white));
 }
 
-.amb-stat__content { flex: 1; min-width: 0; }
-
 .amb-stat__label {
+  /* Ocupa o resto da linha ao lado do ícone; `min-width: 0` deixa o rótulo longo
+     ("PRODUTOS VENDIDOS") quebrar em duas linhas em vez de empurrar o layout. */
+  flex: 1;
+  min-width: 0;
   font-size: var(--amb-texto-xs);
   font-weight: var(--amb-peso-semibold);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--amb-color-text-secondary);
-  display: flex;
-  align-items: center;
-  gap: var(--amb-espaco-1);
   line-height: var(--amb-leading-snug);
 }
 
 .amb-stat__value {
   font-family: var(--amb-fonte-display);
-  font-size: var(--amb-texto-2xl);
+  /**
+   * Tamanho FLUIDO pela largura do próprio card (cqi = 1% da inline-size do container).
+   *
+   * Agora o número tem a LINHA INTEIRA (o ícone foi para o topo), então o multiplicador é
+   * generoso: num card largo cresce até o 2xl cheio; num card estreito de 4 colunas encolhe
+   * só o necessário para caber "R$ 1.284.500,75" numa linha — bem maior do que quando
+   * dividia espaço com o ícone. Piso legível (base) e teto no 2xl de sempre.
+   *
+   * Dinheiro nunca corta nem quebra: cede TAMANHO, e o cqi pergunta a largura do CARD, não a
+   * do device — o mesmo card sozinho numa linha e espremido em 4 colunas se resolve sozinho.
+   */
+  font-size: clamp(var(--amb-texto-base), 11cqi, var(--amb-texto-2xl));
   font-weight: var(--amb-peso-extrabold);
   line-height: var(--amb-leading-tight);
   letter-spacing: -0.02em;
-  margin-top: var(--amb-espaco-1);
+  min-width: 0;
   /* tabular: sem isso a coluna "dança" a cada atualização em tempo real */
   font-variant-numeric: tabular-nums;
-  /* Dinheiro NÃO quebra. No celular, "R$ 1.994,31" virava "R$" numa linha e "1.994,31"
-     na outra — e um valor partido ao meio força a pessoa a remontá-lo com o olho, que é
-     o oposto do que um número grande de painel existe para fazer. Achado olhando a
-     biblioteca num iPhone de 375px. Se não couber, é melhor a caixa ceder que o número. */
+  /* Não quebra em duas linhas — o clamp acima garante que sempre caiba numa só. */
   white-space: nowrap;
 }
 
 .amb-stat__value--empty { color: var(--amb-color-text-muted); }
-
-/**
- * Card estreito: o número cede tamanho, nunca dígito.
- *
- * A ordem de sacrifício importa e é esta: primeiro o TAMANHO da fonte, depois o ícone.
- * Nunca o número — dinheiro cortado ou quebrado no meio é pior que dinheiro pequeno,
- * porque obriga a pessoa a remontar o valor com o olho, que é o oposto do que um número
- * grande de painel existe para fazer.
- *
- * 200px é onde "R$ 1.994,31" para de caber em 28px extrabold — medido, não chutado.
- */
-@container (max-width: 200px) {
-  .amb-stat__value { font-size: var(--amb-texto-xl); }
-}
-
-@container (max-width: 150px) {
-  .amb-stat__value { font-size: var(--amb-texto-lg); }
-  /* Abaixo disto o ícone está roubando espaço do que importa. Ele é decorativo — quem
-     informa é o rótulo. Some ele antes de tocar no número. */
-  .amb-stat__icon { display: none; }
-}
 
 .amb-stat__foot {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: var(--amb-espaco-2);
-  margin-top: var(--amb-espaco-1);
   min-height: 18px; /* reserva a linha: sem isso os cards de uma fileira ficam desalinhados */
 }
 
