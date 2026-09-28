@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { StrictMode, useState } from 'react'
 import { describe, test, expect, vi, beforeAll } from 'vitest'
 import { render, screen, fireEvent, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -37,7 +37,12 @@ beforeAll(() => {
     this.open = false
     const i = abertos.indexOf(this)
     if (i >= 0) abertos.splice(i, 1)
-    this.dispatchEvent(new Event('close'))
+    // O evento é ENFILEIRADO, não disparado na hora — a especificação manda "queue an
+    // element task ... fire an event named close". A primeira versão deste dublê
+    // disparava síncrono, e foi por isso que um defeito real passou verde: com o evento
+    // chegando na hora, uma bandeira baixada logo depois do close() ainda estava de pé.
+    // No navegador ela já tinha sido baixada, e o modal fechava sozinho.
+    setTimeout(() => this.dispatchEvent(new Event('close')), 0)
   }
 
   // O Esc do navegador: `cancel` cancelável no dialog do topo e, se ninguém barrar,
@@ -343,9 +348,46 @@ describe('Dialogo — estrutura', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Abrir' }))
 
     // act(): o close() dispara onFechar, que muda estado fora de um evento do React.
+    // E o evento de `close` é ENFILEIRADO pelo navegador, não síncrono — por isso a
+    // espera. Enquanto o dublê disparava na hora, este teste passava verde com um
+    // defeito real solto: no navegador o evento chegava atrasado e derrubava um modal
+    // que tinha acabado de reabrir.
     const dialog = screen.getByRole('dialog') as HTMLDialogElement
-    act(() => { dialog.close() })
+    await act(async () => { dialog.close(); await new Promise(r => setTimeout(r, 0)) })
 
     expect(fechou).toHaveBeenCalledTimes(1)
   })
+})
+
+/**
+ * StrictMode: efeito → limpeza → efeito.
+ *
+ * A limpeza fecha o modal com `close()`, e o `close` do <dialog> NÃO dispara na hora —
+ * ele é enfileirado. Enquanto a bandeira era baixada na linha seguinte ao `close()`, o
+ * evento chegava depois, encontrava `false` e chamava `onFechar()`. O segundo efeito já
+ * tinha reaberto o modal, então o resultado visível era um modal que não abria e um botão
+ * que parecia morto.
+ *
+ * Medido no iSafe CRM em 28/09/2026: o <dialog> entrava no DOM aos 106 ms e sumia.
+ */
+describe('StrictMode não fecha o modal recém-aberto', () => {
+  test('sobrevive a efeito → limpeza → efeito sem chamar onFechar', async () => {
+    const onFechar = vi.fn()
+
+    render(
+      <StrictMode>
+        <Dialogo aberto onFechar={onFechar} titulo="Confirmar">
+          <p>corpo</p>
+        </Dialogo>
+      </StrictMode>,
+    )
+
+    // O evento de `close` é uma tarefa enfileirada: se ele fosse chegar, chegaria aqui.
+    await new Promise(r => setTimeout(r, 0))
+
+    expect(onFechar).not.toHaveBeenCalled()
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
+    expect(screen.getByText('corpo')).toBeInTheDocument()
+  })
+
 })

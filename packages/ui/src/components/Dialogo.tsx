@@ -157,9 +157,20 @@ export function Dialogo({
 
       if (dialog.open) {
         // Ver `aoFecharNativo`: este close() é nosso, não pode voltar como onFechar.
+        //
+        // A bandeira NÃO é baixada aqui. `close()` não dispara o evento na hora: ele é
+        // ENFILEIRADO. Baixando a bandeira na linha seguinte, o evento chegava depois,
+        // encontrava `false` e chamava `onFechar()` — fechando um modal que já tinha
+        // reaberto.
+        //
+        // Isso mordia em desenvolvimento, onde o StrictMode roda efeito → limpeza →
+        // efeito: a limpeza fechava, o segundo efeito reabria, e o evento atrasado
+        // derrubava. Para quem estava olhando, o modal simplesmente não abria — o botão
+        // parecia morto. Medido: o <dialog> entrava no DOM aos 106 ms e sumia em seguida.
+        //
+        // Quem baixa a bandeira agora é o próprio `aoFecharNativo`, ao consumir o evento.
         fechandoPeloReact.current = true
         dialog.close()
-        fechandoPeloReact.current = false
       }
 
       // O foco volta para quem abriu. Sem isto a pessoa é cuspida no topo do documento
@@ -195,7 +206,13 @@ export function Dialogo({
       // Algo fechou o dialog sem passar por nós — tipicamente um
       // <form method="dialog"> nos children, que é HTML legítimo. Avisa o React, senão
       // cai no mesmo buraco do Esc: fechado na tela, aberto no estado.
-      if (fechandoPeloReact.current) return
+      //
+      // A bandeira é consumida AQUI, e não na limpeza: o evento de `close` chega depois
+      // do `close()`, então baixá-la antes de o evento chegar não protege nada.
+      if (fechandoPeloReact.current) {
+        fechandoPeloReact.current = false
+        return
+      }
       onFechar()
     }
 
